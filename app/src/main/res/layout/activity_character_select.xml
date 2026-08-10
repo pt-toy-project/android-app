@@ -12,6 +12,14 @@
         android:layout_height="wrap_content"
         android:text="위인 선택"
         android:textSize="28sp" />
+    <ImageView
+        android:id="@+id/ivSejongCharacter"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/sesong"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp" />
 
     <Button
         android:id="@+id/btnSejong"

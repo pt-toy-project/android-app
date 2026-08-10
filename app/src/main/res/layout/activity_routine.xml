@@ -13,20 +13,31 @@
         android:text="오늘의 루틴"
         android:textSize="28sp" />
 
+    <!-- 추가된 부분: 프로필 이미지가 들어갈 자리 -->
+    <ImageView
+        android:id="@+id/ivCharacterProfile"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="36dp"
+        android:scaleType="fitCenter" />
+
     <TextView
         android:id="@+id/tvCharacterName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="세종대왕"
         android:textSize="24sp"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="07:00  기상"
         android:textSize="18sp"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="32dp" />
 
     <TextView
         android:layout_width="wrap_content"
