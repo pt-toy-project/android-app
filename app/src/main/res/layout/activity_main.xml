@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:background="#FF0000"
-        android:text="helloWorld! "
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content"
+        android:text="위인 루틴 알람"
+        android:textSize="28sp" />
 
-    <Button
-        android:id="@+id/Button"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="오늘도 위인과 함께 성장해봐요"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btnSelectCharacter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="위인 선택하기"
+        android:layout_marginTop="32dp" />
+
+</LinearLayout>

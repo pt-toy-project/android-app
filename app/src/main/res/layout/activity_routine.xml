@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="오늘의 루틴"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/tvCharacterName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="세종대왕"
+        android:textSize="24sp"
+        android:layout_marginTop="32dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="07:00  기상"
+        android:textSize="18sp"
+        android:layout_marginTop="24dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="08:00  독서"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:00  점심"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="18:00  운동"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp" />
+
+    <Button
+        android:id="@+id/btnStartRoutine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="루틴 시작하기"
+        android:layout_marginTop="32dp" />
+
+</LinearLayout>
