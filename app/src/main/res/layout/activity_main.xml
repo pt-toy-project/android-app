@@ -8,23 +8,21 @@
     android:background="#F5F7FA"
     tools:context=".MainActivity">
 
-    <!-- 메인 스크롤 콘텐츠 -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"> <!-- 하단 바 공간 확보 -->
+        android:layout_marginBottom="60dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="24dp">
 
-            <!-- 인사말 -->
             <TextView
                 android:id="@+id/tvGreeting1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="안녕하세요, 성호님"
+                android:text="안녕하세요, 진영"
                 android:textColor="#222222"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -42,7 +40,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvGreeting1" />
 
-            <!-- 1. 오늘의 루틴 카드 -->
+            <!-- 오늘의 루틴 카드 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardTodayRoutine"
                 android:layout_width="match_parent"
@@ -131,7 +129,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 오늘의 위인 타이틀 -->
             <TextView
                 android:id="@+id/tvHeroSectionTitle"
                 android:layout_width="wrap_content"
@@ -144,7 +141,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardTodayRoutine" />
 
-            <!-- 2. 오늘의 위인 카드 -->
+            <!-- 오늘의 위인 카드 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardTodayHero"
                 android:layout_width="match_parent"
@@ -163,16 +160,14 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- 위인 이미지 -->
                     <ImageView
                         android:id="@+id/ivHeroImage"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@drawable/ic_launcher_background"
+                        android:background="@drawable/sesong"
                         android:scaleType="centerCrop" />
 
-                    <!-- 위인 이름 -->
                     <TextView
                         android:id="@+id/tvHeroName"
                         android:layout_width="wrap_content"
@@ -182,7 +177,6 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <!-- 위인 명언 -->
                     <TextView
                         android:id="@+id/tvHeroQuote"
                         android:layout_width="wrap_content"
@@ -193,7 +187,6 @@
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
-                    <!-- 위인 보기 버튼 -->
                     <Button
                         android:id="@+id/btnViewHero"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -211,16 +204,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- 4구역 하단 네비게이션 -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@android:color/white"
-        app:itemIconTint="#4A4A4A"
-        app:itemTextColor="#4A4A4A"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
+    <!-- 공통 하단바 가져오기 -->
+    <include layout="@layout/layout_bottom_nav" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

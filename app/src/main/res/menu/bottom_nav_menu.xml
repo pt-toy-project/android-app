@@ -26,7 +26,7 @@
         android:title="마이룸" />
     <item
         android:id="@+id/nav_option"
-        android:icon="@android:drawable/ic_menu_info_details"
+        android:icon="@android:drawable/ic_menu_help"
         android:title="설정" />
 
 </menu>
