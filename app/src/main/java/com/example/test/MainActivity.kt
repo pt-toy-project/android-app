@@ -9,7 +9,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
         val btnSelectCharacter = findViewById<Button>(R.id.btnSelectCharacter)
@@ -18,5 +17,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, CharacterSelectActivity::class.java)
             startActivity(intent)
         }
+
     }
 }
