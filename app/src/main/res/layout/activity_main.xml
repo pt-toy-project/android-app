@@ -5,77 +5,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
+    android:background="#F5F7FA"
     tools:context=".MainActivity">
 
     <!-- 메인 스크롤 콘텐츠 -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"> <!-- 하단 바 공간 확보 -->
+        android:layout_marginBottom="60dp"> <!-- 하단 바 공간 확보 -->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="24dp">
+            android:padding="24dp">
 
-            <!-- 상단 헤더 (메뉴, 알림 아이콘) -->
-            <ImageView
-                android:id="@+id/ivMenu"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:src="@android:drawable/ic_menu_sort_by_size"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/ivNotification"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="20dp"
-                android:src="@android:drawable/ic_popup_reminder"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- 타이틀 및 배경 이미지 영역 -->
+            <!-- 인사말 -->
             <TextView
-                android:id="@+id/tvMainTitle"
+                android:id="@+id/tvGreeting1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="32dp"
-                android:text="위인의 하루를\n내 루틴으로."
-                android:textSize="28sp"
+                android:text="안녕하세요, 성호님"
+                android:textColor="#222222"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="#2C3E50"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivMenu" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvSubTitle"
+                android:id="@+id/tvGreeting2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:text="성공한 사람들의 시간을\n내 하루에 동기화하세요."
-                android:textColor="#7F8C8D"
+                android:layout_marginTop="8dp"
+                android:text="오늘도 좋은 하루 보내세요."
+                android:textColor="#777777"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvMainTitle" />
+                app:layout_constraintTop_toBottomOf="@id/tvGreeting1" />
 
-            <!-- 오늘의 루틴 카드 -->
+            <!-- 1. 오늘의 루틴 카드 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardTodayRoutine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:layout_constraintTop_toBottomOf="@id/tvSubTitle">
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp"
+                app:layout_constraintTop_toBottomOf="@id/tvGreeting2">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -87,66 +64,163 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="오늘의 루틴"
+                        android:textColor="#333333"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!-- 기존의 위인 선택 버튼을 '변경' 버튼으로 재활용 -->
-                    <Button
-                        android:id="@+id/btnSelectCharacter"
+                    <TextView
+                        android:id="@+id/tvRoutineProgressLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="변경"
-                        android:textSize="12sp"
+                        android:text="3 / 5 완료"
+                        android:textColor="#4B5EAA"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/tvRoutineHeader"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvRoutineHeader"
-                        android:layout_marginTop="16dp"/>
+                        app:layout_constraintTop_toTopOf="@id/tvRoutineHeader" />
 
-                    <!-- 진행률 프로그레스 바 -->
                     <ProgressBar
                         android:id="@+id/progressBar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="16dp"
+                        android:max="5"
+                        android:progress="3"
+                        android:progressTint="#4B5EAA"
+                        app:layout_constraintTop_toBottomOf="@id/tvRoutineHeader" />
+
+                    <TextView
+                        android:id="@+id/tvNextRoutineLabel"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:max="100"
-                        android:progress="60"
-                        app:layout_constraintTop_toBottomOf="@id/btnSelectCharacter" />
+                        android:text="다음 루틴"
+                        android:textColor="#777777"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/progressBar" />
+
+                    <TextView
+                        android:id="@+id/tvNextRoutine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="18:00 운동"
+                        android:textColor="#222222"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvNextRoutineLabel" />
+
+                    <Button
+                        android:id="@+id/btnCheckRoutine"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="24dp"
+                        android:backgroundTint="#4B5EAA"
+                        android:text="루틴 확인"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        app:cornerRadius="12dp"
+                        app:layout_constraintTop_toBottomOf="@id/tvNextRoutine" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 통계 3개 카드 영역 (생략: 가로 LinearLayout 또는 ConstraintLayout으로 구성) -->
+            <!-- 오늘의 위인 타이틀 -->
+            <TextView
+                android:id="@+id/tvHeroSectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="오늘의 위인"
+                android:textColor="#222222"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardTodayRoutine" />
 
-            <!-- 오늘의 한마디 카드 영역 (생략: MaterialCardView 활용) -->
+            <!-- 2. 오늘의 위인 카드 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTodayHero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp"
+                app:layout_constraintTop_toBottomOf="@id/tvHeroSectionTitle">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- 위인 이미지 -->
+                    <ImageView
+                        android:id="@+id/ivHeroImage"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/ic_launcher_background"
+                        android:scaleType="centerCrop" />
+
+                    <!-- 위인 이름 -->
+                    <TextView
+                        android:id="@+id/tvHeroName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="세종대왕"
+                        android:textColor="#222222"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <!-- 위인 명언 -->
+                    <TextView
+                        android:id="@+id/tvHeroQuote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="24dp"
+                        android:text="&quot;오늘도 힘내거라.&quot;"
+                        android:textColor="#555555"
+                        android:textSize="16sp" />
+
+                    <!-- 위인 보기 버튼 -->
+                    <Button
+                        android:id="@+id/btnViewHero"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="위인 보기"
+                        android:textColor="#4B5EAA"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="#4B5EAA"
+                        app:strokeWidth="1dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- 하단 네비게이션 & FAB -->
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
+    <!-- 4구역 하단 네비게이션 -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:fabCradleMargin="8dp"
-        app:fabCradleRoundedCornerRadius="16dp">
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            app:menu="@menu/bottom_nav_menu" /> <!-- res/menu/에 메뉴 파일 생성 필요 -->
-    </com.google.android.material.bottomappbar>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_anchor="@id/bottomAppBar"
-        app:tint="@android:color/white"
-        android:backgroundTint="#4B5EAA" />
+        android:background="@android:color/white"
+        app:itemIconTint="#4A4A4A"
+        app:itemTextColor="#4A4A4A"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
