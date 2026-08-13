@@ -2,6 +2,7 @@ package com.example.test
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import com.example.test.Routine.CharacterSelectActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
