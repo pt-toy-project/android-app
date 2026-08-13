@@ -36,7 +36,10 @@ fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
                 true
             }
             R.id.nav_option -> {
-                Toast.makeText(this, "설정 탭 클릭", Toast.LENGTH_SHORT).show()
+                // 💡 설정 화면(SettingActivity)으로 이동하도록 수정
+                startActivity(Intent(this, SettingActivity::class.java))
+                overridePendingTransition(0, 0)
+                finish()
                 true
             }
             else -> false
