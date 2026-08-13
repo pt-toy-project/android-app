@@ -1,47 +1,75 @@
 package com.example.test
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
-    val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView) ?: return
 
-    // 현재 선택된 탭 활성화 (이벤트 재발생 방지를 위해 리스너 등록 전 설정)
+    val bottomNav = findViewById<BottomNavigationView>(
+        R.id.bottomNavigationView
+    ) ?: return
+
+    // 현재 페이지의 메뉴를 선택 상태로 표시
     bottomNav.selectedItemId = selectedItemId
 
     bottomNav.setOnItemSelectedListener { item ->
-        if (item.itemId == selectedItemId) return@setOnItemSelectedListener true
 
         when (item.itemId) {
+
             R.id.nav_home -> {
-                startActivity(Intent(this, MainActivity::class.java))
-                overridePendingTransition(0, 0)
-                finish()
+
+                if (this !is MainActivity) {
+                    startActivity(
+                        Intent(this, MainActivity::class.java)
+                    )
+
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+
                 true
             }
+
             R.id.nav_routine -> {
-                Toast.makeText(this, "루틴 탭 클릭", Toast.LENGTH_SHORT).show()
+
+                // 나중에 RoutineActivity가 만들어지면 연결
                 true
             }
+
             R.id.nav_hero -> {
-                startActivity(Intent(this, CharacterSelectActivity::class.java))
-                overridePendingTransition(0, 0)
-                finish()
+
+                if (this !is CharacterSelectActivity) {
+                    startActivity(
+                        Intent(
+                            this,
+                            CharacterSelectActivity::class.java
+                        )
+                    )
+
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+
                 true
             }
+
             R.id.nav_myroom -> {
-                Toast.makeText(this, "마이룸 탭 클릭", Toast.LENGTH_SHORT).show()
+
+                // 나중에 MyRoomActivity가 만들어지면 연결
                 true
             }
+
             R.id.nav_option -> {
                 // 💡 설정 화면(SettingActivity)으로 이동하도록 수정
                 startActivity(Intent(this, SettingActivity::class.java))
                 overridePendingTransition(0, 0)
                 finish()
+
+                // 나중에 OptionActivity가 만들어지면 연결
                 true
             }
+
             else -> false
         }
     }
