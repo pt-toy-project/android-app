@@ -45,7 +45,7 @@ class RoutineActivity : AppCompatActivity() {
 
         val rvRoutineList: RecyclerView = findViewById(R.id.rv_routine_list)
 
-        // 현재 시간에 따른 색상 변화를 테스트하려면 여기 시간을 직접 바꿔가며 확인해보세요!
+        // 현재 시간에 따른 색상 변화를 테스트
         val dummyData = listOf(
             Routine(1, "06:00", "기상", isCompleted = true),
             Routine(2, "06:30", "명상 및 하루 계획", isCompleted = true),
