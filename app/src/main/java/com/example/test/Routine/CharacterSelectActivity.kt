@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import com.example.test.R
+import com.example.test.RoutineActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -61,7 +63,6 @@ class CharacterSelectActivity : AppCompatActivity() {
                 "조선 · 16세기",
                 R.drawable.ic_launcher_foreground
             ),
-
             Hero(
                 "아인슈타인",
                 "과학 · 물리학",
