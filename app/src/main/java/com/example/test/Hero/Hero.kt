@@ -1,4 +1,4 @@
-package com.example.test
+package com.example.test.Hero
 
 data class Hero(
     val name: String,

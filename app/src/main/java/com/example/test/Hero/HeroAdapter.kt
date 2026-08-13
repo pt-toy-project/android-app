@@ -1,4 +1,4 @@
-package com.example.test
+package com.example.test.Hero
 
 import android.app.Dialog
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Intent
+import com.example.test.R
+import com.example.test.RoutineActivity
 
 
 class HeroAdapter(
@@ -50,6 +52,8 @@ class HeroAdapter(
 
             val intent = Intent(
                 holder.itemView.context,
+
+                // TODO(주혁): RoutineActivity::class.java를 RoutineSelected로 변경해야 함
                 RoutineActivity::class.java
             )
 

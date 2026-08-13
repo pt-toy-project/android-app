@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import com.example.test.R
-import com.example.test.RoutineActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.test.Hero.Hero
+import com.example.test.Hero.HeroAdapter
 
 class CharacterSelectActivity : AppCompatActivity() {
 
