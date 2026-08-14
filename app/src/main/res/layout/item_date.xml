@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_date_bg"
+    android:layout_width="48dp"
+    android:layout_height="wrap_content"
+    android:paddingVertical="12dp"
+    android:layout_marginHorizontal="6dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <!-- 새로 추가된 월(Month) 텍스트 -->
+    <TextView
+        android:id="@+id/tv_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8월"
+        android:textColor="#888888"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tv_day_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="22"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_day_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="수"
+        android:textColor="#888888"
+        android:textSize="12sp" />
+</LinearLayout>
