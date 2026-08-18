@@ -1,44 +1,44 @@
-// 1. 유저와 루틴 클래스 (순수 데이터 모델)
-class User(val id: Long, var coinBalance: Int = 0) {
-    fun addCoins(amount: Int) {
-        if (amount < 0) throw IllegalArgumentException("지급할 코인은 0 이상이어야 합니다.")
-        coinBalance += amount
-        println("💰 유저 $id: $amount 코인 획득! (현재 총 잔액: $coinBalance)")
-    }
-}
+# (평택 토이 프로젝트)
 
-class Routine(val id: Long, val userId: Long, var isCompleted: Boolean = false, val rewardCoins: Int = 10) {
-    fun markAsCompleted() {
-        if (isCompleted) throw IllegalStateException("이미 완료 처리된 루틴입니다.")
-        isCompleted = true
-        println("✅ 루틴 $id: 완료 처리 완료.")
-    }
-}
+> "위인의 하루 루틴을 따라하고, 코인을 모아 아이템을 구매하는 동기부여 Android 앱"
 
-// 2. 실행 가능한 메인 함수
-fun main() {
-    // 가짜 데이터 생성 (DB에 데이터가 있다고 가정)
-    val testUser = User(id = 1L, coinBalance = 0)
-    val testRoutine = Routine(id = 100L, userId = 1L, rewardCoins = 50)
+## 프로젝트 소개
+본 프로젝트는 캡스톤 디자인을 준비하며 팀원 간의 협업 경험을 쌓기 위해 진행된 토이 프로젝트입니다. 사용자가 역사적 위인들의 훌륭한 습관과 하루 루틴을 직접 체험하고 실천할 수 있도록 돕습니다. 루틴 달성 시 코인을 지급하여 사용자의 지속적인 동기를 유발합니다.
 
-    println("--- 초기 상태 ---")
-    println("유저 코인: ${testUser.coinBalance}")
-    println("루틴 상태: ${if (testRoutine.isCompleted) "완료" else "미완료"}\n")
+* **목적**: 캡스톤 디자인 전 사전 협업 경험 축적 및 Android 앱 개발 사이클 경험
+* **개발 플랫폼**: Android
 
-    println("--- 루틴 완료 시도 ---")
-    try {
-        // 서버 서비스 로직 시뮬레이션
-        if (testRoutine.userId == testUser.id) {
-            testRoutine.markAsCompleted()     // 1. 루틴 완료 처리
-            testUser.addCoins(testRoutine.rewardCoins) // 2. 코인 지급
-        } else {
-            println("❌ 권한이 없습니다.")
-        }
-    } catch (e: Exception) {
-        println("❌ 에러 발생: ${e.message}")
-    }
+## 팀 구성 (Team)
+| 역할 | 이름 | 담당 업무 |
+| :---: | :---: | :--- |
+| **PM** | 백승효 | 기획 및 Figma 화면 설계, 프로젝트 일정 관리 |
+| **Frontend** | 박성호 | 프론트엔드 팀장 |
+| **Frontend** | 박진영 | 프론트엔드 팀원 및 Git 관리 |
+| **Frontend** | 변주혁 | 프론트엔드 팀원 |
+| **Backend** | 백수현 | 백엔드 팀장 |
+| **Backend** | 배재한 | 백엔드 팀원 |
+| **Backend** | 윤동규 | 백엔드 팀원 |
 
-    println("\n--- 최종 결과 확인 ---")
-    println("유저 코인: ${testUser.coinBalance}")
-    println("루틴 상태: ${if (testRoutine.isCompleted) "완료" else "미완료"}")
-}
+## 주요 기능 (Key Features)
+* **위인 루틴 제공**: 다양한 위인들의 실제 하루 일과와 습관을 바탕으로 한 루틴 목록 제공
+* **루틴 실천 및 트래킹**: 사용자가 선택한 루틴의 달성 여부를 체크하고 기록 
+* **보상 시스템**: 루틴 완료 시 코인 지급
+* **아이템 상점**: 모은 코인을 활용해 앱 내에서 사용할 수 있는 다양한 아이템 구매
+
+## 🛠️ 기술 스택 (Tech Stack)
+### Frontend
+* **Language**: `Kotlin`
+* **UI**: `XML`
+
+### Backend
+
+
+### Design & Collaboration
+* **Design**: `Figma`
+* **Version Control**: `Git`, `GitHub`
+* **Communication**: `Discord`, `Notion`
+
+## 🌲 브랜치 전략 (Branch Strategy)
+* `main`: 배포 가능한 안정적인 버전
+* `develop`: 다음 버전을 위해 기능들이 병합되는 개발 브랜치
+* `feat/*`: 프론트엔드/백엔드 각 담당자의 세부 기능 개발 브랜치 (예: `feature/room-database`)
