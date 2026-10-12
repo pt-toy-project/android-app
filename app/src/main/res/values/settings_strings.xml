@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">설정</string>
+    <string name="settings_sound">사운드</string>
+    <string name="settings_alarm">알람</string>
+    <string name="settings_other">기타 설정</string>
+    <string name="settings_saved_notice">사운드 재생과 알람 기능은 준비 중입니다. 아래 선택은 이 기기에 저장됩니다.</string>
+    <string name="settings_enabled_saved">%1$s 설정을 켜짐으로 저장했습니다.</string>
+    <string name="settings_disabled_saved">%1$s 설정을 꺼짐으로 저장했습니다.</string>
+    <string name="settings_other_unavailable">추가 설정은 준비 중입니다.</string>
+</resources>

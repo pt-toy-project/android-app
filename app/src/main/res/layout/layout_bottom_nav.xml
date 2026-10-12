@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@android:color/white"
-    app:itemIconTint="#4A4A4A"
-    app:itemTextColor="#4A4A4A"
+    android:background="?attr/colorSurface"
+    app:itemIconTint="@color/nav_item_color"
+    app:itemTextColor="@color/nav_item_color"
     app:labelVisibilityMode="labeled"
     app:menu="@menu/bottom_nav_menu" />

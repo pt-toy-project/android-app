@@ -1,112 +1,50 @@
 package com.example.test.Hero
 
-import android.app.Dialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import android.content.Intent
 import com.example.test.R
-import com.example.test.RoutineActivity
 
-
+/** Rendering only: navigation and dialogs belong to the Activity lifecycle. */
 class HeroAdapter(
-    private val heroList: List<Hero>
-) : RecyclerView.Adapter<HeroAdapter.HeroViewHolder>() {
+    private val onHeroClick: (Hero) -> Unit,
+    private val onHeroLongClick: (Hero) -> Unit
+) : ListAdapter<Hero, HeroAdapter.HeroViewHolder>(HeroDiff) {
 
     class HeroViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val image: ImageView = view.findViewById(R.id.ivHero)
         val name: TextView = view.findViewById(R.id.tvHeroName)
         val field: TextView = view.findViewById(R.id.tvHeroField)
         val info: TextView = view.findViewById(R.id.tvHeroInfo)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): HeroViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroViewHolder =
+        HeroViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_hero_card, parent, false))
 
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_hero_card, parent, false)
-
-        return HeroViewHolder(view)
-    }
-
-    override fun onBindViewHolder(
-        holder: HeroViewHolder,
-        position: Int
-    ) {
-
-        val hero = heroList[position]
-
+    override fun onBindViewHolder(holder: HeroViewHolder, position: Int) {
+        val hero = getItem(position)
         holder.image.setImageResource(hero.imageResId)
         holder.name.text = hero.name
         holder.field.text = hero.field
         holder.info.text = hero.info
-
-        // 짧게 클릭
-        holder.itemView.setOnClickListener {
-
-            val intent = Intent(
-                holder.itemView.context,
-
-                // TODO(주혁): RoutineActivity::class.java를 RoutineSelected로 변경해야 함
-                RoutineActivity::class.java
-            )
-
-            intent.putExtra("heroName", hero.name)
-
-            holder.itemView.context.startActivity(intent)
-        }
-
-        // 길게 클릭
+        holder.itemView.isFocusable = true
+        holder.itemView.contentDescription = holder.itemView.context.getString(
+            R.string.hero_card_action, hero.name, hero.field, hero.info
+        )
+        holder.itemView.setOnClickListener { onHeroClick(hero) }
         holder.itemView.setOnLongClickListener {
-
-            showHeroDialog(holder.itemView, hero)
-
+            onHeroLongClick(hero)
             true
         }
     }
 
-    private fun showHeroDialog(
-        itemView: View,
-        hero: Hero
-    ) {
-
-        val dialog = Dialog(itemView.context)
-
-        val dialogView = LayoutInflater.from(itemView.context)
-            .inflate(R.layout.dialog_hero_detail, null)
-
-        // 팝업 안의 카드
-        val image = dialogView.findViewById<ImageView>(R.id.ivHero)
-        val name = dialogView.findViewById<TextView>(R.id.tvHeroName)
-        val field = dialogView.findViewById<TextView>(R.id.tvHeroField)
-        val info = dialogView.findViewById<TextView>(R.id.tvHeroInfo)
-
-        image.setImageResource(hero.imageResId)
-        name.text = hero.name
-        field.text = hero.field
-        info.text = hero.info
-
-        dialog.setContentView(dialogView)
-
-        dialog.window?.setBackgroundDrawableResource(
-            android.R.color.transparent
-        )
-
-        dialog.show()
-
-        dialog.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-    }
-
-    override fun getItemCount(): Int {
-        return heroList.size
+    private object HeroDiff : DiffUtil.ItemCallback<Hero>() {
+        override fun areItemsTheSame(oldItem: Hero, newItem: Hero): Boolean = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Hero, newItem: Hero): Boolean = oldItem == newItem
     }
 }

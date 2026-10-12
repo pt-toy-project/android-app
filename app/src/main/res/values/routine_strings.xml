@@ -1,0 +1,20 @@
+<resources>
+    <string name="routine_title">%1$s의 루틴</string>
+    <string name="routine_choose_date">날짜 선택</string>
+    <string name="routine_sample_notice">공통 예시 루틴입니다. 완료 기록은 이 기기에만 저장되며, 코인 보상과 알림 기능은 준비 중입니다.</string>
+    <string name="routine_detail_schedule">%1$s · %2$s</string>
+    <string name="routine_complete">완료 기록</string>
+    <string name="routine_close">닫기</string>
+    <string name="routine_status_completed">완료</string>
+    <string name="routine_status_overdue">미완료</string>
+    <string name="routine_status_upcoming">예정</string>
+    <string name="routine_accessibility">%1$s, %2$s, %3$s. 상세 보기</string>
+    <string name="routine_completion_recorded">완료를 기록했습니다.</string>
+    <string name="routine_already_completed">이미 완료한 루틴입니다.</string>
+    <string name="routine_future_completion">미래 날짜의 루틴은 완료할 수 없습니다.</string>
+    <string name="routine_invalid">루틴을 찾을 수 없습니다.</string>
+    <color name="routine_completed">#4656A7</color>
+    <color name="routine_overdue">#B3261E</color>
+    <color name="routine_upcoming">#555B66</color>
+    <color name="date_unselected_text">#555B66</color>
+</resources>

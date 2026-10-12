@@ -1,75 +1,47 @@
 package com.example.test
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+/** Keep home as the task root and reuse an existing destination when it is on the stack. */
+fun AppCompatActivity.navigateTo(destination: Class<out AppCompatActivity>) {
+    if (destination.isInstance(this)) return
+    startActivity(
+        Intent(this, destination)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    )
+    if (this !is MainActivity) finish()
+}
+
 fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
-
-    val bottomNav = findViewById<BottomNavigationView>(
-        R.id.bottomNavigationView
-    ) ?: return
-
-    // 현재 페이지의 메뉴를 선택 상태로 표시
+    val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView) ?: return
+    // Clear the old listener before restoring the selection after returning to a retained screen.
+    bottomNav.setOnItemSelectedListener(null)
     bottomNav.selectedItemId = selectedItemId
-
     bottomNav.setOnItemSelectedListener { item ->
-
         when (item.itemId) {
-
             R.id.nav_home -> {
-
-                if (this !is MainActivity) {
-                    startActivity(
-                        Intent(this, MainActivity::class.java)
-                    )
-
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-
+                navigateTo(MainActivity::class.java)
                 true
             }
-
             R.id.nav_routine -> {
-
-                // 나중에 RoutineActivity가 만들어지면 연결
+                navigateTo(RoutineActivity::class.java)
                 true
             }
-
             R.id.nav_hero -> {
-
-                if (this !is CharacterSelectActivity) {
-                    startActivity(
-                        Intent(
-                            this,
-                            CharacterSelectActivity::class.java
-                        )
-                    )
-
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-
+                navigateTo(CharacterSelectActivity::class.java)
                 true
             }
-
-            R.id.nav_myroom -> {
-
-                // 나중에 MyRoomActivity가 만들어지면 연결
-                true
-            }
-
             R.id.nav_option -> {
-                // 💡 설정 화면(SettingActivity)으로 이동하도록 수정
-                startActivity(Intent(this, SettingActivity::class.java))
-                overridePendingTransition(0, 0)
-                finish()
-
-                // 나중에 OptionActivity가 만들어지면 연결
+                navigateTo(SettingActivity::class.java)
                 true
             }
-
+            R.id.nav_myroom -> {
+                Toast.makeText(this, R.string.nav_myroom_unavailable, Toast.LENGTH_SHORT).show()
+                false
+            }
             else -> false
         }
     }

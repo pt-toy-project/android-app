@@ -1,105 +1,154 @@
 package com.example.test
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.ImageView
+import android.os.Handler
+import android.os.Looper
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.test.Routine.DateAdapter
-import com.example.test.Routine.DateItem
-import com.example.test.Routine.Routine
-import com.example.test.Routine.RoutineAdapter
-import java.text.SimpleDateFormat
+import com.example.test.Hero.HeroCatalog
+import com.example.test.Routine.*
 import java.util.Calendar
-import java.util.Locale
+import java.util.GregorianCalendar
 
 class RoutineActivity : AppCompatActivity() {
-
-    private var currentSelectedCalendar = Calendar.getInstance()
+    private lateinit var repository: RoutineRepository
+    private lateinit var routineAdapter: RoutineAdapter
+    private lateinit var dateAdapter: DateAdapter
+    private lateinit var datesView: RecyclerView
+    private lateinit var selectedDate: RoutineDate
+    private lateinit var heroId: String
+    private var datePicker: DatePickerDialog? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private val clockRefresh = object : Runnable {
+        override fun run() {
+            renderRoutines()
+            handler.postDelayed(this, 60_000L - System.currentTimeMillis() % 60_000L)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_routine)
-
+        applySystemBarInsets()
         setupBottomNavigation(R.id.nav_routine)
-
-        updateWeekCalendar(currentSelectedCalendar)
-
-        val ivCalendar: ImageView = findViewById(R.id.iv_calendar)
-        ivCalendar.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(
-                this,
-                { _, year, month, dayOfMonth ->
-                    currentSelectedCalendar.set(year, month, dayOfMonth)
-                    updateWeekCalendar(currentSelectedCalendar)
-                },
-                currentSelectedCalendar.get(Calendar.YEAR),
-                currentSelectedCalendar.get(Calendar.MONTH),
-                currentSelectedCalendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePickerDialog.show()
+        repository = RoutineRepository(this)
+        heroId = HeroCatalog.getOrDefault(
+            savedInstanceState?.getString(HERO_ID) ?: intent.getStringExtra(HERO_ID) ?: repository.selectedHeroId
+        ).id
+        repository.selectedHeroId = heroId
+        selectedDate = RoutineDate.parse(savedInstanceState?.getString(SELECTED_DATE)) ?: RoutineDate.today()
+        routineAdapter = RoutineAdapter(::showRoutine)
+        findViewById<RecyclerView>(R.id.rv_routine_list).apply {
+            layoutManager = LinearLayoutManager(this@RoutineActivity)
+            adapter = routineAdapter
         }
-
-        val rvRoutineList: RecyclerView = findViewById(R.id.rv_routine_list)
-
-        // 현재 시간에 따른 색상 변화를 테스트
-        val dummyData = listOf(
-            Routine(1, "06:00", "기상", isCompleted = true),
-            Routine(2, "06:30", "명상 및 하루 계획", isCompleted = true),
-            Routine(3, "07:00", "독서", isCompleted = true),
-            Routine(4, "08:00", "업무 시작", isCompleted = false),
-            Routine(5, "18:00", "저녁 식사", isCompleted = false),
-            Routine(6, "22:00", "취침", isCompleted = false)
-        )
-
-        val routineAdapter = RoutineAdapter(dummyData) { clickedRoutine ->
-            val bottomSheet = RoutineDetailBottomSheet()
-            bottomSheet.show(supportFragmentManager, "RoutineDetail")
+        dateAdapter = DateAdapter { date ->
+            selectedDate = date
+            renderDates()
+            renderRoutines()
         }
-
-        rvRoutineList.layoutManager = LinearLayoutManager(this)
-        rvRoutineList.adapter = routineAdapter
+        datesView = findViewById<RecyclerView>(R.id.rv_date_selector).apply {
+            layoutManager = LinearLayoutManager(this@RoutineActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = dateAdapter
+        }
+        findViewById<ImageButton>(R.id.iv_calendar).setOnClickListener { showDatePicker() }
+        supportFragmentManager.setFragmentResultListener(RoutineDetailBottomSheet.RESULT_KEY, this) { _, result ->
+            val date = RoutineDate.parse(result.getString(SELECTED_DATE)) ?: return@setFragmentResultListener
+            val resultHero = result.getString(HERO_ID) ?: return@setFragmentResultListener
+            if (HeroCatalog.getOrDefault(resultHero).id != resultHero) return@setFragmentResultListener
+            val outcome = repository.complete(RoutineScope(resultHero, date), result.getInt(ROUTINE_ID, -1), RoutineDate.today())
+            val message = when (outcome) {
+                CompletionResult.RECORDED -> R.string.routine_completion_recorded
+                CompletionResult.ALREADY_COMPLETED -> R.string.routine_already_completed
+                CompletionResult.FUTURE_DATE -> R.string.routine_future_completion
+                CompletionResult.UNKNOWN_ROUTINE -> R.string.routine_invalid
+            }
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            renderRoutines()
+        }
+        renderDates()
     }
 
-    private fun updateWeekCalendar(targetCalendar: Calendar) {
-        val rvDateSelector: RecyclerView = findViewById(R.id.rv_date_selector)
-        val dateData = mutableListOf<DateItem>()
-        val weekCalendar = targetCalendar.clone() as Calendar
-        var targetPosition = 0
-
-        val currentDayOfWeek = weekCalendar.get(Calendar.DAY_OF_WEEK)
-        val daysToSubtract = if (currentDayOfWeek == Calendar.SUNDAY) 6 else currentDayOfWeek - Calendar.MONDAY
-        weekCalendar.add(Calendar.DAY_OF_MONTH, -daysToSubtract)
-
-        // 월, 일, 요일, 전체날짜 포맷
-        val monthFormat = SimpleDateFormat("M월", Locale.getDefault())
-        val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
-        val weekFormat = SimpleDateFormat("E", Locale.KOREAN)
-        val fullDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
-        for (i in 0 until 7) {
-            val monthStr = monthFormat.format(weekCalendar.time)
-            val dayNumber = dayFormat.format(weekCalendar.time)
-            val dayWeek = weekFormat.format(weekCalendar.time).replace("요일", "")
-            val fullDate = fullDateFormat.format(weekCalendar.time)
-
-            dateData.add(DateItem(monthStr, dayNumber, dayWeek, fullDate))
-
-            if (weekCalendar.get(Calendar.YEAR) == targetCalendar.get(Calendar.YEAR) &&
-                weekCalendar.get(Calendar.DAY_OF_YEAR) == targetCalendar.get(Calendar.DAY_OF_YEAR)
-            ) {
-                targetPosition = i
-            }
-            weekCalendar.add(Calendar.DAY_OF_MONTH, 1)
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        intent.getStringExtra(HERO_ID)?.let {
+            heroId = HeroCatalog.getOrDefault(it).id
+            repository.selectedHeroId = heroId
+            (supportFragmentManager.findFragmentByTag(DETAIL_TAG) as? RoutineDetailBottomSheet)?.dismiss()
+            renderRoutines()
         }
+    }
 
-        rvDateSelector.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvDateSelector.adapter = DateAdapter(dateData, selectedPosition = targetPosition) { clickedDate ->
-            Toast.makeText(this, "선택한 날짜: ${clickedDate.fullDate}", Toast.LENGTH_SHORT).show()
-            Log.d("MY_DATE_TEST", "내부 데이터 값 -> ${clickedDate.fullDate}")
-        }
+    override fun onResume() {
+        super.onResume()
+        handler.removeCallbacks(clockRefresh)
+        handler.post(clockRefresh)
+    }
+
+    override fun onPause() {
+        handler.removeCallbacks(clockRefresh)
+        super.onPause()
+    }
+
+    override fun onStop() {
+        datePicker?.dismiss()
+        datePicker = null
+        super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(HERO_ID, heroId)
+        outState.putString(SELECTED_DATE, selectedDate.iso)
+        super.onSaveInstanceState(outState)
+    }
+
+    private fun renderDates() {
+        val week = selectedDate.week()
+        dateAdapter.submitDates(week, selectedDate)
+        datesView.scrollToPosition(week.indexOf(selectedDate))
+    }
+
+    private fun renderRoutines() {
+        val now = GregorianCalendar()
+        val hero = HeroCatalog.getOrDefault(heroId)
+        findViewById<TextView>(R.id.routine_title).text = getString(R.string.routine_title, hero.name)
+        findViewById<TextView>(R.id.routine_date).text = selectedDate.label("yyyy년 M월 d일 E요일")
+        routineAdapter.submitRoutines(
+            repository.routines(RoutineScope(heroId, selectedDate)), selectedDate, RoutineDate.fromCalendar(now),
+            RoutineTime(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE))
+        )
+        (supportFragmentManager.findFragmentByTag(DETAIL_TAG) as? RoutineDetailBottomSheet)?.refreshCompletionAvailability()
+    }
+
+    private fun showRoutine(routine: Routine) {
+        if (supportFragmentManager.isStateSaved || supportFragmentManager.findFragmentByTag(DETAIL_TAG) != null) return
+        val scope = RoutineScope(heroId, selectedDate)
+        val currentRoutine = repository.routines(scope).firstOrNull { it.id == routine.id } ?: return
+        RoutineDetailBottomSheet.newInstance(
+            scope, currentRoutine, HeroCatalog.getOrDefault(heroId).name
+        ).showNow(supportFragmentManager, DETAIL_TAG)
+    }
+
+    private fun showDatePicker() {
+        if (datePicker?.isShowing == true) return
+        datePicker = DatePickerDialog(this, { _, year, month, day ->
+            selectedDate = RoutineDate(year, month + 1, day)
+            renderDates()
+            renderRoutines()
+        }, selectedDate.year, selectedDate.month - 1, selectedDate.day).also { it.show() }
+    }
+
+    companion object {
+        const val HERO_ID = "hero_id"
+        const val SELECTED_DATE = "selected_date"
+        const val ROUTINE_ID = "routine_id"
+        private const val DETAIL_TAG = "routine_detail"
     }
 }

@@ -1,82 +1,56 @@
 package com.example.test.Routine
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test.R
-import java.util.Calendar
 
-class RoutineAdapter(
-    private val routineList: List<Routine>,
-    private val onItemClick: (Routine) -> Unit
-) : RecyclerView.Adapter<RoutineAdapter.ViewHolder>() {
+data class RoutineRow(val routine: Routine, val status: RoutineStatus)
+
+class RoutineAdapter(private val onItemClick: (Routine) -> Unit) : ListAdapter<RoutineRow, RoutineAdapter.ViewHolder>(DIFF) {
+    fun submitRoutines(routines: List<Routine>, date: RoutineDate, today: RoutineDate, now: RoutineTime) {
+        submitList(routines.map { RoutineRow(it, it.statusOn(date, today, now)) })
+    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvTime: TextView = view.findViewById(R.id.tv_time)
-        val tvTitle: TextView = view.findViewById(R.id.tv_routine_title)
-        val viewTimeline: View = view.findViewById(R.id.view_timeline_line)
-        val ivActionBtn: ImageView = view.findViewById(R.id.iv_action_btn)
-        val ivTimelineDot: ImageView = view.findViewById(R.id.iv_timeline_dot)
-
-        fun bind(routine: Routine) {
-            tvTime.text = routine.time
-            tvTitle.text = routine.title
-
-            // 1. 휴대폰의 현재 시간 가져오기
-            val calendar = Calendar.getInstance()
-            val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
-            val currentMinute = calendar.get(Calendar.MINUTE)
-
-            // 2. 루틴의 시간 데이터를 시간(Hour)과 분(Minute)으로 분리 ("06:30" -> 6과 30)
-            val timeParts = routine.time.split(":")
-            val routineHour = timeParts.getOrNull(0)?.toIntOrNull() ?: 0
-            val routineMinute = timeParts.getOrNull(1)?.toIntOrNull() ?: 0
-
-            // 3. 현재 시간이 루틴 시간을 지났는지 판별
-            val isTimePassed = (currentHour > routineHour) ||
-                    (currentHour == routineHour && currentMinute > routineMinute)
-
-            // 4. 상태에 따른 UI 색상 업데이트
-            if (routine.isCompleted) {
-                // [완료] 파란색
-                tvTime.setTextColor(Color.parseColor("#5B67C9"))
-                viewTimeline.setBackgroundColor(Color.parseColor("#5B67C9"))
-
-                // ivActionBtn.setImageResource(R.drawable.ic_check_circle)
-            } else if (isTimePassed) {
-                // [미완료 & 시간 지남] 빨간색
-                tvTime.setTextColor(Color.parseColor("#FF3B30"))
-                viewTimeline.setBackgroundColor(Color.parseColor("#FF3B30"))
-
-
-            } else {
-                // [미완료 & 아직 시간 안 지남] 기본 회색
-                tvTime.setTextColor(Color.parseColor("#999999"))
-                viewTimeline.setBackgroundColor(Color.parseColor("#EEEEEE"))
-
-
-            }
-
-            // 아이템 클릭 이벤트
-            itemView.setOnClickListener {
-                onItemClick(routine)
+        private val time = view.findViewById<TextView>(R.id.tv_time)
+        private val title = view.findViewById<TextView>(R.id.tv_routine_title)
+        private val status = view.findViewById<TextView>(R.id.tv_status)
+        init {
+            view.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) onItemClick(getItem(position).routine)
             }
         }
+        fun bind(row: RoutineRow) {
+            time.text = row.routine.time
+            title.text = row.routine.title
+            val (label, color) = when (row.status) {
+                RoutineStatus.COMPLETED -> R.string.routine_status_completed to R.color.routine_completed
+                RoutineStatus.OVERDUE -> R.string.routine_status_overdue to R.color.routine_overdue
+                RoutineStatus.UPCOMING -> R.string.routine_status_upcoming to R.color.routine_upcoming
+            }
+            status.setText(label)
+            status.setTextColor(ContextCompat.getColor(itemView.context, color))
+            time.setTextColor(ContextCompat.getColor(itemView.context, color))
+            itemView.contentDescription = itemView.context.getString(
+                R.string.routine_accessibility, row.routine.time, row.routine.title, itemView.context.getString(label)
+            )
+        }
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_routine, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_routine, parent, false)
+    )
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
+    companion object {
+        private val DIFF = object : DiffUtil.ItemCallback<RoutineRow>() {
+            override fun areItemsTheSame(old: RoutineRow, new: RoutineRow) = old.routine.id == new.routine.id
+            override fun areContentsTheSame(old: RoutineRow, new: RoutineRow) = old == new
+        }
     }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(routineList[position])
-    }
-
-    override fun getItemCount(): Int = routineList.size
 }

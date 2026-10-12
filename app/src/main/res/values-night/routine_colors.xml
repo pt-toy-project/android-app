@@ -1,0 +1,5 @@
+<resources>
+    <color name="routine_completed">#BBC3FF</color>
+    <color name="routine_overdue">#FFB4AB</color>
+    <color name="routine_upcoming">#C5C6D0</color>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="hero_select_title">위인 선택</string>
+    <string name="hero_select_description">카드를 눌러 루틴을 확인하세요. 길게 누르면 위인 정보를 볼 수 있습니다.</string>
+    <string name="hero_sample_notice">위인 카드와 루틴은 개발용 예시 데이터입니다.</string>
+    <string name="hero_field_prompt">위인 분야</string>
+    <string name="hero_empty_state">이 분야에는 등록된 위인이 없습니다.</string>
+    <string name="hero_detail_select">루틴 보기</string>
+    <string name="hero_card_action">%1$s, %2$s, %3$s. 눌러서 루틴 보기, 길게 눌러서 위인 정보 보기</string>
+</resources>

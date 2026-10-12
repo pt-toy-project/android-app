@@ -1,48 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="#EEEEEE"
-    android:padding="8dp"
-    android:layout_margin="6dp">
+    android:layout_margin="6dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurfaceVariant"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
 
-    <!-- 위인 이미지 -->
-    <ImageView
-        android:id="@+id/ivHero"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/sesong" />
-
-    <!-- 위인 이름 -->
-    <TextView
-        android:id="@+id/tvHeroName"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="세종대왕"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="8dp" />
+        android:orientation="vertical"
+        android:padding="12dp">
 
-    <!-- 분야 -->
-    <TextView
-        android:id="@+id/tvHeroField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="정치 · 과학"
-        android:textSize="14sp"
-        android:layout_marginTop="4dp" />
+        <ImageView
+            android:id="@+id/ivHero"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            tools:src="@drawable/sesong" />
 
-    <!-- 시대 / 지역 -->
-    <TextView
-        android:id="@+id/tvHeroInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="조선 · 15세기"
-        android:textSize="13sp"
-        android:layout_marginTop="2dp" />
+        <TextView
+            android:id="@+id/tvHeroName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textStyle="bold"
+            tools:text="세종대왕" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvHeroField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            tools:text="정치 · 과학 · 문화" />
+
+        <TextView
+            android:id="@+id/tvHeroInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            tools:text="조선 · 15세기" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
