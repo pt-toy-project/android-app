@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="quest_progress">%1$d/%2$d 완료</string>
+    <string name="quest_preview">제안 %1$s · %2$d개 퀘스트</string>
+    <string name="quest_row_meta">%1$s · %2$s</string>
+    <string name="quest_detail">실천 보기</string>
+    <string name="quest_heading">서브 퀘스트</string>
+    <string name="quest_modern_note">동작·시간·횟수는 앱 제안입니다.</string>
+    <string name="quest_read_only_note">하루를 시작하면 날짜별로 체크할 수 있어요.</string>
+    <string name="quest_saved">체크 저장됨</string>
+    <string name="quest_unavailable">이 날짜나 활성화 상태에서는 체크할 수 없어요.</string>
+    <string name="quest_save_error">체크를 저장하지 못했어요. 다시 시도해 주세요.</string>
+    <string name="quest_check_label">%1$s, %2$s, %3$s</string>
+    <string name="quest_goal_hint">배우고 싶은 분야</string>
+    <string name="quest_source_toggle">근거·출처 보기</string>
+    <string name="quest_source_hide">근거·출처 접기</string>
+</resources>

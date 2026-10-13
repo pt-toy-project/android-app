@@ -23,6 +23,14 @@ class HeroEvidenceSheet : BottomSheetDialogFragment(R.layout.sheet_hero_evidence
             return
         }
         view.findViewById<TextView>(R.id.evidence_title).text = block.title
+        QuestViews.bind(view.findViewById(R.id.evidence_quests), block.quests)
+        view.findViewById<Button>(R.id.evidence_toggle).setOnClickListener {
+            val group = view.findViewById<View>(R.id.evidence_citation_group)
+            val expanded = group.visibility != View.VISIBLE
+            group.visibility = if (expanded) View.VISIBLE else View.GONE
+            view.findViewById<Button>(R.id.evidence_toggle).setText(
+                if (expanded) R.string.quest_source_hide else R.string.quest_source_toggle)
+        }
         view.findViewById<TextView>(R.id.evidence_grade).text = block.grade.label
         view.findViewById<TextView>(R.id.evidence_practice).text = block.description
         view.findViewById<TextView>(R.id.evidence_times).text = getString(R.string.evidence_time_labels,

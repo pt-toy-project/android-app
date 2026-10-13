@@ -43,7 +43,7 @@ class RepositoryUpgradeBehaviorTest {
                 assertEquals(1, repo.legacyHistoryCount())
                 assertEquals("franklin", repo.selectedHeroId)
             }
-            SQLiteDatabase.openDatabase(path.path, null, SQLiteDatabase.OPEN_READONLY).use { assertEquals(2, it.version) }
+            SQLiteDatabase.openDatabase(path.path, null, SQLiteDatabase.OPEN_READONLY).use { assertEquals(3, it.version) }
         } finally { context.deleteDatabase(name) }
     }
 

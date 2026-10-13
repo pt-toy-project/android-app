@@ -50,7 +50,7 @@ class HeroDetailActivity : AppCompatActivity() {
 
     private fun bindPerson(person: Hero) {
         findViewById<TextView>(R.id.heroDetailName).text = person.name
-        findViewById<TextView>(R.id.heroDetailField).text = person.field
+        findViewById<TextView>(R.id.heroDetailField).text = com.example.test.Hero.HeroQuestCatalog.goalFor(person.id)
         findViewById<TextView>(R.id.heroDetailBio).text = HeroDayCatalog.NOTICE
         findViewById<TextView>(R.id.heroPortraitCredit).text = person.portraitCredit
         findViewById<ImageView>(R.id.heroDetailPortrait).apply {
@@ -74,7 +74,7 @@ class HeroDetailActivity : AppCompatActivity() {
         HeroDayCatalog.forHero(person).blocks.sortedBy { it.suggestedTime }.forEach { block ->
             val card = layoutInflater.inflate(R.layout.item_day_preview, container, false)
             card.findViewById<TextView>(R.id.day_preview_title).apply { text = block.title; CompactText.apply(this) }
-            card.findViewById<TextView>(R.id.day_preview_subtitle).text = getString(R.string.redesign_suggested, block.suggestedTime, block.kind.label)
+            card.findViewById<TextView>(R.id.day_preview_subtitle).text = getString(R.string.quest_preview, block.suggestedTime, block.quests.size)
             card.findViewById<TextView>(R.id.day_preview_description).apply { text = block.description; CompactText.apply(this); visibility = View.GONE }
             card.findViewById<TextView>(R.id.day_grade).text = block.grade.label
             fun showEvidence() {

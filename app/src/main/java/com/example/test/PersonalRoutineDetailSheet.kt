@@ -28,6 +28,10 @@ class PersonalRoutineDetailSheet : BottomSheetDialogFragment(R.layout.dialog_per
             args.getString(RoutineActivity.SELECTED_DATE).orEmpty(), args.getString("time").orEmpty())
         view.findViewById<TextView>(R.id.personal_detail_fact).text = block?.let { "${it.grade.label} · 자료 재확인 미완료\n${it.historicalTime?.let { time -> "v2 출처 시간대: $time\n" }.orEmpty()}${com.example.test.Hero.HeroDayCatalog.NOTICE}" } ?: template?.historicalFact ?: getString(R.string.personal_snapshot)
         view.findViewById<TextView>(R.id.personal_detail_practice).text = block?.description ?: template?.modernPractice.orEmpty()
+        // Evidence is available from the source button; keep the action sheet focused on doing.
+        view.findViewById<View>(R.id.personal_detail_fact).visibility = View.GONE
+        view.findViewById<View>(R.id.personal_detail_practice).visibility = if (block == null) View.VISIBLE else View.GONE
+        bindQuests(block?.quests.orEmpty())
         view.findViewById<Button>(R.id.personal_detail_source).apply {
             visibility = if (block == null && template == null) View.GONE else View.VISIBLE
             setText(R.string.day_details)
@@ -41,6 +45,50 @@ class PersonalRoutineDetailSheet : BottomSheetDialogFragment(R.layout.dialog_per
         view.findViewById<Button>(R.id.personal_detail_edit).setOnClickListener { dispatch("edit") }
         view.findViewById<Button>(R.id.personal_detail_delete).setOnClickListener { dispatch("delete") }
         refreshDateBoundary()
+    }
+
+    private fun bindQuests(quests: List<com.example.test.Hero.DayQuest>) {
+        val root = view ?: return
+        val args = requireArguments()
+        val date = RoutineDate.parse(args.getString(RoutineActivity.SELECTED_DATE)) ?: return
+        val id = args.getLong(RoutineActivity.USER_ROUTINE_ID)
+        val progress = root.findViewById<TextView>(R.id.quest_detail_progress)
+        val container = root.findViewById<android.widget.LinearLayout>(R.id.quest_detail_container)
+        progress.visibility = if (quests.isEmpty()) View.GONE else View.VISIBLE
+        root.findViewById<View>(R.id.quest_detail_notice).visibility = progress.visibility
+        val context = requireContext().applicationContext
+        AppIo.run(viewLifecycleOwner, {
+            com.example.test.data.AppRepository(context).use { repo ->
+                val routine = repo.getRoutine(id)
+                val editable = routine != null && routine.enabled && date <= RoutineDate.today() &&
+                    date.iso >= routine.createdOn && RoutineRules.scheduledOn(routine.weekdayMask, date)
+                repo.questChecks(id, date) to editable
+            }
+        }) { result ->
+            result.onSuccess { (checks, editable) ->
+                val checked = checks.filter { key -> quests.any { it.id == key } }.toMutableSet()
+                fun updateProgress() { progress.text = getString(R.string.quest_progress, checked.size, quests.size) }
+                updateProgress()
+                QuestViews.bind(container, quests, checked, editable) { quest, requested, finish ->
+                    AppIo.run(viewLifecycleOwner, {
+                        com.example.test.data.AppRepository(context).use { it.setQuestChecked(id, quest.id, date, requested) }
+                    }) { saved ->
+                        val success = saved.getOrNull() == true
+                        finish(success)
+                        if (success) {
+                            if (requested) checked.add(quest.id) else checked.remove(quest.id)
+                            updateProgress()
+                            parentFragmentManager.setFragmentResult(CHECKS_CHANGED, Bundle.EMPTY)
+                        } else android.widget.Toast.makeText(context,
+                            if (saved.isFailure) R.string.quest_save_error else R.string.quest_unavailable,
+                            android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }.onFailure {
+                progress.setText(R.string.quest_save_error)
+                QuestViews.bind(container, quests)
+            }
+        }
     }
 
     fun refreshDateBoundary(today: RoutineDate = RoutineDate.today()) {
@@ -80,6 +128,7 @@ class PersonalRoutineDetailSheet : BottomSheetDialogFragment(R.layout.dialog_per
 
     companion object {
         const val RESULT_KEY = "personal_routine_action"
+        const val CHECKS_CHANGED = "quest_checks_changed"
         fun newInstance(routine: UserRoutine, date: RoutineDate, completed: Boolean) = PersonalRoutineDetailSheet().apply {
             arguments = Bundle().apply {
                 putLong(RoutineActivity.USER_ROUTINE_ID, routine.id); putString(RoutineActivity.HERO_ID, routine.heroId)

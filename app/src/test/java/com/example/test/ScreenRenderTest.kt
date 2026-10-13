@@ -22,7 +22,7 @@ import java.io.File
 @Config(sdk = [35], qualifiers = "w360dp-h800dp-mdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ScreenRenderTest {
-    private fun capture(activity: AppCompatActivity, name: String) {
+    private fun capture(activity: AppCompatActivity, name: String, dialogRoot: View? = null) {
         // Drain both the database action and the UI-triggered reload it schedules.
         repeat(2) {
             shadowOf(Looper.getMainLooper()).idle()
@@ -35,7 +35,7 @@ class ScreenRenderTest {
             }
             assertTrue(idle)
         }
-        val root = activity.window.decorView
+        val root = dialogRoot ?: activity.window.decorView
         root.measure(View.MeasureSpec.makeMeasureSpec(360, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(800, View.MeasureSpec.EXACTLY))
         root.layout(0, 0, 360, 800)
@@ -103,6 +103,24 @@ class ScreenRenderTest {
             capture(activity, "today-large-font")
             val nav = activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
             assertTrue(nav.height >= 104)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun renderAdoptedConcreteChecklist() {
+        val context = RuntimeEnvironment.getApplication()
+        val hero = com.example.test.Hero.HeroCatalog.getOrDefault("ada_lovelace")
+        val work = com.example.test.Hero.HeroDayCatalog.forHero(hero).blocks.single { it.kind == com.example.test.Hero.DayKind.WORK }
+        val routine = com.example.test.data.AppRepository(context).use { repo ->
+            repo.startHeroDay(hero)
+            repo.listRoutines(hero.id, source = com.example.test.data.RoutineSource.HERO_DAY).single { it.templateId == work.id }
+        }
+        val controller = Robolectric.buildActivity(MainActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            val sheet = PersonalRoutineDetailSheet.newInstance(routine, com.example.test.Routine.RoutineDate.today(), false)
+            sheet.showNow(activity.supportFragmentManager, "render_quests")
+            capture(activity, "quest-checklist", sheet.dialog!!.window!!.decorView)
+            assertEquals(3, sheet.requireView().findViewById<android.widget.LinearLayout>(R.id.quest_detail_container).childCount)
         } finally { controller.pause().stop().destroy() }
     }
 

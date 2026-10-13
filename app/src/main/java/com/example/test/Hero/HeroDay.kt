@@ -14,7 +14,8 @@ data class HeroDayBlock(
     val grade: EvidenceGrade,
     val historicalTime: String? = null,
     val recordedActionVerified: Boolean = false,
-    val recordedTimeVerified: Boolean = false
+    val recordedTimeVerified: Boolean = false,
+    val quests: List<DayQuest> = emptyList()
 ) {
     init {
         require(id.isNotBlank() && title.isNotBlank() && description.isNotBlank())
@@ -31,7 +32,7 @@ object HeroDayCatalog {
         val learning = hero.routines.getOrNull(2)
         val theme = first.title
         val profile = DayEditorialProfiles.forHero(hero.id)
-        val titles = listOf("기상", first.title, "식사", learning?.title ?: "학습", "운동·산책", "휴식", last?.title ?: "성찰·기록", "취침")
+        val titles = listOf("기상·아침 식사", first.title, "점심 식사", learning?.title ?: "학습", "운동·산책", "저녁 식사·휴식", last?.title ?: "성찰·기록", "취침")
         val times = listOf("07:00", first.suggestedTime, "12:00", learning?.suggestedTime ?: "14:00", "17:00", "18:30", last?.suggestedTime ?: "20:00", "22:30")
         val descriptions = listOf(
             "몸과 공간을 정돈하고, $theme 실천을 준비합니다.", first.modernPractice,
@@ -43,11 +44,14 @@ object HeroDayCatalog {
         )
         return HeroDay(hero.id, DayKind.entries.mapIndexed { index, kind ->
             val template = when (kind) { DayKind.WORK -> first; DayKind.REFLECT -> last; DayKind.LEARN -> learning; else -> null }
-            HeroDayBlock(template?.id ?: "${hero.id}_day_${kind.name.lowercase(java.util.Locale.ROOT)}",
+            val id = template?.id ?: "${hero.id}_day_${kind.name.lowercase(java.util.Locale.ROOT)}"
+            val source = template?.source ?: first.source
+            HeroDayBlock(id,
                 kind, titles[index], times[index], descriptions[index], template?.source ?: first.source,
                 // Source sites were actually requested again; proxy CONNECT 403 prevented reading.
                 // Retain v2 source locations separately, but do not upgrade them to verified daily actions.
-                EvidenceGrade.MODERN, template?.historicalTime)
+                EvidenceGrade.MODERN, template?.historicalTime,
+                quests = HeroQuestCatalog.forBlock(hero, id, kind, source))
         })
     }
     fun find(heroId: String, blockId: String): HeroDayBlock? =

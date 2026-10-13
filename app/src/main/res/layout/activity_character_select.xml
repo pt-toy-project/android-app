@@ -7,6 +7,12 @@
         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:hint="@string/hero_search_hint" app:endIconMode="clear_text">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/heroSearch" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" android:imeOptions="actionSearch" android:maxLines="1" android:importantForAutofill="no"/>
         </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:hint="@string/quest_goal_hint">
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/hero_goal"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none"
+                android:importantForAutofill="no"/>
+        </com.google.android.material.textfield.TextInputLayout>
         <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:fillViewport="true" android:scrollbars="none">
             <com.google.android.material.chip.ChipGroup android:id="@+id/hero_fields" android:layout_width="wrap_content" android:layout_height="wrap_content" app:singleLine="true" app:singleSelection="true" app:selectionRequired="true"/>
         </HorizontalScrollView>

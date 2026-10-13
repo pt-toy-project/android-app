@@ -14,3 +14,7 @@
 ## UI 검증 의존성
 
 Robolectric 4.16.1은 테스트에만 사용하며 APK에 포함하지 않습니다. Maven POM(https://repo.maven.apache.org/maven2/org/robolectric/robolectric/4.16.1/robolectric-4.16.1.pom)과 공식 LICENSE(https://raw.githubusercontent.com/robolectric/robolectric/master/LICENSE)를 실제 HTTP 200으로 확인했습니다. MIT 및 함께 제공된 Apache 고지를 test-licenses/robolectric-MIT.txt에 보관합니다. 앱의 신규 폰트·런타임 이미지/라이브러리 추가는 없습니다.
+
+## v3.1 서브 퀘스트
+
+기존 30명만 유지하고 새 유명인·사진·로고·번역문·폰트·런타임 라이브러리를 추가하지 않았다. 세부 실천 문구는 직접 작성했으며 현대 적용으로 표시한다. 사망한 인물이라고 모든 권리가 자유롭다고 판단하지 않는다. 기존 자료 이용조건·개별 권리 확인의 미확인 범위는 그대로 남는다. 공개 배포 전 미확인 자료·권리 조건과 앱의 인물 이름 활용에 대한 검토가 필요하며 공식 제휴·추천을 주장하지 않는다. 기존 이미지 파일·이미지 크레딧을 보존한다.

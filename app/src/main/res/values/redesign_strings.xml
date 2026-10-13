@@ -47,8 +47,8 @@
 %1$s</string><string name="evidence_citation">%1$s
 %2$s
 %3$s
-확인 상태: 미확인 · 자료 접근 제한</string><string name="redesign_shop_heading">작은 실천으로 얻은 칭호</string><string name="redesign_history_heading">쌓여가는 나의 실천</string><string name="redesign_legacy">이전 버전 기록 보기</string><string name="redesign_legacy_count">이전 버전 기록 %1$d개</string><string name="redesign_record_count">최근 실천 %1$d개</string><string name="redesign_record_meta">%1$s · %2$s</string><string name="redesign_credits_intro">역사 자료의 확인 상태와 사진·라이브러리 출처를 확인하세요.</string><string name="redesign_everyday">매일</string><string name="redesign_alarm_on">알림 설정 켬</string><string name="redesign_alarm_off">알림 설정 끔</string><string name="redesign_plan_schedule">%1$s · %2$s</string><string name="redesign_empty_schedule">이 날짜의 실천이 없어요</string><string name="redesign_check_schedule">날짜나 활성화 설정을 확인하세요.</string><string name="redesign_manage_plans">관리</string><string name="compact_catalog_title">인물 · %1$d명</string>
-<string name="compact_build_label">3.0 · 간결 화면 1013</string>
-<string name="compact_build_details">버전 3.0 · 간결 화면 1013 · 인물 %1$d명</string>
+확인 상태: 미확인 · 자료 접근 제한</string><string name="redesign_shop_heading">작은 실천으로 얻은 칭호</string><string name="redesign_history_heading">쌓여가는 나의 실천</string><string name="redesign_legacy">이전 버전 기록 보기</string><string name="redesign_legacy_count">이전 버전 기록 %1$d개</string><string name="redesign_record_count">최근 실천 %1$d개</string><string name="redesign_record_meta">%1$s · %2$s</string><string name="redesign_credits_intro">30명의 세부 실천과 분량은 앱 제안입니다. 연결한 자료는 재확인 미완료이며, 기존 자료·사진·라이브러리 출처를 아래에서 확인할 수 있습니다.</string><string name="redesign_everyday">매일</string><string name="redesign_alarm_on">알림 설정 켬</string><string name="redesign_alarm_off">알림 설정 끔</string><string name="redesign_plan_schedule">%1$s · %2$s</string><string name="redesign_empty_schedule">이 날짜의 실천이 없어요</string><string name="redesign_check_schedule">날짜나 활성화 설정을 확인하세요.</string><string name="redesign_manage_plans">관리</string><string name="compact_catalog_title">인물 · %1$d명</string>
+<string name="compact_build_label">3.1 · 서브 퀘스트</string>
+<string name="compact_build_details">버전 3.1 · 서브 퀘스트 · 인물 %1$d명</string>
 <string name="hero_card_compact_action">%1$s, %2$s. 하루 보기</string>
 </resources>

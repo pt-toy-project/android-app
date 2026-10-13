@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
 
-SCHEMA = (Path(__file__).resolve().parents[1] / "app/src/main/assets/database/schema_v2.sql").read_text(encoding="utf-8")
+SCHEMA = (Path(__file__).resolve().parents[1] / "app/src/main/assets/database/schema_v3.sql").read_text(encoding="utf-8")
 LONG_MAX = 2**63 - 1
 
 
@@ -204,6 +204,11 @@ class DatabaseV2Test(unittest.TestCase):
                 self.assertEqual(before[table], [row[:-1] for row in after] if table == "user_routines" else after)
             self.assertEqual(("PERSONAL",), db.execute("SELECT source FROM user_routines").fetchone())
             self.assertEqual((80,), db.execute("SELECT balance FROM wallet").fetchone())
+            db.executescript("BEGIN IMMEDIATE;" + (root / "app/src/main/assets/database/migration_2_3.sql").read_text() + "PRAGMA user_version=3;COMMIT;")
+            self.assertEqual((3,), db.execute("PRAGMA user_version").fetchone())
+            for table in tables:
+                after = db.execute(f"SELECT * FROM {table}").fetchall()
+                self.assertEqual(before[table], [row[:-1] for row in after] if table == "user_routines" else after)
             fresh = connect(); fresh.executescript(SCHEMA)
             def structure(database):
                 return sorted(database.execute("SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'").fetchall())
@@ -245,6 +250,7 @@ class DatabaseV2Test(unittest.TestCase):
         self.assertEqual({h["id"] for h in original}, {h["id"] for h in catalog[:15]})
         self.assertEqual({q["id"] for h in original for q in h["routines"]}, {q["id"] for h in catalog[:15] for q in h["routines"]})
         all_ids = set()
+        quest_ids = set()
         for hero in catalog:
             blocks = hero["heroDay"]["blocks"]
             self.assertTrue(5 <= len(blocks) <= 8)
@@ -256,6 +262,51 @@ class DatabaseV2Test(unittest.TestCase):
                 if block["grade"] == "RECORDED":
                     self.assertTrue(block["recordedTimeVerified"] and block["recordedActionVerified"] and block["historicalTime"])
                 if block["source"]["verification"]["status"] == "UNVERIFIED": self.assertEqual("MODERN", block["grade"])
+                self.assertTrue(2 <= len(block["quests"]) <= 4)
+                for quest in block["quests"]:
+                    self.assertNotIn(quest["id"], quest_ids); quest_ids.add(quest["id"])
+                    self.assertTrue(quest["instruction"] and quest["measure"])
+                    self.assertEqual("MODERN", quest["grade"])
+                    self.assertEqual(block["source"], quest["source"])
+        self.assertEqual(510, len(quest_ids))
+        self.assertTrue(all_ids.isdisjoint(quest_ids))
+
+
+class DatabaseV3QuestTest(unittest.TestCase):
+    def test_actual_v2_fixture_upgrade_matches_fresh_and_preserves_all_tables(self):
+        import shutil
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "upgrade2.db"
+            shutil.copy(root / "app/src/androidTest/assets/historical_routines_v2.db", path)
+            db = connect(path)
+            self.assertEqual((2,), db.execute("PRAGMA user_version").fetchone())
+            tables = ("user_routines", "completion_records", "wallet", "owned_items", "applied_item", "legacy_completions", "app_metadata")
+            before = {t: db.execute(f"SELECT * FROM {t}").fetchall() for t in tables}
+            db.executescript("BEGIN IMMEDIATE;" + (root / "app/src/main/assets/database/migration_2_3.sql").read_text() + "PRAGMA user_version=3;COMMIT;")
+            self.assertEqual(before, {t: db.execute(f"SELECT * FROM {t}").fetchall() for t in tables})
+            fresh = connect(); fresh.executescript(SCHEMA)
+            sql = "SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name"
+            self.assertEqual(fresh.execute(sql).fetchall(), db.execute(sql).fetchall())
+            self.assertEqual((0,), db.execute("SELECT count(*) FROM quest_checks").fetchone())
+            self.assertEqual([], db.execute("PRAGMA foreign_key_check").fetchall())
+            self.assertEqual(("ok",), db.execute("PRAGMA integrity_check").fetchone())
+            fresh.close(); db.close()
+
+    def test_quest_constraints_date_source_separation_and_no_reward(self):
+        db = connect(); db.executescript(SCHEMA)
+        personal = adopt(db)
+        day = db.execute("INSERT INTO user_routines(hero_id,template_id,title,local_time,weekday_mask,created_on,source) VALUES('franklin','question','하루','09:00',127,'2026-10-12','HERO_DAY')").lastrowid
+        db.execute("INSERT INTO quest_checks VALUES(?,?,?,?)", (day, "question_q1", "2026-10-12", 1))
+        db.execute("INSERT INTO quest_checks VALUES(?,?,?,?)", (personal, "question_q1", "2026-10-13", 2))
+        with self.assertRaises(sqlite3.IntegrityError):
+            db.execute("INSERT INTO quest_checks VALUES(?,?,?,?)", (day, "question_q1", "2026-10-12", 3))
+        for row in ((99999, "question_q1", "2026-10-12", 1), (day, "", "2026-10-12", 1), (day, "question_q2", "wrong-date", 1), (day, "question_q2", "2026-10-12", -1)):
+            with self.assertRaises(sqlite3.IntegrityError): db.execute("INSERT INTO quest_checks VALUES(?,?,?,?)", row)
+        self.assertEqual((0,), db.execute("SELECT balance FROM wallet").fetchone())
+        self.assertEqual((0,), db.execute("SELECT count(*) FROM completion_records").fetchone())
+        self.assertEqual((2,), db.execute("SELECT count(*) FROM quest_checks").fetchone())
+        db.close()
 
 
 

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test.R
 import com.example.test.data.UserRoutine
 
-data class PersonalRoutineRow(val routine: UserRoutine, val completed: Boolean, val date: RoutineDate, val today: RoutineDate, val currentMinute: Int)
+data class PersonalRoutineRow(val routine: UserRoutine, val completed: Boolean, val date: RoutineDate, val today: RoutineDate, val currentMinute: Int, val questChecks: Set<String> = emptySet())
 
 class PersonalRoutineAdapter(
     private val onComplete: (PersonalRoutineRow) -> Unit = {},
@@ -29,6 +29,11 @@ class PersonalRoutineAdapter(
             com.example.test.CompactText.apply(title)
             val heroName = com.example.test.data.RoutineIdentity.displayName(row.routine.heroId)
             val block = com.example.test.Hero.HeroDayCatalog.find(row.routine.heroId, row.routine.templateId)
+            if (block != null) {
+                val checked = block.quests.count { it.id in row.questChecks }
+                val progress = itemView.context.getString(R.string.quest_progress, checked, block.quests.size)
+                time.text = "${row.routine.time} · $heroName · $progress"
+            }
             itemView.findViewById<TextView>(R.id.day_row_subtitle).visibility = View.GONE
             itemView.findViewById<TextView>(R.id.day_row_subtitle).text = if (row.routine.source == com.example.test.data.RoutineSource.HERO_DAY)
                 block?.description.orEmpty() else {
@@ -69,7 +74,7 @@ class PersonalRoutineAdapter(
             }
             status.setText(label); status.setTextColor(ContextCompat.getColor(itemView.context, color))
             time.setTextColor(ContextCompat.getColor(itemView.context, color))
-            itemView.contentDescription = heroName + ", " + itemView.context.getString(R.string.routine_accessibility, row.routine.time, row.routine.title, itemView.context.getString(label)) + ", " + itemView.findViewById<TextView>(R.id.day_row_subtitle).text + ", " + (block?.grade?.label.orEmpty())
+            itemView.contentDescription = heroName + ", " + itemView.context.getString(R.string.routine_accessibility, row.routine.time, row.routine.title, itemView.context.getString(label)) + ", " + time.text + ", " + (block?.grade?.label.orEmpty())
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_routine, parent, false))

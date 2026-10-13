@@ -21,6 +21,7 @@ class CharacterSelectActivity : AppCompatActivity() {
     private lateinit var heroAdapter: HeroAdapter
     private lateinit var search: EditText
     private var selectedField = HeroCatalog.ALL_FIELDS
+    private var selectedGoal = com.example.test.Hero.HeroQuestCatalog.goals.first()
     private var openingDetail = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +30,8 @@ class CharacterSelectActivity : AppCompatActivity() {
         applySystemBarInsets()
         ScreenToolbar.bind(this, R.string.nav_hero)
         selectedField = savedInstanceState?.getString(FIELD) ?: HeroCatalog.ALL_FIELDS
+        selectedGoal = savedInstanceState?.getString(GOAL)?.takeIf { it in com.example.test.Hero.HeroQuestCatalog.goals }
+            ?: com.example.test.Hero.HeroQuestCatalog.goals.first()
         search = findViewById(R.id.heroSearch)
         heroAdapter = HeroAdapter(::openHero, ::openHero)
         findViewById<RecyclerView>(R.id.heroRecyclerView).apply {
@@ -36,6 +39,16 @@ class CharacterSelectActivity : AppCompatActivity() {
             adapter = heroAdapter
         }
         bindFields()
+        findViewById<com.google.android.material.textfield.MaterialAutoCompleteTextView>(R.id.hero_goal).apply {
+            setSimpleItems(com.example.test.Hero.HeroQuestCatalog.goals.toTypedArray())
+            setText(selectedGoal, false)
+            setOnItemClickListener { parent, _, position, _ ->
+                // Filtered and accessibility popup adapters can have different item positions.
+                selectedGoal = (parent?.getItemAtPosition(position) as? String ?: text.toString())
+                    .takeIf { it in com.example.test.Hero.HeroQuestCatalog.goals } ?: selectedGoal
+                renderResults()
+            }
+        }
         search.setText(savedInstanceState?.getString(QUERY).orEmpty())
         search.doAfterTextChanged { renderResults() }
         renderResults()
@@ -62,8 +75,10 @@ class CharacterSelectActivity : AppCompatActivity() {
     private fun renderResults() {
         val query = search.text.toString().trim()
         val rows = HeroCatalog.filterByField(selectedField).filter { hero ->
-            query.isEmpty() || listOf(hero.name, hero.field, hero.info, hero.bio)
-                .any { it.contains(query, ignoreCase = true) }
+            val goal = com.example.test.Hero.HeroQuestCatalog.goalFor(hero.id)
+            (selectedGoal == com.example.test.Hero.HeroQuestCatalog.goals.first() || goal == selectedGoal) &&
+                (query.isEmpty() || listOf(hero.name, hero.field, hero.info, hero.bio, goal)
+                    .any { it.contains(query, ignoreCase = true) })
         }
         heroAdapter.submitList(rows)
         findViewById<View>(R.id.heroEmptyState).visibility = if (rows.isEmpty()) View.VISIBLE else View.GONE
@@ -92,11 +107,13 @@ class CharacterSelectActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(FIELD, selectedField)
         outState.putString(QUERY, search.text.toString())
+        outState.putString(GOAL, selectedGoal)
         super.onSaveInstanceState(outState)
     }
 
     companion object {
         private const val FIELD = "selected_hero_field"
         private const val QUERY = "hero_search"
+        private const val GOAL = "hero_learning_goal"
     }
 }

@@ -33,13 +33,13 @@ class HeroAdapter(
         com.example.test.CompactText.apply(holder.name)
         com.example.test.CompactText.apply(holder.field)
         holder.name.text = hero.name
-        holder.field.text = hero.field
+        holder.field.text = HeroQuestCatalog.goalFor(hero.id)
         holder.info.visibility = View.GONE
         holder.habitCount.visibility = View.GONE
         holder.habitCount.setText(R.string.redesign_eight_blocks)
         holder.itemView.isFocusable = true
         holder.itemView.contentDescription = holder.itemView.context.getString(
-            R.string.hero_card_compact_action, hero.name, hero.field
+            R.string.hero_card_compact_action, hero.name, HeroQuestCatalog.goalFor(hero.id)
         )
         holder.itemView.setOnClickListener { onHeroClick(hero) }
         holder.itemView.setOnLongClickListener {

@@ -87,6 +87,7 @@ abstract class TimelineActivity : AppCompatActivity() {
                 "delete" -> confirmDelete(id)
             }
         }
+        supportFragmentManager.setFragmentResultListener(PersonalRoutineDetailSheet.CHECKS_CHANGED, this) { _, _ -> load() }
         timelineHeader.findViewById<Button>(R.id.day_settings).setOnClickListener { startActivity(Intent(this, SettingActivity::class.java)) }
         timelineHeader.findViewById<Button>(R.id.empty_start).setOnClickListener {
             if (routineSource == com.example.test.data.RoutineSource.PERSONAL) openPersonalEditor()
@@ -155,10 +156,11 @@ abstract class TimelineActivity : AppCompatActivity() {
                 val hero = HeroCatalog.getOrDefault(if (resolve) repo.selectedHeroId else targetHero)
                 repo.selectedHeroId = hero.id
                 val completed = repo.completedRoutineIds(date)
+                val questChecks = repo.questChecksForDate(date)
                 val adopted = repo.listRoutines(source = routineSource)
                 val now = java.util.GregorianCalendar()
                 val rows = repo.listRoutines(date = if (manage) null else date, source = routineSource).map { routine ->
-                    PersonalRoutineRow(routine, routine.id in completed, date, RoutineDate.today(), now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE))
+                    PersonalRoutineRow(routine, routine.id in completed, date, RoutineDate.today(), now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE), questChecks[routine.id].orEmpty())
                 }
                 PersonalSnapshot(hero.id, rows, repo.balance(), completed, repo.appliedItemId(),
                     adopted.map { it.heroId }.distinct(), adopted.any { it.enabled && it.alarmEnabled })

@@ -148,6 +148,38 @@ class AppRepository(
         if (heroId == null) arrayOf(date.iso) else arrayOf(date.iso, heroId)
     ).use { buildSet { while (it.moveToNext()) add(it.getLong(0)) } }
 
+    /** Each adoption/source has its own checklist. Reading never changes wallet or history. */
+    fun questChecks(id: Long, date: RoutineDate): Set<String> = db.query(
+        "quest_checks", arrayOf("quest_id"), "routine_id=? AND local_date=?",
+        arrayOf(id.toString(), date.iso), null, null, null
+    ).use { cursor -> buildSet { while (cursor.moveToNext()) add(cursor.getString(0)) } }
+
+    fun questChecksForDate(date: RoutineDate): Map<Long, Set<String>> = db.query(
+        "quest_checks", arrayOf("routine_id", "quest_id"), "local_date=?", arrayOf(date.iso), null, null, null
+    ).use { cursor ->
+        val rows = linkedMapOf<Long, MutableSet<String>>()
+        while (cursor.moveToNext()) rows.getOrPut(cursor.getLong(0)) { linkedSetOf() }.add(cursor.getString(1))
+        rows
+    }
+
+    /** Reject stale, forged and unavailable checklist writes inside the same transaction as the check. */
+    fun setQuestChecked(id: Long, questId: String, date: RoutineDate, checked: Boolean): Boolean = transaction {
+        val routine = getRoutine(id) ?: return@transaction false
+        if (date > todayProvider() || date.iso < routine.createdOn || !routine.enabled ||
+            !RoutineRules.scheduledOn(routine.weekdayMask, date)) return@transaction false
+        val block = com.example.test.Hero.HeroDayCatalog.find(routine.heroId, routine.templateId)
+            ?: return@transaction false
+        if (block.quests.none { it.id == questId }) return@transaction false
+        if (checked) {
+            db.insertWithOnConflict("quest_checks", null, ContentValues().apply {
+                put("routine_id", id); put("quest_id", questId); put("local_date", date.iso)
+                put("checked_at", System.currentTimeMillis().coerceAtLeast(0))
+            }, SQLiteDatabase.CONFLICT_IGNORE)
+        } else db.delete("quest_checks", "routine_id=? AND quest_id=? AND local_date=?",
+            arrayOf(id.toString(), questId, date.iso))
+        true
+    }
+
     fun balance(): Long = db.rawQuery("SELECT balance FROM wallet WHERE singleton_id=1", null).use {
         check(it.moveToFirst()) { "Wallet missing" }; it.getLong(0)
     }

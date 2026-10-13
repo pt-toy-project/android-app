@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:paddingTop="8dp" android:paddingBottom="8dp">
+    <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/quest_check"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:minHeight="48dp" android:textAppearance="?attr/textAppearanceTitleSmall"/>
+    <TextView android:id="@+id/quest_instruction" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:paddingStart="12dp" android:paddingEnd="12dp"/>
+    <TextView android:id="@+id/quest_measure" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="@color/ui_primary" android:paddingStart="12dp" android:layout_marginTop="4dp"/>
+</LinearLayout>
