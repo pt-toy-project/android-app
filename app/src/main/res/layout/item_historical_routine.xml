@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="?attr/colorSurfaceVariant"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:id="@+id/historicalRoutineTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/hero_fact_heading"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/historicalFactText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:lineSpacingExtra="3dp"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textIsSelectable="true" />
+
+        <TextView
+            android:id="@+id/historicalRecordedTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/hero_practice_heading"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/modernPracticeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:lineSpacingExtra="3dp"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textIsSelectable="true" />
+
+        <TextView
+            android:id="@+id/historicalSuggestedTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?attr/textAppearanceLabelLarge" />
+
+        <TextView
+            android:id="@+id/historicalSourceText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textIsSelectable="true" />
+
+        <Button
+            android:id="@+id/historicalSourceButton"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/hero_source_open" />
+
+        <Button
+            android:id="@+id/historicalAddButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/hero_add_routine" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

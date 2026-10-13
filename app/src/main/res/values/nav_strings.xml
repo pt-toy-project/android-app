@@ -2,9 +2,8 @@
     <string name="nav_home">홈</string>
     <string name="nav_routine">루틴</string>
     <string name="nav_hero">위인</string>
-    <string name="nav_myroom">마이룸</string>
+    <string name="nav_myroom">상점</string>
     <string name="nav_settings">설정</string>
-    <string name="nav_myroom_unavailable">마이룸과 아이템 상점은 준비 중입니다.</string>
     <string name="home_title">위인의 하루</string>
     <string name="home_today_routine">오늘의 루틴</string>
     <string name="home_progress">%1$d / %2$d 완료</string>
@@ -17,5 +16,5 @@
     <string name="home_choose_hero">위인 선택</string>
     <string name="home_hero_info">%1$s\n%2$s</string>
     <string name="home_hero_image">%1$s 이미지</string>
-    <string name="home_demo_notice">현재 루틴은 예시이며, 코인 보상과 아이템 상점은 준비 중입니다.</string>
+    <string name="home_demo_notice">역사에 기록된 습관을 오늘의 실천으로 이어갑니다. 루틴의 실천 시간은 직접 바꿀 수 있으며, 코인은 이 앱 안에서만 사용합니다.</string>
 </resources>

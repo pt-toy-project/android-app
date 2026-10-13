@@ -54,14 +54,18 @@ class NavigationTest {
     }
 
     @Test
-    fun unavailableMyroomDoesNotChangeTheSelectedScreen() {
+    fun myroomOpensShopAndBackReturnsToExistingHome() {
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+            lateinit var originalHome: MainActivity
             scenario.onActivity { activity ->
-                val bottomNav = activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-                bottomNav.selectedItemId = R.id.nav_myroom
-
-                assertEquals(R.id.nav_home, bottomNav.selectedItemId)
-                assertFalse(activity.isFinishing)
+                originalHome = activity
+            }
+            onView(withId(R.id.nav_myroom)).perform(click())
+            onView(withId(R.id.shop_title)).check(matches(isDisplayed()))
+            pressBack()
+            scenario.onActivity { activity ->
+                assertSame(originalHome, activity)
+                assertEquals(R.id.nav_home, activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView).selectedItemId)
             }
         }
     }

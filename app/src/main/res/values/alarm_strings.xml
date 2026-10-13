@@ -1,0 +1,13 @@
+<resources>
+    <string name="alarm_channel_name">루틴 실천 알림</string>
+    <string name="alarm_channel_description">직접 선택한 역사 인물 루틴의 실천 시간 알림</string>
+    <string name="alarm_silent_channel_name">루틴 실천 알림 · 무음</string>
+    <string name="alarm_silent_channel_description">소리 없이 표시하는 루틴 실천 시간 알림</string>
+    <string name="alarm_notification_title">%1$s · 실천할 시간</string>
+    <string name="alarm_notification_text">오늘의 작은 습관을 이어가세요. 눌러서 루틴을 확인할 수 있어요.</string>
+    <string name="alarm_action_complete">완료</string>
+    <string name="alarm_action_snooze">5분 미루기</string>
+    <string name="alarm_error_database">알림 예약을 확인하지 못했어요. 앱을 다시 열어 재시도해 주세요.</string>
+    <string name="alarm_error_cancel">일부 이전 알림을 취소하지 못했어요. 설정에서 다시 확인해 주세요.</string>
+    <string name="alarm_error_schedule">일부 루틴 알림을 예약하지 못했어요. 시간과 권한을 다시 확인해 주세요.</string>
+</resources>

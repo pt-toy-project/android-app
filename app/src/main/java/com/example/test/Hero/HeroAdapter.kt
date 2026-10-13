@@ -21,6 +21,7 @@ class HeroAdapter(
         val name: TextView = view.findViewById(R.id.tvHeroName)
         val field: TextView = view.findViewById(R.id.tvHeroField)
         val info: TextView = view.findViewById(R.id.tvHeroInfo)
+        val habitCount: TextView = view.findViewById(R.id.tvHeroHabitCount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroViewHolder =
@@ -32,6 +33,7 @@ class HeroAdapter(
         holder.name.text = hero.name
         holder.field.text = hero.field
         holder.info.text = hero.info
+        holder.habitCount.text = holder.itemView.context.getString(R.string.hero_habit_count, hero.routines.size)
         holder.itemView.isFocusable = true
         holder.itemView.contentDescription = holder.itemView.context.getString(
             R.string.hero_card_action, hero.name, hero.field, hero.info

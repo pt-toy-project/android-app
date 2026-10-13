@@ -3,7 +3,7 @@ package com.example.test
 import android.content.Context
 import androidx.core.content.edit
 
-/** Stores preferences only; sound playback and alarm scheduling are not implemented yet. */
+/** Global notification choices consumed by AlarmCoordinator; Android channel settings also apply. */
 class SettingsPreferences(context: Context, fileName: String = "app_settings") {
     private val preferences = context.applicationContext.getSharedPreferences(fileName, Context.MODE_PRIVATE)
 

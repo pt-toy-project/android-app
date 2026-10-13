@@ -29,8 +29,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/hero_sample_notice"
+            android:text="@string/hero_history_notice"
             android:textAppearance="?attr/textAppearanceBodySmall" />
+
+        <EditText
+            android:id="@+id/heroSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="@string/hero_search_hint"
+            android:inputType="text"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
+            android:minHeight="48dp"
+            android:importantForAutofill="no" />
+
+        <TextView
+            android:id="@+id/heroAlarmStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:accessibilityLiveRegion="polite"
+            android:text="@string/hero_alarm_restore_error"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorError"
+            android:visibility="gone" />
 
         <Spinner
             android:id="@+id/fieldSpinner"
@@ -40,6 +63,14 @@
             android:contentDescription="@string/hero_field_prompt"
             android:minHeight="48dp"
             android:prompt="@string/hero_field_prompt" />
+
+        <TextView
+            android:id="@+id/heroResultCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:accessibilityLiveRegion="polite" />
 
         <FrameLayout
             android:layout_width="match_parent"

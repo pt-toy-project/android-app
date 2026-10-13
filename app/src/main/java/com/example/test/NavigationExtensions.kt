@@ -1,7 +1,6 @@
 package com.example.test
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -39,8 +38,8 @@ fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
                 true
             }
             R.id.nav_myroom -> {
-                Toast.makeText(this, R.string.nav_myroom_unavailable, Toast.LENGTH_SHORT).show()
-                false
+                navigateTo(ShopActivity::class.java)
+                true
             }
             else -> false
         }

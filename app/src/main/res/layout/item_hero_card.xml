@@ -21,10 +21,10 @@
         <ImageView
             android:id="@+id/ivHero"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="140dp"
             android:contentDescription="@null"
             android:scaleType="fitCenter"
-            tools:src="@drawable/sesong" />
+            tools:src="@drawable/portrait_sejong" />
 
         <TextView
             android:id="@+id/tvHeroName"
@@ -50,5 +50,14 @@
             android:layout_marginTop="4dp"
             android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="조선 · 15세기" />
+
+        <TextView
+            android:id="@+id/tvHeroHabitCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorPrimary"
+            tools:text="3개의 실천 제안" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

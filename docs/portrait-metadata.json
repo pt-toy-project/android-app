@@ -1,0 +1,332 @@
+{
+  "sejong": {
+    "id": "sejong",
+    "file": "portrait_sejong.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/77/Statue_of_King_Sejong.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Statue_of_King_Sejong.jpg",
+    "artist": "Republic of  Korea",
+    "credit": "https://www.flickr.com/photos/koreanet/54452762781/",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "description": "Statue of King Sejong\nApril 15, 2025\nGwanghwamun Square, Seoul \nMinistry of culture, sports and Tourism\nOfficial Photographer : Lee jeong woo\nAll photographs in the official Flickr account of the Republic of Korea are available only for publication by news organizations and/or for public purposes with proper attribution to the correct source (photographer and organizations mentioned above).\nAny distortion to the original meaning of a photograph for provision to a third party through posting and resale, partial reproduction, falsification or use of the photograph with other images is strictly prohibited without the express written permission of the government of the Republic of Korea.\nThank you.\n\n\n2025-04-15\n봄맞이 세종대왕 동상 세척\n광화문광장, 서울시 종로구\n문화체육관광부\n이정우\n플리커 채널 'Republic of Korea'에 게재되는 대한민국정부 사진은 올바른 저작권 이름 (촬영자 / 상기 명기된 기관)으로 표기한 이후 보도 혹은 공익목적으로 사용하실 수 있습니다.\n\n의미를 왜곡하는 맥락에서 사진을 게시하고 재판매, 부분 복제, 변조 또는 다른 이미지에 통합하는 것과 같은 사진의 모든 수정, 자료를 제3자에게 제공하는 것은 대한민국정부(운영자/저작권자)의 명시적인 허가 없이 금지됩니다.",
+    "copyrighted": "True",
+    "originalSize": [
+      4291,
+      2671
+    ],
+    "size": [
+      600,
+      373
+    ],
+    "bytes": 23528,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "yi_sun_sin": {
+    "id": "yi_sun_sin",
+    "file": "portrait_yi_sun_sin.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Bust_of_Yi_Sun-sin_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Bust_of_Yi_Sun-sin_01.jpg",
+    "artist": "Unknown, War Memorial of Korea",
+    "credit": "https://archives.warmemo.or.kr:8443/intgsrch/intgsrchArchv.do?MID=UM00045",
+    "license": "KOGL Type 1",
+    "licenseUrl": "http://www.kogl.or.kr/info/licenseType1.do",
+    "description": "Bust of Yi held at the War Memorial of Korea. Note that this is a modern reconstruction of what he looked like; there are no known surviving contemporary depictions of him. The KOGL license for this image is visible when you search for this page in their internal search engine of the War Memorial website. Also displayed here: [1]. Unfortunately I can't find info on who created this sculpture, but whatever the case it's clearly in the collection of the War Memorial and copyright is consistently attributed to them.",
+    "copyrighted": "True",
+    "originalSize": [
+      2000,
+      3000
+    ],
+    "size": [
+      400,
+      600
+    ],
+    "bytes": 31133,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "einstein": {
+    "id": "einstein",
+    "file": "portrait_einstein.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/28/Albert_Einstein_Head_cleaned.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Albert_Einstein_Head_cleaned.jpg",
+    "artist": "Oren Jack Turner",
+    "credit": "This image  is available from the United States Library of Congress's Prints and Photographs division under the digital ID cph.3b46036.This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "Albert Einstein",
+    "copyrighted": "False",
+    "originalSize": [
+      4530,
+      5607
+    ],
+    "size": [
+      485,
+      600
+    ],
+    "bytes": 60060,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "newton": {
+    "id": "newton",
+    "file": "portrait_newton.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Portrait_of_Sir_Isaac_Newton%2C_1689_%28brightened%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Portrait_of_Sir_Isaac_Newton,_1689_(brightened).jpg",
+    "artist": "Godfrey Kneller",
+    "credit": "File:Portrait of Sir Isaac Newton, 1689.jpg from https://exhibitions.lib.cam.ac.uk/linesofthought/artifacts",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "",
+    "copyrighted": "False",
+    "originalSize": [
+      2218,
+      2671
+    ],
+    "size": [
+      498,
+      600
+    ],
+    "bytes": 40587,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "da_vinci": {
+    "id": "da_vinci",
+    "file": "portrait_da_vinci.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/16/Francesco_Melzi_-_Portrait_of_Leonardo_%28colour_correction%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Francesco_Melzi_-_Portrait_of_Leonardo_(colour_correction).png",
+    "artist": "Attributed to Francesco Melzi",
+    "credit": "File:Francesco_Molzi_-_Portrait_of_Leonardo_-_WGA14795.jpg",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "",
+    "copyrighted": "False",
+    "originalSize": [
+      1286,
+      1842
+    ],
+    "size": [
+      419,
+      600
+    ],
+    "bytes": 82965,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "shakespeare": {
+    "id": "shakespeare",
+    "file": "portrait_shakespeare.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/21/William_Shakespeare_by_John_Taylor%2C_edited.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:William_Shakespeare_by_John_Taylor,_edited.jpg",
+    "artist": "Attributed to John Taylor",
+    "credit": "one or more third parties have made copyright claims against Wikimedia Commons in relation to the work from which this is sourced or a purely mechanical reproduction thereof. This may be due to recognition of the \"sweat of the brow\" doctrine, allowing works to be eligible for protection through skill and labour, and not purely by originality as is the case in the United States (where this website is hosted). These claims may or may not be valid in all jurisdictions.\nAs such, use of this image in the jurisdiction of the claimant or other countries may be regarded as copyright infringement. Please see Commons:When to use the PD-Art tag for more information.",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "",
+    "copyrighted": "False",
+    "originalSize": [
+      2400,
+      3059
+    ],
+    "size": [
+      471,
+      600
+    ],
+    "bytes": 35238,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "franklin": {
+    "id": "franklin",
+    "file": "portrait_franklin.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/87/Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg",
+    "artist": "Joseph-Siffred Duplessis",
+    "credit": "ZgEyj5EEKdux-g at Google Cultural Institute maximum zoom level",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "A painting of Benjamin Franklin ca. 1785",
+    "copyrighted": "False",
+    "originalSize": [
+      3249,
+      4000
+    ],
+    "size": [
+      487,
+      600
+    ],
+    "bytes": 28966,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "darwin": {
+    "id": "darwin",
+    "file": "portrait_darwin.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Charles_Darwin_seated_crop.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Charles_Darwin_seated_crop.jpg",
+    "artist": "Charles_Darwin_seated.jpg: Henry Maull (1829–1914) and John Fox (1832–1907) (Maull & Fox) [3]\nderivative work: Beao",
+    "credit": "Charles_Darwin_seated.jpg",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "Photograph of Charles Darwin; the frontispiece of Francis Darwin's The Life and Letters of Charles Darwin (1887) has the caption \"From a Photograph (1854?) by Messrs. Maull. And Fox. Engraved for Harper's Magazine, October 1884.\"[1]  In an 1899 paper, Francis Darwin wrote that \"The date of the photograph is probably 1854; it is, however, impossible to be certain on this point, the books of Messrs. Maull and Fox having been destroyed by fire. The reproduction is by Mr. Dew-Smith, who has been at some disadvantage, having only an old and faded print to work from.\"[2]",
+    "copyrighted": "False",
+    "originalSize": [
+      2370,
+      3119
+    ],
+    "size": [
+      456,
+      600
+    ],
+    "bytes": 55073,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "curie": {
+    "id": "curie",
+    "file": "portrait_curie.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Marie_Curie_c._1920s.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Marie_Curie_c._1920s.jpg",
+    "artist": "Henri Manuel",
+    "credit": "cdn-images-1.medium.com",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "Depicted person:  Marie Curie",
+    "copyrighted": "False",
+    "originalSize": [
+      1549,
+      2105
+    ],
+    "size": [
+      442,
+      600
+    ],
+    "bytes": 29259,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "nightingale": {
+    "id": "nightingale",
+    "file": "portrait_nightingale.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Florence_Nightingale_%28H_Hering_NPG_x82368%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Florence_Nightingale_(H_Hering_NPG_x82368).jpg",
+    "artist": "Henry Hering (1814-1893)",
+    "credit": "NPG x82368 from National Portrait Gallery, London",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "Photograph  by Henry Hering",
+    "copyrighted": "False",
+    "originalSize": [
+      1105,
+      1536
+    ],
+    "size": [
+      432,
+      600
+    ],
+    "bytes": 55370,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "marcus_aurelius": {
+    "id": "marcus_aurelius",
+    "file": "portrait_marcus_aurelius.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ec/MSR-ra-61-b-1-DM.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:MSR-ra-61-b-1-DM.jpg",
+    "artist": "Daniel Martin",
+    "credit": "Photothèque du musée Saint-Raymond",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "description": "Marble bust of Roman Emperor Marcus Aurelius, Musée Saint-Raymond, Toulouse, France",
+    "copyrighted": "True",
+    "originalSize": [
+      3000,
+      4000
+    ],
+    "size": [
+      450,
+      600
+    ],
+    "bytes": 32653,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "thoreau": {
+    "id": "thoreau",
+    "file": "portrait_thoreau.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Benjamin_D._Maxham_-_Henry_David_Thoreau_-_Restored.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Benjamin_D._Maxham_-_Henry_David_Thoreau_-_Restored.jpg",
+    "artist": "Benjamin D. Maxham active 1848 - 1858",
+    "credit": "National Portrait Gallery",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "Portrait photograph from a ninth-plate daguerreotype of Henry David Thoreau. Calvin R. Greene was a Thoreau “disciple” who lived in Rochester, Michigan, and who first began corresponding with Thoreau in January 1856.  When Greene asked for a photographic image of the author, Thoreau initially replied: “You may rely on it that you have the best of me in my books, and that I am not worth seeing personally – the stuttering, blundering, clodhopper that I am.” Yet Greene repeated his request and sent money for the sitting.  Thoreau must have kept this commitment to his fan in the back of his mind for the next several months.  On June 18, 1856, during a trip to Worcester, Massachusetts, Henry Thoreau visited the Daguerrean Palace of Benjamin D. Maxham at 16 Harrington Corner and had three daguerreotypes taken for fifty cents each.  He gave two of the prints to his Worcester friends and hosts, H.G.O. Blake and Theophilius Brown.  The third he sent to Calvin Greene in Michigan.  “While in Worcester this week I obtained the accompanying daguerreotype – which my friends think is pretty good – though better looking than I,” Thoreau wrote.",
+    "copyrighted": "False",
+    "originalSize": [
+      2484,
+      3327
+    ],
+    "size": [
+      448,
+      600
+    ],
+    "bytes": 36641,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "douglass": {
+    "id": "douglass",
+    "file": "portrait_douglass.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Frederick_Douglass_%28circa_1879%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Frederick_Douglass_(circa_1879)_(cropped).jpg",
+    "artist": "George Kendall Warren",
+    "credit": "This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "Frederick Douglass",
+    "copyrighted": "False",
+    "originalSize": [
+      2006,
+      2672
+    ],
+    "size": [
+      450,
+      600
+    ],
+    "bytes": 47326,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "john_muir": {
+    "id": "john_muir",
+    "file": "portrait_john_muir.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ab/John_Muir_Watkins_Portrait_circa_1875_Edit.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:John_Muir_Watkins_Portrait_circa_1875_Edit.png",
+    "artist": "Carlton E. Watkins",
+    "credit": "https://scholarlycommons.pacific.edu/jmp/168/",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "Portrait of John Muir by Carlton E. Watkins",
+    "copyrighted": "False",
+    "originalSize": [
+      1037,
+      1407
+    ],
+    "size": [
+      442,
+      600
+    ],
+    "bytes": 49562,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  },
+  "jane_addams": {
+    "id": "jane_addams",
+    "file": "portrait_jane_addams.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Jane_Addams_-_Bain_News_Service.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "filePage": "https://commons.wikimedia.org/wiki/File:Jane_Addams_-_Bain_News_Service.jpg",
+    "artist": "Adam Cuerden",
+    "credit": "This image  is available from the United States Library of Congress's Prints and Photographs division under the digital ID ggbain.39054.This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "Sociologist, suffragette, social worker, philosopher, and Nobel Peace Prize winner Jane Addams, in 1924 or 1926 (the way the date is written (mirror image, at top of the TIFF version) is probably 3-2-26, but could be 3-2-24.",
+    "copyrighted": "False",
+    "originalSize": [
+      2961,
+      4347
+    ],
+    "size": [
+      409,
+      600
+    ],
+    "bytes": 28279,
+    "modification": "비율 유지, 최대600px, JPEG 변환·압축"
+  }
+}

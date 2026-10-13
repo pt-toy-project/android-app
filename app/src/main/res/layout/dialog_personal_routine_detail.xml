@@ -1,0 +1,15 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+        <TextView android:id="@+id/personal_detail_hero" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelLarge" />
+        <TextView android:id="@+id/personal_detail_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+        <TextView android:id="@+id/personal_detail_date" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/personal_recorded_fact" android:textAppearance="?attr/textAppearanceTitleMedium" />
+        <TextView android:id="@+id/personal_detail_fact" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyLarge" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/personal_modern_practice" android:textAppearance="?attr/textAppearanceTitleMedium" />
+        <TextView android:id="@+id/personal_detail_practice" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyLarge" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/personal_detail_source" style="@style/Widget.MaterialComponents.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/personal_detail_complete" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/personal_complete_reward" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/personal_detail_edit" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/personal_edit" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/personal_detail_delete" style="@style/Widget.MaterialComponents.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/personal_remove" />
+    </LinearLayout>
+</ScrollView>
