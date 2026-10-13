@@ -70,6 +70,19 @@ class AppRepository(
         }
     }
 
+    /** A new local plan has its own stable identity and uses the existing reward/history schema. */
+    fun addPersonalPlan(title: String, time: String, weekdayMask: Int = 127,
+                        enabled: Boolean = true, alarmEnabled: Boolean = false): Long = transaction {
+        val templateId = "manual_" + java.util.UUID.randomUUID().toString().replace("-", "")
+        val id = addRoutine(RoutineIdentity.PERSONAL_HERO_ID, templateId, title, time, weekdayMask,
+            RoutineSource.PERSONAL)
+        db.update("user_routines", ContentValues().apply {
+            put("enabled", if (enabled) 1 else 0)
+            put("alarm_enabled", if (alarmEnabled) 1 else 0)
+        }, "id=?", arrayOf(id.toString()))
+        id
+    }
+
     /** All blocks commit together. Existing adoptions are returned without updating user settings. */
     fun startHeroDay(hero: com.example.test.Hero.Hero): List<Long> = transaction {
         val day = com.example.test.Hero.HeroDayCatalog.forHero(hero)

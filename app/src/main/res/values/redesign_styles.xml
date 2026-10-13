@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.HeroDay.Card" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@color/ui_surface</item>
+        <item name="strokeColor">@color/ui_outline</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+<style name="ShapeAppearance.HeroDay.Avatar" parent=""><item name="cornerFamily">rounded</item><item name="cornerSize">50%</item></style></resources>

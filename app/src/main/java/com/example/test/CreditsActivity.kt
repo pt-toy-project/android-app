@@ -19,9 +19,12 @@ class CreditsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credits)
         applySystemBarInsets()
+        ScreenToolbar.bind(this, R.string.redesign_credits, back = true)
         findViewById<MaterialButton>(R.id.credits_close).setOnClickListener { finish() }
         webView = findViewById(R.id.credits_webview)
         webView.settings.apply {
+            textZoom = (resources.configuration.fontScale * 100).toInt()
+            if (android.os.Build.VERSION.SDK_INT >= 33) isAlgorithmicDarkeningAllowed = true
             javaScriptEnabled = false
             allowFileAccess = false
             allowContentAccess = false

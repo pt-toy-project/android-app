@@ -23,12 +23,19 @@ class PersonalRoutineAdapter(
         private val status = view.findViewById<TextView>(R.id.tv_status)
         init { view.setOnClickListener { if (bindingAdapterPosition != RecyclerView.NO_POSITION) onClick(getItem(bindingAdapterPosition)) } }
         fun bind(row: PersonalRoutineRow) {
-            time.text = row.routine.time; title.text = row.routine.title
+            time.text = "${row.routine.time} · ${com.example.test.data.RoutineIdentity.displayName(row.routine.heroId)}"
+            title.text = row.routine.title
+            com.example.test.CompactText.apply(time)
             com.example.test.CompactText.apply(title)
-            val hero = com.example.test.Hero.HeroCatalog.getOrDefault(row.routine.heroId)
-            val block = com.example.test.Hero.HeroDayCatalog.find(hero.id, row.routine.templateId)
+            val heroName = com.example.test.data.RoutineIdentity.displayName(row.routine.heroId)
+            val block = com.example.test.Hero.HeroDayCatalog.find(row.routine.heroId, row.routine.templateId)
             itemView.findViewById<TextView>(R.id.day_row_subtitle).text = if (row.routine.source == com.example.test.data.RoutineSource.HERO_DAY)
-                "${hero.name} · ${block?.kind?.label ?: "실천"}" else "${hero.name} · 나만의 계획"
+                block?.description.orEmpty() else {
+                    val schedule = if (row.routine.weekdayMask == 127) itemView.context.getString(R.string.redesign_everyday)
+                        else itemView.resources.getStringArray(R.array.personal_weekdays).filterIndexed { index, _ -> row.routine.weekdayMask and (1 shl index) != 0 }.joinToString(" · ")
+                    itemView.context.getString(R.string.redesign_plan_schedule, schedule,
+                        itemView.context.getString(if (row.routine.alarmEnabled) R.string.redesign_alarm_on else R.string.redesign_alarm_off))
+                }
             itemView.findViewById<com.google.android.material.chip.Chip>(R.id.day_grade).apply {
                 visibility = if (row.routine.source == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
                 text = block?.grade?.label ?: "현대 적용"
@@ -37,12 +44,20 @@ class PersonalRoutineAdapter(
             itemView.findViewById<android.widget.Button>(R.id.timeline_complete).apply {
                 isEnabled = TimelinePresentation.canComplete(row)
                 setText(if (row.completed) R.string.routine_status_completed else R.string.timeline_complete)
-                contentDescription = itemView.context.getString(R.string.timeline_complete_accessibility, hero.name, row.routine.title)
+                contentDescription = itemView.context.getString(R.string.timeline_complete_accessibility, heroName, row.routine.title)
                 setOnClickListener { if (bindingAdapterPosition != RecyclerView.NO_POSITION) onComplete(getItem(bindingAdapterPosition)) }
             }
             itemView.findViewById<android.widget.Button>(R.id.timeline_detail).apply {
-                contentDescription = itemView.context.getString(R.string.timeline_detail_accessibility, hero.name, row.routine.title)
+                contentDescription = itemView.context.getString(R.string.timeline_detail_accessibility, heroName, row.routine.title)
                 setOnClickListener { if (bindingAdapterPosition != RecyclerView.NO_POSITION) onClick(getItem(bindingAdapterPosition)) }
+            }
+            val actions = itemView.findViewById<android.widget.LinearLayout>(R.id.timeline_actions)
+            val expanded = itemView.resources.configuration.fontScale >= 1.3f
+            actions.orientation = if (expanded) android.widget.LinearLayout.VERTICAL else android.widget.LinearLayout.HORIZONTAL
+            for (index in 0 until actions.childCount) {
+                actions.getChildAt(index).layoutParams = android.widget.LinearLayout.LayoutParams(
+                    if (expanded) android.view.ViewGroup.LayoutParams.MATCH_PARENT else 0,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, if (expanded) 0f else 1f)
             }
             val due = RoutineTime.parse(row.routine.time)?.minutes ?: Int.MAX_VALUE
             val (label, color) = when {
@@ -53,7 +68,7 @@ class PersonalRoutineAdapter(
             }
             status.setText(label); status.setTextColor(ContextCompat.getColor(itemView.context, color))
             time.setTextColor(ContextCompat.getColor(itemView.context, color))
-            itemView.contentDescription = itemView.context.getString(R.string.routine_accessibility, row.routine.time, row.routine.title, itemView.context.getString(label)) + ", " + itemView.findViewById<TextView>(R.id.day_row_subtitle).text + ", " + (block?.grade?.label.orEmpty())
+            itemView.contentDescription = heroName + ", " + itemView.context.getString(R.string.routine_accessibility, row.routine.time, row.routine.title, itemView.context.getString(label)) + ", " + itemView.findViewById<TextView>(R.id.day_row_subtitle).text + ", " + (block?.grade?.label.orEmpty())
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_routine, parent, false))

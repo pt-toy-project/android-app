@@ -1,0 +1,15 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+        <TextView android:id="@+id/editor_heading" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/redesign_editor_title" android:textAppearance="?attr/textAppearanceTitleLarge" />
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/editor_title_layout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:hint="@string/redesign_plan_name">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/editor_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapSentences" android:maxLength="160" android:maxLines="2" android:importantForAutofill="no" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/editor_time" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_marginTop="16dp" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/redesign_days" android:textAppearance="?attr/textAppearanceTitleSmall" android:layout_marginTop="16dp" />
+        <com.google.android.material.chip.ChipGroup android:id="@+id/editor_days" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/editor_enabled" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/redesign_enabled" />
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/editor_alarm" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/redesign_alarm" />
+        <TextView android:id="@+id/editor_error" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="?attr/colorError" android:accessibilityLiveRegion="polite" android:visibility="gone" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/editor_save" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_marginTop="20dp" android:text="@string/redesign_save_plan" />
+    </LinearLayout>
+</ScrollView>

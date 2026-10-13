@@ -1,8 +1,8 @@
 <resources>
-    <color name="home_background">#181820</color>
-    <color name="home_primary">#BBC3FF</color>
-    <color name="home_text">#EFEFEF</color>
-    <color name="home_secondary">#C5C6D0</color>
-    <color name="nav_unselected">#C5C6D0</color>
-    <color name="home_on_primary">#222222</color>
+    <color name="home_background">@color/ui_background</color>
+    <color name="home_primary">@color/ui_primary</color>
+    <color name="home_text">@color/ui_text</color>
+    <color name="home_secondary">@color/ui_secondary</color>
+    <color name="nav_unselected">@color/ui_secondary</color>
+    <color name="home_on_primary">@color/ui_on_primary</color>
 </resources>

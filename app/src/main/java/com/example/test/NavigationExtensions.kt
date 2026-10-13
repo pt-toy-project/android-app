@@ -16,6 +16,10 @@ fun AppCompatActivity.navigateTo(destination: Class<out AppCompatActivity>) {
 
 fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
     val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView) ?: return
+    val fontScale = resources.configuration.fontScale.coerceAtLeast(1f)
+    bottomNav.setLabelFontScalingEnabled(true)
+    bottomNav.setLabelMaxLines(Int.MAX_VALUE)
+    bottomNav.minimumHeight = ((80 + 48 * (fontScale - 1)) * resources.displayMetrics.density).toInt()
     // Clear the old listener before restoring the selection after returning to a retained screen.
     bottomNav.setOnItemSelectedListener(null)
     bottomNav.selectedItemId = selectedItemId

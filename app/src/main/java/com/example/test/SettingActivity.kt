@@ -38,6 +38,7 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
         applySystemBarInsets()
+        ScreenToolbar.bind(this, R.string.nav_settings, back = true)
         setupBottomNavigation(0)
         preferences = SettingsPreferences(applicationContext)
         status = findViewById(R.id.settings_alarm_status)

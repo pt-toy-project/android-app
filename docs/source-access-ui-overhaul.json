@@ -1,0 +1,284 @@
+{
+  "https://ctext.org/wiki.pl?if=gb&res=756968": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://ctext.org/zhuzi-yulei": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://db.history.go.kr/diachronic/level.do?levelId=nh_029_0020_0020_0030_0010": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://db.history.go.kr/diachronic/level.do?levelId=nh_031_0050_0060_0030_0050": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://en.wikisource.org/wiki/The_Narrow_Road_to_the_Deep_North": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://encykorea.aks.ac.kr/Article/E0002368": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://encykorea.aks.ac.kr/Article/E0034673": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://encykorea.aks.ac.kr/Article/E0048833": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://encykorea.aks.ac.kr/Article/E0050540": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://sillok.history.go.kr/id/kda_10508004_002": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://sillok.history.go.kr/id/kda_11612011_004": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.biodiversitylibrary.org/bibliography/63607": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.britannica.com/biography/Hokusai": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.britannica.com/biography/Ibn-Battuta": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.britannica.com/biography/Ibn-al-Haytham": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.britannica.com/biography/Sor-Juana-Ines-de-la-Cruz": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.fourmilab.ch/babbage/sketch.html": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/1041": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/12439": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/1325": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/148": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/2010": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/205": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/23": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/2680": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/32540": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/3330": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/33504": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/39863": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/5000": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/6842": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/69617": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/ebooks/70678": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.nl.go.kr/": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/1041/pg1041.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/12439/pg12439.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/1325/pg1325.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/148/pg148.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/2010/pg2010.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/205/pg205.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/23/pg23.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/2680/pg2680.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/32540/pg32540.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/33504/pg33504.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/5000/pg5000.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/69617/pg69617.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  },
+  "https://www.gutenberg.org/cache/epub/70678/pg70678.txt": {
+    "status": "UNVERIFIED",
+    "httpStatus": "000",
+    "reason": "curl: (56) CONNECT tunnel failed, response 403",
+    "checkedAt": "2026-10-13"
+  }
+}

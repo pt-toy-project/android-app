@@ -29,14 +29,14 @@ class HeroAdapter(
 
     override fun onBindViewHolder(holder: HeroViewHolder, position: Int) {
         val hero = getItem(position)
-        holder.image.setImageResource(hero.imageResId)
-        com.example.test.CompactText.circle(holder.image)
+        com.example.test.AvatarView.bind(holder.image, hero.imageResId)
         com.example.test.CompactText.apply(holder.name)
         com.example.test.CompactText.apply(holder.field)
         holder.name.text = hero.name
         holder.field.text = hero.field
         holder.info.visibility = View.GONE
         holder.habitCount.visibility = View.GONE
+        holder.habitCount.setText(R.string.redesign_eight_blocks)
         holder.itemView.isFocusable = true
         holder.itemView.contentDescription = holder.itemView.context.getString(
             R.string.hero_card_action, hero.name, hero.field, hero.info

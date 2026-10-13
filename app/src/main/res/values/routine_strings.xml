@@ -13,8 +13,8 @@
     <string name="routine_already_completed">이미 완료한 루틴입니다.</string>
     <string name="routine_future_completion">미래 날짜의 루틴은 완료할 수 없습니다.</string>
     <string name="routine_invalid">루틴을 찾을 수 없습니다.</string>
-    <color name="routine_completed">#4656A7</color>
+    <color name="routine_completed">@color/ui_primary</color>
     <color name="routine_overdue">#B3261E</color>
-    <color name="routine_upcoming">#555B66</color>
-    <color name="date_unselected_text">#555B66</color>
+    <color name="routine_upcoming">@color/ui_secondary</color>
+    <color name="date_unselected_text">@color/ui_secondary</color>
 </resources>

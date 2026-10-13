@@ -34,7 +34,7 @@ object HeroDayCatalog {
         val titles = listOf("기상", first.title, "식사", learning?.title ?: "학습", "운동·산책", "휴식", last?.title ?: "성찰·기록", "취침")
         val times = listOf("07:00", first.suggestedTime, "12:00", learning?.suggestedTime ?: "14:00", "17:00", "18:30", last?.suggestedTime ?: "20:00", "22:30")
         val descriptions = listOf(
-            "오늘의 $theme 실천을 떠올리며 몸과 공간을 정돈합니다.", first.modernPractice,
+            "몸과 공간을 정돈하고, $theme 실천을 준비합니다.", first.modernPractice,
             "${hero.name}의 주제에서 잠시 벗어나 식사를 천천히 하고 몸 상태를 살핍니다.",
             learning?.modernPractice ?: profile.learning,
             profile.walking,

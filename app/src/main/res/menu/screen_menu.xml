@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/screen_history" android:title="@string/personal_history" app:showAsAction="never"/>
+    <item android:id="@+id/screen_settings" android:title="@string/nav_settings" app:showAsAction="never"/>
+    <item android:id="@+id/screen_credits" android:title="@string/redesign_credits" app:showAsAction="never"/>
+</menu>

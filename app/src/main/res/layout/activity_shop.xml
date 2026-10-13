@@ -1,66 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-            <TextView
-                android:id="@+id/shop_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/shop_title"
-                android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/shop_intro"
-                android:textAppearance="?attr/textAppearanceBodyMedium" />
-            <TextView
-                android:id="@+id/shop_balance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:accessibilityLiveRegion="polite"
-                android:text="@string/shop_loading"
-                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
-            <TextView
-                android:id="@+id/shop_selected_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="?attr/textAppearanceBodyLarge" />
-            <TextView
-                android:id="@+id/shop_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:accessibilityLiveRegion="polite"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:visibility="gone" />
-            <LinearLayout
-                android:id="@+id/shop_items"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="vertical" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/shop_local_notice"
-                android:textAppearance="?attr/textAppearanceBodySmall" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/ui_background">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/screen_toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" app:title="@string/nav_myroom"/>
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="20dp" android:orientation="vertical">
+            <TextView android:id="@+id/shop_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceHeadlineSmall" android:text="@string/redesign_shop_heading" android:textStyle="bold"/>
+            <TextView android:id="@+id/shop_intro" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:text="@string/shop_intro" android:layout_marginTop="6dp" android:layout_marginBottom="16dp"/>
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="20dp" android:orientation="vertical">
+                    <TextView android:id="@+id/shop_balance" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceHeadlineMedium" android:text="@string/shop_loading" android:accessibilityLiveRegion="polite" android:textColor="@color/ui_primary"/>
+                    <TextView android:id="@+id/shop_selected_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginTop="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView android:id="@+id/shop_message" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:visibility="gone" android:accessibilityLiveRegion="polite"/>
+            <LinearLayout android:id="@+id/shop_items" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
+            <TextView android:id="@+id/shop_notice" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodySmall" android:text="@string/shop_local_notice"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <include layout="@layout/layout_bottom_nav" />
+    <include layout="@layout/layout_bottom_nav"/>
 </LinearLayout>

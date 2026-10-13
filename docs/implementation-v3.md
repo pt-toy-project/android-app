@@ -55,3 +55,7 @@ Android 계측 테스트 48개는 APK 컴파일만 확인했고 실행하지 않
 최신 빌드/체크섬/소스는 downloads/v3-build-manifest.json을 기준으로 합니다. v2 서명 키 부재와 실기기 검증 미실행 제한은 유지합니다.
 
 후속 검증: JVM 75개·SQLite 19개 통과, 앱·계측 APK 빌드 성공. 0 errors, 64 warnings. 실기기 테스트는 미실행입니다.
+
+## UI 전면 개편
+
+오늘·인물 검색·하루 상세·개인 계획·편집·기록·상점·공통 툴바를 개편했습니다. 최신 구조와 실제 시뮬레이션 실행 범위는 [ui-guidelines.md](ui-guidelines.md), [ui-overhaul-validation.md](ui-overhaul-validation.md)에 있습니다. 기존 사진 15장·기본 아바타·이미지 크레딧·서명 키·DB v2 SQL을 유지합니다. 최신 검증 수와 APK 소스/체크섬은 다운로드 manifest를 기준으로 합니다.

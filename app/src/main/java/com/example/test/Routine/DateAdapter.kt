@@ -27,12 +27,13 @@ class DateAdapter(private val onDateClick: (RoutineDate) -> Unit) : ListAdapter<
             }
         }
         fun bind(row: DateRow) {
+            itemView.layoutParams.width = (52 * itemView.resources.displayMetrics.density * itemView.resources.configuration.fontScale.coerceAtLeast(1f)).toInt()
             month.text = row.date.label("M월")
             number.text = row.date.label("dd")
             weekday.text = row.date.label("E")
             itemView.isSelected = row.selected
             itemView.setBackgroundResource(if (row.selected) R.drawable.bg_date_selected else R.drawable.bg_date_unselected)
-            val color = ContextCompat.getColor(itemView.context, if (row.selected) android.R.color.white else R.color.date_unselected_text)
+            val color = ContextCompat.getColor(itemView.context, if (row.selected) R.color.ui_on_primary else R.color.ui_secondary)
             listOf(month, number, weekday).forEach { it.setTextColor(color) }
             itemView.contentDescription = row.date.label("yyyy년 M월 d일 E요일")
         }

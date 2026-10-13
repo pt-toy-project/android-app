@@ -25,6 +25,7 @@ class ShopActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop)
         applySystemBarInsets()
+        ScreenToolbar.bind(this, R.string.nav_myroom, back = false)
         setupBottomNavigation(R.id.nav_myroom)
         balanceView = findViewById(R.id.shop_balance)
         selectedView = findViewById(R.id.shop_selected_title)
@@ -74,31 +75,16 @@ class ShopActivity : AppCompatActivity() {
         messageView.visibility = if (snapshot.message == null) View.GONE else View.VISIBLE
         container.removeAllViews()
         ShopCatalog.items.forEach { item ->
-            val card = MaterialCardView(this).apply {
-                radius = dp(18).toFloat()
-                cardElevation = 0f
-                layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) }
-            }
-            val content = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(dp(20), dp(20), dp(20), dp(20))
-            }
-            content.addView(TextView(this).apply {
-                text = item.title
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleLarge)
-            })
-            content.addView(TextView(this).apply {
-                text = item.description
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-                setPadding(0, dp(8), 0, dp(8))
-            })
+            val card = layoutInflater.inflate(R.layout.item_shop_card, container, false) as MaterialCardView
+            card.findViewById<TextView>(R.id.shop_item_name).apply { text = item.title; CompactText.apply(this) }
+            card.findViewById<TextView>(R.id.shop_item_description).apply { text = item.description; CompactText.apply(this) }
             val owned = item.id in snapshot.ownedIds
             val applied = snapshot.appliedId == item.id
-            content.addView(TextView(this).apply {
+            card.findViewById<TextView>(R.id.shop_item_price).apply {
                 text = if (owned) getString(R.string.shop_owned) else getString(R.string.shop_price, item.price)
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelLarge)
-            })
-            content.addView(MaterialButton(this).apply {
+            }
+            card.findViewById<MaterialButton>(R.id.shop_item_action).apply {
                 layoutParams = LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) }
                 minHeight = dp(48)
                 text = getString(if (applied) R.string.shop_applied else if (owned) R.string.shop_apply else R.string.shop_buy)
@@ -119,8 +105,7 @@ class ShopActivity : AppCompatActivity() {
                         }
                     }
                 }
-            })
-            card.addView(content)
+            }
             container.addView(card)
         }
     }
