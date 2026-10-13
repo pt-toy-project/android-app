@@ -30,14 +30,15 @@ object HeroDayCatalog {
         val last = hero.routines.getOrNull(1)
         val learning = hero.routines.getOrNull(2)
         val theme = first.title
+        val profile = DayEditorialProfiles.forHero(hero.id)
         val titles = listOf("기상", first.title, "식사", learning?.title ?: "학습", "운동·산책", "휴식", last?.title ?: "성찰·기록", "취침")
         val times = listOf("07:00", first.suggestedTime, "12:00", learning?.suggestedTime ?: "14:00", "17:00", "18:30", last?.suggestedTime ?: "20:00", "22:30")
         val descriptions = listOf(
             "오늘의 $theme 실천을 떠올리며 몸과 공간을 정돈합니다.", first.modernPractice,
             "${hero.name}의 주제에서 잠시 벗어나 식사를 천천히 하고 몸 상태를 살핍니다.",
-            learning?.modernPractice ?: "${first.source.title}와 연결되는 주제를 찾아 내 말로 요약합니다.",
-            "$theme 에 대한 생각을 내려놓고 안전한 곳에서 가볍게 걷습니다.",
-            "오늘의 $theme 작업을 멈추고 눈과 몸을 쉽니다.", last?.modernPractice ?: "오늘 배운 점을 한 줄 적습니다.",
+            learning?.modernPractice ?: profile.learning,
+            profile.walking,
+            profile.rest, last?.modernPractice ?: "오늘 배운 점을 한 줄 적습니다.",
             "오늘의 $theme 실천을 마무리하고 수면을 준비합니다."
         )
         return HeroDay(hero.id, DayKind.entries.mapIndexed { index, kind ->

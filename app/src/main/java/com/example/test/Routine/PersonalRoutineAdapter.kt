@@ -13,7 +13,10 @@ import com.example.test.data.UserRoutine
 
 data class PersonalRoutineRow(val routine: UserRoutine, val completed: Boolean, val date: RoutineDate, val today: RoutineDate, val currentMinute: Int)
 
-class PersonalRoutineAdapter(private val onClick: (PersonalRoutineRow) -> Unit) : ListAdapter<PersonalRoutineRow, PersonalRoutineAdapter.Holder>(DIFF) {
+class PersonalRoutineAdapter(
+    private val onComplete: (PersonalRoutineRow) -> Unit = {},
+    private val onClick: (PersonalRoutineRow) -> Unit
+) : ListAdapter<PersonalRoutineRow, PersonalRoutineAdapter.Holder>(DIFF) {
     inner class Holder(view: View) : RecyclerView.ViewHolder(view) {
         private val time = view.findViewById<TextView>(R.id.tv_time)
         private val title = view.findViewById<TextView>(R.id.tv_routine_title)
@@ -31,6 +34,16 @@ class PersonalRoutineAdapter(private val onClick: (PersonalRoutineRow) -> Unit) 
                 text = block?.grade?.label ?: "현대 적용"
             }
             com.example.test.CompactText.apply(itemView.findViewById(R.id.day_row_subtitle))
+            itemView.findViewById<android.widget.Button>(R.id.timeline_complete).apply {
+                isEnabled = TimelinePresentation.canComplete(row)
+                setText(if (row.completed) R.string.routine_status_completed else R.string.timeline_complete)
+                contentDescription = itemView.context.getString(R.string.timeline_complete_accessibility, hero.name, row.routine.title)
+                setOnClickListener { if (bindingAdapterPosition != RecyclerView.NO_POSITION) onComplete(getItem(bindingAdapterPosition)) }
+            }
+            itemView.findViewById<android.widget.Button>(R.id.timeline_detail).apply {
+                contentDescription = itemView.context.getString(R.string.timeline_detail_accessibility, hero.name, row.routine.title)
+                setOnClickListener { if (bindingAdapterPosition != RecyclerView.NO_POSITION) onClick(getItem(bindingAdapterPosition)) }
+            }
             val due = RoutineTime.parse(row.routine.time)?.minutes ?: Int.MAX_VALUE
             val (label, color) = when {
                 row.completed -> R.string.routine_status_completed to R.color.routine_completed

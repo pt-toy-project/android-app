@@ -1,63 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="6dp"
-    android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="?attr/colorSurfaceVariant"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="0dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="12dp">
-
-        <ImageView
-            android:id="@+id/ivHero"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@null"
-            android:scaleType="fitCenter"
-            tools:src="@drawable/portrait_sejong" />
-
-        <TextView
-            android:id="@+id/tvHeroName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textStyle="bold"
-            tools:text="세종대왕" />
-
-        <TextView
-            android:id="@+id/tvHeroField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            tools:text="정치 · 과학 · 문화" />
-
-        <TextView
-            android:id="@+id/tvHeroInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            tools:text="조선 · 15세기" />
-
-        <TextView
-            android:id="@+id/tvHeroHabitCount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            android:textColor="?attr/colorPrimary"
-            tools:text="3개의 실천 제안" />
-    </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="6dp" android:foreground="?attr/selectableItemBackground" app:cardBackgroundColor="?attr/colorSurface" app:cardCornerRadius="16dp" app:cardElevation="0dp" app:strokeWidth="1dp">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+<ImageView android:id="@+id/ivHero" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@null" android:scaleType="centerCrop" />
+<LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="16dp" android:orientation="vertical">
+<TextView android:id="@+id/tvHeroName" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:textStyle="bold" />
+<TextView android:id="@+id/tvHeroField" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textAppearance="?attr/textAppearanceBodyMedium" />
+<TextView android:id="@+id/tvHeroInfo" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" />
+<TextView android:id="@+id/tvHeroHabitCount" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" />
+</LinearLayout>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/hero_list_open_glyph" android:textSize="28sp" android:importantForAccessibility="no" />
+</LinearLayout></com.google.android.material.card.MaterialCardView>

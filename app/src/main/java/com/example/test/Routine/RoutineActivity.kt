@@ -26,6 +26,7 @@ open class RoutineActivity : AppCompatActivity() {
     private var heroId = HeroCatalog.default.id
     private var selectedDate = RoutineDate.today()
     private var managementMode = false
+    private var dayFilter: String? = null
     private var resolveStoredHero = false
     private var requestedDetailId = -1L
     private var generation = 0
@@ -53,8 +54,9 @@ open class RoutineActivity : AppCompatActivity() {
         heroId = HeroCatalog.getOrDefault(incomingHero).id
         selectedDate = RoutineDate.parse(savedInstanceState?.getString(SELECTED_DATE) ?: intent.getStringExtra(SELECTED_DATE)) ?: RoutineDate.today()
         managementMode = savedInstanceState?.getBoolean(MANAGE) ?: false
+        dayFilter = savedInstanceState?.getString("day_filter")
         requestedDetailId = savedInstanceState?.getLong(USER_ROUTINE_ID, -1) ?: intent.getLongExtra(USER_ROUTINE_ID, -1)
-        routineAdapter = PersonalRoutineAdapter { showDetail(it.routine.id) }
+        routineAdapter = PersonalRoutineAdapter(onComplete = { complete(it.routine.id, it.date) }) { showDetail(it.routine.id) }
         findViewById<RecyclerView>(R.id.rv_routine_list).apply {
             layoutManager = LinearLayoutManager(this@RoutineActivity); adapter = routineAdapter
         }
@@ -86,7 +88,7 @@ open class RoutineActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent); setIntent(intent)
-        scopeVersion++
+        scopeVersion++; dayFilter = null
         intent.getStringExtra(HERO_ID)?.let { heroId = HeroCatalog.getOrDefault(it).id; resolveStoredHero = false }
         RoutineDate.parse(intent.getStringExtra(SELECTED_DATE))?.let { selectedDate = it; renderDates() }
         requestedDetailId = intent.getLongExtra(USER_ROUTINE_ID, -1)
@@ -110,6 +112,7 @@ open class RoutineActivity : AppCompatActivity() {
     override fun onSaveInstanceState(out: Bundle) {
         out.putString(HERO_ID, heroId); out.putString(SELECTED_DATE, selectedDate.iso); out.putBoolean(MANAGE, managementMode)
         out.putLong(USER_ROUTINE_ID, requestedDetailId)
+        out.putString("day_filter", dayFilter)
         super.onSaveInstanceState(out)
     }
 
@@ -132,7 +135,8 @@ open class RoutineActivity : AppCompatActivity() {
                 val rows = repo.listRoutines(date = if (manage) null else date, source = routineSource).map { routine ->
                     PersonalRoutineRow(routine, routine.id in completed, date, RoutineDate.today(), now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE))
                 }
-                PersonalSnapshot(hero.id, rows, repo.balance(), completed, repo.appliedItemId())
+                PersonalSnapshot(hero.id, rows, repo.balance(), completed, repo.appliedItemId(),
+                    repo.listRoutines(source = routineSource).map { it.heroId }.distinct())
             }
         }) { result ->
             if (ticket != generation) return@run
@@ -142,11 +146,29 @@ open class RoutineActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.day_notice).visibility = if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
                 findViewById<Button>(R.id.personal_add).setText(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.day_choose else R.string.day_personal_add)
                 findViewById<TextView>(R.id.routine_date).text = selectedDate.label("yyyy년 M월 d일 E요일")
+                if (dayFilter !in snapshot.startedHeroes) dayFilter = null
+                val visibleRows = TimelinePresentation.forHero(snapshot.rows, dayFilter)
+                renderHeroFilters(snapshot.startedHeroes)
+                val finished = visibleRows.count { it.completed }
+                findViewById<com.google.android.material.progressindicator.LinearProgressIndicator>(R.id.timeline_progress).apply {
+                    max = visibleRows.size.coerceAtLeast(1)
+                    progress = finished
+                    contentDescription = getString(R.string.home_progress, finished, visibleRows.size)
+                }
+                findViewById<TextView>(R.id.timeline_next).text = TimelinePresentation.next(visibleRows)?.let {
+                    getString(R.string.timeline_next, it.routine.time, it.routine.title)
+                } ?: getString(when {
+                    visibleRows.isEmpty() -> R.string.timeline_start_hint
+                    finished == visibleRows.size -> R.string.home_all_completed
+                    else -> R.string.timeline_paused
+                })
+                findViewById<TextView>(R.id.personal_empty).setText(
+                    if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.timeline_empty else R.string.personal_empty)
                 findViewById<TextView>(R.id.personal_summary).text = getString(R.string.personal_progress,
-                    snapshot.rows.count { it.completed }, snapshot.rows.size, snapshot.balance)
+                    finished, visibleRows.size, snapshot.balance)
                 findViewById<TextView>(R.id.day_badge).text = com.example.test.data.ShopCatalog.find(snapshot.badge.orEmpty())?.let { getString(R.string.personal_badge, it.title) }.orEmpty()
-                routineAdapter.submitList(snapshot.rows)
-                findViewById<TextView>(R.id.personal_empty).visibility = if (snapshot.rows.isEmpty()) View.VISIBLE else View.GONE
+                routineAdapter.submitList(visibleRows)
+                findViewById<TextView>(R.id.personal_empty).visibility = if (visibleRows.isEmpty()) View.VISIBLE else View.GONE
                 findViewById<Button>(R.id.personal_manage).setText(if (managementMode) R.string.personal_schedule else R.string.personal_manage)
                 (supportFragmentManager.findFragmentByTag(DETAIL_TAG) as? PersonalRoutineDetailSheet)?.apply {
                     updateCompletion(snapshot.completedIds, heroId, selectedDate)
@@ -155,6 +177,28 @@ open class RoutineActivity : AppCompatActivity() {
                     showDetail(requestedDetailId)
                 }
             }, onFailure = { findViewById<TextView>(R.id.personal_summary).setText(R.string.personal_storage_error) })
+        }
+    }
+
+    private fun renderHeroFilters(startedHeroes: List<String>) {
+        val group = findViewById<com.google.android.material.chip.ChipGroup>(R.id.timeline_heroes)
+        group.visibility = if (routineSource == com.example.test.data.RoutineSource.HERO_DAY && startedHeroes.isNotEmpty()) View.VISIBLE else View.GONE
+        val key = startedHeroes to dayFilter
+        if (group.tag == key) return
+        group.tag = key
+        group.removeAllViews()
+        val choices = listOf<String?>(null) + startedHeroes
+        choices.forEach { id ->
+            group.addView(com.google.android.material.chip.Chip(this).apply {
+                text = id?.let { HeroCatalog.getOrDefault(it).name } ?: getString(R.string.timeline_all_heroes)
+                isCheckable = true; isChecked = id == dayFilter
+                minHeight = (48 * resources.displayMetrics.density).toInt()
+                setOnClickListener {
+                    dayFilter = id; scopeVersion++; requestedDetailId = -1
+                    (supportFragmentManager.findFragmentByTag(DETAIL_TAG) as? PersonalRoutineDetailSheet)?.dismissAllowingStateLoss()
+                    load()
+                }
+            })
         }
     }
 
@@ -283,7 +327,7 @@ open class RoutineActivity : AppCompatActivity() {
             selectedDate.year, selectedDate.month - 1, selectedDate.day).also { it.show() }
     }
     private fun showMessage(message: Int) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?)
+    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?, val startedHeroes: List<String>)
     companion object {
         const val HERO_ID = "hero_id"
         const val SELECTED_DATE = "selected_date"

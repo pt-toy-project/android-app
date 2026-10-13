@@ -9,4 +9,14 @@
 <string name="day_details">근거·출처 자세히</string>
 <string name="day_preview_summary">제안 %1$s · %2$s</string>
 <string name="day_source_open">출처 열기</string>
+<string name="timeline_complete">완료 · 10코인</string>
+<string name="timeline_detail">자세히 · 시간·알림 설정</string>
+<string name="timeline_complete_accessibility">%1$s, %2$s 완료</string>
+<string name="timeline_detail_accessibility">%1$s, %2$s 상세와 설정</string>
+<string name="timeline_all_heroes">모든 인물</string>
+<string name="timeline_next">다음 실천 · %1$s %2$s</string>
+<string name="timeline_start_hint">인물을 고르고 하루를 시작해 보세요.</string>
+<string name="timeline_empty">이 날짜의 인물 하루가 없습니다. 하루를 시작하거나 모든 블록 관리에서 중지한 블록을 확인하세요.</string>
+<string name="timeline_paused">남은 블록이 중지되어 있습니다. 개별 설정에서 다시 켤 수 있어요.</string>
+<string name="hero_list_open_glyph">›</string>
 </resources>

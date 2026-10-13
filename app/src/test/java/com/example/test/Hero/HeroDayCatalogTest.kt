@@ -42,4 +42,19 @@ class HeroDayCatalogTest {
         assertFalse(HeroCatalog.all.any { it.id in setOf("jang_yeong_sil", "hokusai") })
         assertTrue(HeroCatalog.all.drop(15).all { it.imageResId == com.example.test.R.drawable.avatar_default })
     }
+    @Test fun everyHeroHasDistinctEditorialLearningWalkingAndRestPrompts() {
+        val profiles = HeroCatalog.all.map { DayEditorialProfiles.forHero(it.id) }
+        assertEquals(30, profiles.size)
+        assertEquals(30, profiles.map { it.learning }.toSet().size)
+        assertEquals(30, profiles.map { it.walking }.toSet().size)
+        assertEquals(30, profiles.map { it.rest }.toSet().size)
+        HeroCatalog.all.forEach { hero ->
+            val blocks = HeroDayCatalog.forHero(hero).blocks
+            val profile = DayEditorialProfiles.forHero(hero.id)
+            assertEquals(profile.walking, blocks.single { it.kind == DayKind.WALK }.description)
+            assertEquals(profile.rest, blocks.single { it.kind == DayKind.REST }.description)
+            assertTrue(blocks.all { it.grade == EvidenceGrade.MODERN })
+        }
+    }
+
 }

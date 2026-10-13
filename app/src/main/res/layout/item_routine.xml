@@ -1,8 +1,16 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="80dp" android:padding="16dp" android:orientation="vertical" android:background="?attr/selectableItemBackground" android:focusable="true" android:clickable="true">
-<TextView android:id="@+id/tv_routine_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:importantForAccessibility="no" />
-<TextView android:id="@+id/day_row_subtitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textAppearance="?attr/textAppearanceBodyMedium" android:importantForAccessibility="no" />
-<com.google.android.material.chip.Chip android:id="@+id/day_grade" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" android:checkable="false" android:importantForAccessibility="no" />
-<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-<TextView android:id="@+id/tv_time" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textAppearance="?attr/textAppearanceLabelLarge" android:importantForAccessibility="no" />
-<TextView android:id="@+id/tv_status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelLarge" android:importantForAccessibility="no" />
-</LinearLayout></LinearLayout>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp"
+    android:foreground="?attr/selectableItemBackground" android:focusable="true" android:clickable="true"
+    app:cardCornerRadius="16dp" app:cardElevation="0dp" app:strokeWidth="1dp" app:cardBackgroundColor="?attr/colorSurface">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+            <TextView android:id="@+id/tv_time" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textAppearance="?attr/textAppearanceTitleLarge" android:textStyle="bold" android:importantForAccessibility="no" />
+            <TextView android:id="@+id/tv_status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelLarge" android:importantForAccessibility="no" />
+        </LinearLayout>
+        <TextView android:id="@+id/tv_routine_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textAppearance="?attr/textAppearanceTitleMedium" android:importantForAccessibility="no" />
+        <TextView android:id="@+id/day_row_subtitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textAppearance="?attr/textAppearanceBodyMedium" android:importantForAccessibility="no" />
+        <com.google.android.material.chip.Chip android:id="@+id/day_grade" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" android:checkable="false" android:importantForAccessibility="no" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/timeline_complete" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/timeline_complete" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/timeline_detail" style="@style/Widget.MaterialComponents.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/timeline_detail" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
