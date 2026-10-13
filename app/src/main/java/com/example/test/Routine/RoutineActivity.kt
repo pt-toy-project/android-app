@@ -19,6 +19,7 @@ import com.example.test.data.CompletionOutcome
 import com.example.test.data.UserRoutine
 
 open class RoutineActivity : AppCompatActivity() {
+    protected open val timelineLayout = R.layout.activity_routine
     protected open val routineSource = com.example.test.data.RoutineSource.PERSONAL
     private lateinit var dateAdapter: DateAdapter
     private lateinit var routineAdapter: PersonalRoutineAdapter
@@ -44,7 +45,7 @@ open class RoutineActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_routine)
+        setContentView(timelineLayout)
         // Keep the old fragment class loadable for upgrade restoration, but do not show obsolete sample UI.
         supportFragmentManager.fragments.filterIsInstance<RoutineDetailBottomSheet>().forEach { it.dismissAllowingStateLoss() }
         applySystemBarInsets()
@@ -118,6 +119,16 @@ open class RoutineActivity : AppCompatActivity() {
 
     private fun renderDates() {
         val week = selectedDate.week(); dateAdapter.submitDates(week, selectedDate); datesView.scrollToPosition(week.indexOf(selectedDate))
+    }
+
+    protected fun reloadTimeline(selectedHero: String? = null) {
+        if (selectedHero != null) {
+            heroId = selectedHero
+            dayFilter = selectedHero
+            resolveStoredHero = false
+            scopeVersion++
+        }
+        load()
     }
 
     private fun load() {

@@ -1,0 +1,9 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:minHeight="64dp" android:padding="12dp" android:orientation="vertical"
+    android:background="?attr/selectableItemBackground" android:clickable="true" android:focusable="true">
+    <TextView android:id="@+id/today_preview_time" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelLarge" android:textColor="?attr/colorPrimary" android:importantForAccessibility="no" />
+    <TextView android:id="@+id/today_preview_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:importantForAccessibility="no" />
+    <TextView android:id="@+id/today_preview_kind" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodySmall" android:importantForAccessibility="no" />
+    <com.google.android.material.chip.Chip android:id="@+id/today_preview_grade" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" android:checkable="false" android:importantForAccessibility="no" />
+</LinearLayout>

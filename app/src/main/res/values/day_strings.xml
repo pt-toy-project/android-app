@@ -19,4 +19,9 @@
 <string name="timeline_empty">이 날짜의 인물 하루가 없습니다. 하루를 시작하거나 모든 블록 관리에서 중지한 블록을 확인하세요.</string>
 <string name="timeline_paused">남은 블록이 중지되어 있습니다. 개별 설정에서 다시 켤 수 있어요.</string>
 <string name="hero_list_open_glyph">›</string>
+<string name="today_pick_title">오늘 함께할 인물</string>
+<string name="today_pick_subtitle">30명의 하루에서 나에게 맞는 실천을 골라보세요.</string>
+<string name="today_show_preview">하루 8블록 미리보기</string>
+<string name="today_hide_preview">미리보기 접기</string>
+<string name="today_sources">인물 이야기 · 근거와 출처</string>
 </resources>
