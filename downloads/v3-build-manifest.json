@@ -1,13 +1,14 @@
 {
   "versionCode": 3,
   "versionName": "3.0",
-  "sourceCommit": "16c837058147793bb0549c73147a15def726b83c",
+  "sourceCommit": "2ed266984aae713eebc49a0e40efd26dc9e5fdca",
   "apk": "android-app-v3-debug.apk",
-  "sha256": "795a8a60776e06fc88f714425735f921a2b5b178147216f47b19359eae619392",
-  "bytes": 9200765,
+  "sha256": "42ba71407f25ed137f33ae30b46c3a0706d5fb705a42d239af553404a60e78bf",
+  "bytes": 9202856,
   "certificateSha256": "bf3489b7cb1b71f6f452b1e3caea6859e29365b69a37d5d8680c536dc5f81c4c",
   "compatibleWithExistingV2": false,
   "jvmTests": 75,
   "hostSQLiteTests": 19,
-  "instrumentationTestsExecuted": false
+  "instrumentationTestsExecuted": false,
+  "instrumentationTests": 50
 }
