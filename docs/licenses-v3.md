@@ -13,4 +13,4 @@
 
 ## UI 검증 의존성
 
-Robolectric 4.16.1은 테스트에만 사용하며 APK에 포함하지 않습니다. Maven POM(https://repo.maven.apache.org/maven2/org/robolectric/robolectric/4.16.1/robolectric-4.16.1.pom)과 공식 LICENSE(https://raw.githubusercontent.com/robolectric/robolectric/master/LICENSE)를 실제 HTTP 200으로 확인했습니다. MIT 전문은 test-licenses/robolectric-MIT.txt에 보관합니다. 앱의 신규 폰트·런타임 이미지/라이브러리 추가는 없습니다.
+Robolectric 4.16.1은 테스트에만 사용하며 APK에 포함하지 않습니다. Maven POM(https://repo.maven.apache.org/maven2/org/robolectric/robolectric/4.16.1/robolectric-4.16.1.pom)과 공식 LICENSE(https://raw.githubusercontent.com/robolectric/robolectric/master/LICENSE)를 실제 HTTP 200으로 확인했습니다. MIT 및 함께 제공된 Apache 고지를 test-licenses/robolectric-MIT.txt에 보관합니다. 앱의 신규 폰트·런타임 이미지/라이브러리 추가는 없습니다.
