@@ -33,10 +33,6 @@ fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
                 navigateTo(CharacterSelectActivity::class.java)
                 true
             }
-            R.id.nav_option -> {
-                navigateTo(SettingActivity::class.java)
-                true
-            }
             R.id.nav_myroom -> {
                 navigateTo(ShopActivity::class.java)
                 true

@@ -25,16 +25,17 @@ class HeroDetailActivityTest {
         ActivityScenario.launch<HeroDetailActivity>(intent).use { scenario ->
             scenario.onActivity { activity ->
                 assertEquals(hero.name, activity.findViewById<TextView>(R.id.heroDetailName).text.toString())
-                assertEquals(hero.bio, activity.findViewById<TextView>(R.id.heroDetailBio).text.toString())
+                assertEquals(com.example.test.Hero.HeroDayCatalog.NOTICE, activity.findViewById<TextView>(R.id.heroDetailBio).text.toString())
                 val cards = activity.findViewById<LinearLayout>(R.id.historicalRoutineContainer)
-                assertEquals(hero.routines.size, cards.childCount)
+                assertEquals(com.example.test.Hero.HeroDayCatalog.forHero(hero).blocks.size, cards.childCount)
                 assertTrue(cards.childCount > 0)
                 val firstCard = cards.getChildAt(0)
-                val firstRoutine = hero.routines.first()
-                assertEquals(firstRoutine.historicalFact, firstCard.findViewById<TextView>(R.id.historicalFactText).text.toString())
-                assertEquals(firstRoutine.modernPractice, firstCard.findViewById<TextView>(R.id.modernPracticeText).text.toString())
-                assertTrue(firstCard.findViewById<TextView>(R.id.historicalSourceText).text.contains(firstRoutine.source.url))
-                assertEquals(hero.portraitCredit, activity.findViewById<TextView>(R.id.heroPortraitCredit).text.toString())
+                val firstBlock = com.example.test.Hero.HeroDayCatalog.forHero(hero).blocks.minBy { it.suggestedTime }
+                assertEquals(firstBlock.title, firstCard.findViewById<TextView>(R.id.day_preview_title).text.toString())
+                assertTrue(firstCard.findViewById<TextView>(R.id.day_preview_subtitle).text.contains(firstBlock.suggestedTime))
+                assertTrue(firstCard.findViewById<TextView>(R.id.day_grade).text == firstBlock.grade.label)
+                firstCard.findViewById<View>(R.id.day_preview_details).performClick()
+                                assertEquals(hero.portraitCredit, activity.findViewById<TextView>(R.id.heroPortraitCredit).text.toString())
             }
         }
     }
@@ -48,7 +49,7 @@ class HeroDetailActivityTest {
             scenario.recreate()
             scenario.onActivity {
                 assertEquals(hero.name, it.findViewById<TextView>(R.id.heroDetailName).text.toString())
-                assertEquals(hero.routines.size, it.findViewById<LinearLayout>(R.id.historicalRoutineContainer).childCount)
+                assertEquals(com.example.test.Hero.HeroDayCatalog.forHero(hero).blocks.size, it.findViewById<LinearLayout>(R.id.historicalRoutineContainer).childCount)
             }
         }
     }

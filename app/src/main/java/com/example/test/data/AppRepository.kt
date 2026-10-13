@@ -38,15 +38,16 @@ class AppRepository(
         }
 
     /** Without a date includes disabled routines for management; with a date returns that day's schedule. */
-    fun listRoutines(heroId: String? = null, date: RoutineDate? = null): List<UserRoutine> {
+    fun listRoutines(heroId: String? = null, date: RoutineDate? = null, source: RoutineSource? = null): List<UserRoutine> {
         val selection = if (heroId == null) "deleted=0" else "deleted=0 AND hero_id=?"
         val arguments = heroId?.let { arrayOf(it) }
         val routines = db.query("user_routines", null, selection, arguments, null, null, "local_time,id").use { cursor ->
             buildList { while (cursor.moveToNext()) add(cursor.routine()) }
         }
-        if (date == null) return routines
+        val scoped = routines.filter { source == null || it.source == source }
+        if (date == null) return scoped
         val completedIds = completedRoutineIds(date, heroId)
-        return routines.filter {
+        return scoped.filter {
             // Do not present routines before adoption or disabled routines as missed work.
             it.id in completedIds || (it.enabled && date.iso >= it.createdOn && RoutineRules.scheduledOn(it.weekdayMask, date))
         }
@@ -54,26 +55,36 @@ class AppRepository(
 
     fun getRoutine(id: Long): UserRoutine? = queryRoutine(id, includeDeleted = false)
 
-    fun addRoutine(heroId: String, templateId: String, title: String, time: String, weekdayMask: Int = 127): Long {
+    fun addRoutine(heroId: String, templateId: String, title: String, time: String, weekdayMask: Int = 127, source: RoutineSource = RoutineSource.PERSONAL): Long {
         RoutineRules.validateRoutine(heroId, templateId, title, time, weekdayMask)
         return transaction {
-            db.query("user_routines", arrayOf("id"), "hero_id=? AND template_id=? AND deleted=0", arrayOf(heroId, templateId), null, null, null).use {
+            db.query("user_routines", arrayOf("id"), "hero_id=? AND template_id=? AND source=? AND deleted=0", arrayOf(heroId, templateId, source.name), null, null, null).use {
                 if (it.moveToFirst()) return@transaction it.getLong(0)
             }
             db.insertOrThrow("user_routines", null, ContentValues().apply {
                 put("hero_id", heroId); put("template_id", templateId); put("title", title.trim())
                 put("local_time", time); put("weekday_mask", weekdayMask)
                 put("enabled", 1); put("alarm_enabled", 0); put("deleted", 0)
-                put("created_on", todayProvider().iso)
+                put("created_on", todayProvider().iso); put("source", source.name)
             })
         }
+    }
+
+    /** All blocks commit together. Existing adoptions are returned without updating user settings. */
+    fun startHeroDay(hero: com.example.test.Hero.Hero): List<Long> = transaction {
+        val day = com.example.test.Hero.HeroDayCatalog.forHero(hero)
+        val ids = day.blocks.map { block ->
+            addRoutine(hero.id, block.id, block.title, block.suggestedTime, source = RoutineSource.HERO_DAY)
+        }
+        selectedHeroId = hero.id
+        ids
     }
 
     fun updateRoutine(routine: UserRoutine) {
         RoutineRules.validateRoutine(routine.heroId, routine.templateId, routine.title, routine.time, routine.weekdayMask)
         transaction {
             val original = getRoutine(routine.id) ?: return@transaction
-            require(original.heroId == routine.heroId && original.templateId == routine.templateId) { "Routine identity cannot change" }
+            require(original.heroId == routine.heroId && original.templateId == routine.templateId && original.source == routine.source) { "Routine identity cannot change" }
             db.update("user_routines", ContentValues().apply {
                 put("title", routine.title.trim()); put("local_time", routine.time); put("weekday_mask", routine.weekdayMask)
                 put("enabled", if (routine.enabled) 1 else 0); put("alarm_enabled", if (routine.alarmEnabled) 1 else 0)
@@ -248,6 +259,7 @@ class AppRepository(
     private fun Cursor.routine() = UserRoutine(
         long("id"), string("hero_id"), string("template_id"), string("title"), string("local_time"),
         getInt(getColumnIndexOrThrow("weekday_mask")), getInt(getColumnIndexOrThrow("enabled")) == 1,
-        getInt(getColumnIndexOrThrow("alarm_enabled")) == 1, string("created_on"), getInt(getColumnIndexOrThrow("deleted")) == 1
+        getInt(getColumnIndexOrThrow("alarm_enabled")) == 1, string("created_on"), getInt(getColumnIndexOrThrow("deleted")) == 1,
+        RoutineSource.valueOf(string("source"))
     )
 }

@@ -25,7 +25,7 @@ class NavigationTest {
             lateinit var originalHome: MainActivity
             scenario.onActivity { originalHome = it }
 
-            onView(withId(R.id.btnCheckRoutine)).perform(scrollTo(), click())
+            onView(withId(R.id.nav_routine)).perform(click())
             onView(withId(R.id.rv_routine_list)).check(matches(isDisplayed()))
             pressBack()
 
@@ -42,12 +42,13 @@ class NavigationTest {
             lateinit var originalHome: MainActivity
             scenario.onActivity { originalHome = it }
 
-            onView(withId(R.id.btnViewHero)).perform(scrollTo(), click())
+            onView(withId(R.id.nav_hero)).perform(click())
             onView(withId(R.id.heroRecyclerView)).check(matches(isDisplayed()))
-            onView(withId(R.id.nav_option)).perform(click())
+            onView(withId(R.id.nav_home)).perform(click())
+            onView(withId(R.id.day_settings)).perform(scrollTo(), click())
             onView(withId(R.id.switch_sound)).check(matches(isDisplayed()))
             onView(withId(R.id.nav_home)).perform(click())
-            onView(withId(R.id.btnCheckRoutine)).perform(scrollTo()).check(matches(isDisplayed()))
+            onView(withId(R.id.nav_home)).check(matches(isDisplayed()))
 
             scenario.onActivity { assertSame(originalHome, it) }
         }

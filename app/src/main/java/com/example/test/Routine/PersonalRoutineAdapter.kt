@@ -21,6 +21,16 @@ class PersonalRoutineAdapter(private val onClick: (PersonalRoutineRow) -> Unit) 
         init { view.setOnClickListener { if (bindingAdapterPosition != RecyclerView.NO_POSITION) onClick(getItem(bindingAdapterPosition)) } }
         fun bind(row: PersonalRoutineRow) {
             time.text = row.routine.time; title.text = row.routine.title
+            com.example.test.CompactText.apply(title)
+            val hero = com.example.test.Hero.HeroCatalog.getOrDefault(row.routine.heroId)
+            val block = com.example.test.Hero.HeroDayCatalog.find(hero.id, row.routine.templateId)
+            itemView.findViewById<TextView>(R.id.day_row_subtitle).text = if (row.routine.source == com.example.test.data.RoutineSource.HERO_DAY)
+                "${hero.name} · ${block?.kind?.label ?: "실천"}" else "${hero.name} · 나만의 계획"
+            itemView.findViewById<com.google.android.material.chip.Chip>(R.id.day_grade).apply {
+                visibility = if (row.routine.source == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
+                text = block?.grade?.label ?: "현대 적용"
+            }
+            com.example.test.CompactText.apply(itemView.findViewById(R.id.day_row_subtitle))
             val due = RoutineTime.parse(row.routine.time)?.minutes ?: Int.MAX_VALUE
             val (label, color) = when {
                 row.completed -> R.string.routine_status_completed to R.color.routine_completed
@@ -30,7 +40,7 @@ class PersonalRoutineAdapter(private val onClick: (PersonalRoutineRow) -> Unit) 
             }
             status.setText(label); status.setTextColor(ContextCompat.getColor(itemView.context, color))
             time.setTextColor(ContextCompat.getColor(itemView.context, color))
-            itemView.contentDescription = itemView.context.getString(R.string.routine_accessibility, row.routine.time, row.routine.title, itemView.context.getString(label))
+            itemView.contentDescription = itemView.context.getString(R.string.routine_accessibility, row.routine.time, row.routine.title, itemView.context.getString(label)) + ", " + itemView.findViewById<TextView>(R.id.day_row_subtitle).text + ", " + (block?.grade?.label.orEmpty())
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_routine, parent, false))

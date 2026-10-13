@@ -1,32 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- 1. 홈 -->
-    <item
-        android:id="@+id/nav_home"
-        android:icon="@android:drawable/ic_menu_view"
-        android:title="@string/nav_home" />
-
-    <!-- 2. 루틴 -->
-    <item
-        android:id="@+id/nav_routine"
-        android:icon="@android:drawable/ic_menu_agenda"
-        android:title="@string/nav_routine" />
-
-    <!-- 3. 위인 -->
-    <item
-        android:id="@+id/nav_hero"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="@string/nav_hero" />
-
-    <!-- 4. 마이룸 -->
-    <item
-        android:id="@+id/nav_myroom"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/nav_myroom" />
-    <item
-        android:id="@+id/nav_option"
-        android:icon="@android:drawable/ic_menu_help"
-        android:title="@string/nav_settings" />
-
+<item android:id="@+id/nav_home" android:icon="@android:drawable/ic_menu_view" android:title="@string/nav_home" />
+<item android:id="@+id/nav_hero" android:icon="@android:drawable/ic_menu_myplaces" android:title="@string/nav_hero" />
+<item android:id="@+id/nav_routine" android:icon="@android:drawable/ic_menu_agenda" android:title="@string/nav_routine" />
+<item android:id="@+id/nav_myroom" android:icon="@android:drawable/ic_menu_info_details" android:title="@string/nav_myroom" />
 </menu>

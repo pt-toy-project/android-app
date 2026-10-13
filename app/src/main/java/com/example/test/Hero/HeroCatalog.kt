@@ -6,9 +6,9 @@ import com.example.test.R
 object HeroCatalog {
     const val ALL_FIELDS = "전체"
 
-    val fields: List<String> = listOf(ALL_FIELDS, "정치", "과학", "예술", "문학", "군사", "철학", "의료", "사회", "교육", "환경")
+    val fields: List<String> = listOf(ALL_FIELDS, "정치", "과학", "예술", "문학", "군사", "철학", "의료", "사회", "교육", "환경", "탐험", "수학", "학습")
 
-    val all: List<Hero> = listOf(
+    val original: List<Hero> = listOf(
         Hero(
             id = "sejong",
             name = "세종대왕",
@@ -552,6 +552,8 @@ object HeroCatalog {
             )
         ),
     )
+
+    val all: List<Hero> = original + NewHeroCatalog.all
 
     val default: Hero = all.first()
 

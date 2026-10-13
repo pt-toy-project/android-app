@@ -1,7 +1,7 @@
 <resources>
-    <string name="nav_home">홈</string>
-    <string name="nav_routine">루틴</string>
-    <string name="nav_hero">위인</string>
+    <string name="nav_home">오늘</string>
+    <string name="nav_routine">나만의 계획</string>
+    <string name="nav_hero">인물</string>
     <string name="nav_myroom">상점</string>
     <string name="nav_settings">설정</string>
     <string name="home_title">위인의 하루</string>

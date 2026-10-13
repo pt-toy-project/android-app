@@ -31,7 +31,7 @@ class CharacterSelectActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.heroRecyclerView)
         val emptyView = findViewById<TextView>(R.id.heroEmptyState)
         val heroAdapter = HeroAdapter(::showHeroDetail, ::showHeroDetail)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.layoutManager = GridLayoutManager(this, 1)
         recyclerView.adapter = heroAdapter
 
         fieldSpinner = findViewById(R.id.fieldSpinner)
@@ -87,7 +87,7 @@ class CharacterSelectActivity : AppCompatActivity() {
     private fun showHeroDetail(hero: Hero) {
         if (openingDetail) return
         openingDetail = true
-        startActivity(Intent(this, HeroDetailActivity::class.java).putExtra(HeroDetailActivity.EXTRA_HERO_ID, hero.id))
+        startActivity(Intent(this, HeroDetailActivity::class.java).putExtra(HeroDetailActivity.EXTRA_HERO_ID, hero.id).putExtra("personal_mode", intent.getBooleanExtra("personal_mode", false)))
     }
 
     private companion object {

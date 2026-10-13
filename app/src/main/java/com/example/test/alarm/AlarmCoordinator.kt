@@ -289,7 +289,7 @@ class AlarmCoordinator(context: Context) {
         if (Build.VERSION.SDK_INT >= 33 && context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED) return
         if (!notificationsAllowed()) return
-        val open = Intent(context, RoutineActivity::class.java).apply {
+        val open = Intent(context, if (routine.source == com.example.test.data.RoutineSource.HERO_DAY) com.example.test.MainActivity::class.java else RoutineActivity::class.java).apply {
             data = Uri.parse(AlarmIdentity.uri("open", routine.id))
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             putExtra("hero_id", routine.heroId)

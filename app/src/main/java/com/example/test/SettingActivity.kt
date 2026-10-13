@@ -38,7 +38,7 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
         applySystemBarInsets()
-        setupBottomNavigation(R.id.nav_option)
+        setupBottomNavigation(0)
         preferences = SettingsPreferences(applicationContext)
         status = findViewById(R.id.settings_alarm_status)
         permissionButton = findViewById(R.id.settings_notification_permission)

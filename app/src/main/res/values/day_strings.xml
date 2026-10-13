@@ -1,0 +1,12 @@
+<resources>
+<string name="day_today">오늘 · 인물의 하루</string>
+<string name="day_personal">나만의 계획</string>
+<string name="day_choose">인물의 하루 시작하기</string>
+<string name="day_personal_add">개별 실천 추가</string>
+<string name="day_start">이 인물의 하루 시작</string>
+<string name="day_notice">기록에 없는 활동과 시각은 앱 제안입니다. 알림 시각은 직접 바꿀 수 있습니다.</string>
+<string name="day_started">하루를 시작했습니다. 기존 블록 설정은 유지됩니다.</string>
+<string name="day_details">근거·출처 자세히</string>
+<string name="day_preview_summary">제안 %1$s · %2$s</string>
+<string name="day_source_open">출처 열기</string>
+</resources>

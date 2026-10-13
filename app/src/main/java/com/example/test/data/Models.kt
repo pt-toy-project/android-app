@@ -14,7 +14,8 @@ data class UserRoutine(
     val enabled: Boolean,
     val alarmEnabled: Boolean,
     val createdOn: String = "",
-    val deleted: Boolean = false
+    val deleted: Boolean = false,
+    val source: RoutineSource = RoutineSource.PERSONAL
 )
 
 data class CompletionRecord(
@@ -43,3 +44,5 @@ object ShopCatalog {
     )
     fun find(id: String): ShopItem? = items.firstOrNull { it.id == id }
 }
+
+enum class RoutineSource { PERSONAL, HERO_DAY }

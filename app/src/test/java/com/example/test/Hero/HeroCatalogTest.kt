@@ -39,7 +39,7 @@ class HeroCatalogTest {
     @Test
     fun scienceFilterIncludesHeroesWithMultipleFields() {
         assertEquals(
-            setOf("sejong", "einstein", "newton", "da_vinci", "franklin", "darwin", "curie"),
+            setOf("sejong", "einstein", "newton", "da_vinci", "franklin", "darwin", "curie", "ada_lovelace", "maria_merian", "ibn_al_haytham"),
             HeroCatalog.filterByField("과학").map { it.id }.toSet()
         )
         assertEquals(
@@ -51,7 +51,7 @@ class HeroCatalogTest {
     @Test
     fun categoriesUseWholeNamesAndEmptyCategoriesReturnEmptyLists() {
         assertTrue(HeroCatalog.fields.contains("환경"))
-        assertEquals(listOf("thoreau", "john_muir"), HeroCatalog.filterByField("환경").map { it.id })
+        assertEquals(listOf("thoreau", "john_muir", "xu_xiake"), HeroCatalog.filterByField("환경").map { it.id })
         assertTrue(HeroCatalog.filterByField("음악").isEmpty())
         assertTrue(HeroCatalog.filterByField("과").isEmpty())
         assertTrue(HeroCatalog.filterByField("unknown_field").isEmpty())
@@ -77,7 +77,7 @@ class HeroCatalogTest {
     @Test
     fun templateIdentityRemainsOwnedByItsHero() {
         val routines = HeroCatalog.all.flatMap { it.routines }
-        assertEquals(29, routines.size)
+        assertEquals(59, routines.size)
         assertEquals(routines.size, routines.map { it.id }.toSet().size)
         HeroCatalog.all.forEach { hero ->
             assertTrue(hero.routines.all { it.id.startsWith(hero.id + "_") })
@@ -114,7 +114,8 @@ class HeroCatalogTest {
 
     @Test
     fun everyPortraitIsDistinctAndIncludesOriginalSourceAndRights() {
-        val heroes = HeroCatalog.all
+        val heroes = HeroCatalog.original
+        assertEquals(15, heroes.size)
         assertEquals(heroes.size, heroes.map { it.imageResId }.toSet().size)
         assertTrue(heroes.all { it.imageResId != 0 })
         assertTrue(heroes.all { it.portraitCredit.contains("https://commons.wikimedia.org/wiki/File:") })

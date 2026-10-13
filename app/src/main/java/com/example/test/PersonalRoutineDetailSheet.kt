@@ -20,17 +20,18 @@ class PersonalRoutineDetailSheet : BottomSheetDialogFragment(R.layout.dialog_per
         super.onViewCreated(view, state)
         val args = requireArguments()
         val hero = HeroCatalog.getOrDefault(args.getString(RoutineActivity.HERO_ID))
+        val block = com.example.test.Hero.HeroDayCatalog.find(hero.id, args.getString("template").orEmpty())
         val template = hero.routines.firstOrNull { it.id == args.getString("template") }
         view.findViewById<TextView>(R.id.personal_detail_title).text = args.getString("title")
         view.findViewById<TextView>(R.id.personal_detail_hero).text = hero.name
         view.findViewById<TextView>(R.id.personal_detail_date).text = getString(R.string.routine_detail_schedule,
             args.getString(RoutineActivity.SELECTED_DATE).orEmpty(), args.getString("time").orEmpty())
-        view.findViewById<TextView>(R.id.personal_detail_fact).text = template?.historicalFact ?: getString(R.string.personal_snapshot)
-        view.findViewById<TextView>(R.id.personal_detail_practice).text = template?.modernPractice.orEmpty()
+        view.findViewById<TextView>(R.id.personal_detail_fact).text = block?.let { "${it.grade.label} · 자료 재확인 미완료\n${it.historicalTime?.let { time -> "v2 출처 시간대: $time\n" }.orEmpty()}${com.example.test.Hero.HeroDayCatalog.NOTICE}" } ?: template?.historicalFact ?: getString(R.string.personal_snapshot)
+        view.findViewById<TextView>(R.id.personal_detail_practice).text = block?.description ?: template?.modernPractice.orEmpty()
         view.findViewById<Button>(R.id.personal_detail_source).apply {
-            visibility = if (template == null) View.GONE else View.VISIBLE
-            text = template?.source?.let { getString(R.string.personal_source, it.title, it.locator) }
-            setOnClickListener { template?.source?.url?.let(::openSource) }
+            visibility = if (block == null && template == null) View.GONE else View.VISIBLE
+            text = (block?.source ?: template?.source)?.let { getString(R.string.personal_source, it.title, it.locator) }
+            setOnClickListener { (block?.source ?: template?.source)?.url?.let(::openSource) }
         }
         view.findViewById<Button>(R.id.personal_detail_complete).setOnClickListener { dispatch("complete") }
         view.findViewById<Button>(R.id.personal_detail_edit).setOnClickListener { dispatch("edit") }
@@ -53,7 +54,7 @@ class PersonalRoutineDetailSheet : BottomSheetDialogFragment(R.layout.dialog_per
 
     fun updateCompletion(completedIds: Set<Long>, heroId: String, date: RoutineDate) {
         val args = requireArguments()
-        if (args.getString(RoutineActivity.HERO_ID) == heroId && args.getString(RoutineActivity.SELECTED_DATE) == date.iso) {
+        if (args.getString(RoutineActivity.SELECTED_DATE) == date.iso) {
             args.putBoolean("completed", args.getLong(RoutineActivity.USER_ROUTINE_ID) in completedIds)
         }
         refreshDateBoundary()

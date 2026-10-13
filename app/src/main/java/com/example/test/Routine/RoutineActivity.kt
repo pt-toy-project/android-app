@@ -18,7 +18,8 @@ import com.example.test.data.AppRepository
 import com.example.test.data.CompletionOutcome
 import com.example.test.data.UserRoutine
 
-class RoutineActivity : AppCompatActivity() {
+open class RoutineActivity : AppCompatActivity() {
+    protected open val routineSource = com.example.test.data.RoutineSource.PERSONAL
     private lateinit var dateAdapter: DateAdapter
     private lateinit var routineAdapter: PersonalRoutineAdapter
     private lateinit var datesView: RecyclerView
@@ -46,7 +47,7 @@ class RoutineActivity : AppCompatActivity() {
         // Keep the old fragment class loadable for upgrade restoration, but do not show obsolete sample UI.
         supportFragmentManager.fragments.filterIsInstance<RoutineDetailBottomSheet>().forEach { it.dismissAllowingStateLoss() }
         applySystemBarInsets()
-        setupBottomNavigation(R.id.nav_routine)
+        setupBottomNavigation(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.id.nav_home else R.id.nav_routine)
         val incomingHero = savedInstanceState?.getString(HERO_ID) ?: intent.getStringExtra(HERO_ID)
         resolveStoredHero = incomingHero == null
         heroId = HeroCatalog.getOrDefault(incomingHero).id
@@ -64,7 +65,7 @@ class RoutineActivity : AppCompatActivity() {
         }
         findViewById<ImageButton>(R.id.iv_calendar).setOnClickListener { showDatePicker() }
         findViewById<Button>(R.id.personal_add).setOnClickListener {
-            startActivity(Intent(this, HeroDetailActivity::class.java).putExtra("hero_id", heroId))
+            startActivity(Intent(this, CharacterSelectActivity::class.java).putExtra("personal_mode", routineSource == com.example.test.data.RoutineSource.PERSONAL))
         }
         findViewById<Button>(R.id.personal_manage).setOnClickListener { managementMode = !managementMode; load() }
         findViewById<Button>(R.id.personal_history).setOnClickListener {
@@ -79,6 +80,7 @@ class RoutineActivity : AppCompatActivity() {
                 "delete" -> confirmDelete(id)
             }
         }
+        findViewById<Button>(R.id.day_settings).setOnClickListener { startActivity(Intent(this, SettingActivity::class.java)) }
         renderDates()
     }
 
@@ -93,7 +95,7 @@ class RoutineActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        super.onResume(); handler.removeCallbacks(refresh); handler.post(refresh)
+        super.onResume(); setupBottomNavigation(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.id.nav_home else R.id.nav_routine); handler.removeCallbacks(refresh); handler.post(refresh)
         AppIo.run(this, { AlarmCoordinator(applicationContext).reconcile() }) { result ->
             findViewById<TextView>(R.id.personal_alarm_status).text = result.fold(
                 { if (it.notificationsBlocked) getString(R.string.personal_permission_needed)
@@ -125,21 +127,24 @@ class RoutineActivity : AppCompatActivity() {
             AppRepository(applicationContext).use { repo ->
                 val hero = HeroCatalog.getOrDefault(if (resolve) repo.selectedHeroId else targetHero)
                 repo.selectedHeroId = hero.id
-                val completed = repo.completedRoutineIds(date, hero.id)
+                val completed = repo.completedRoutineIds(date)
                 val now = java.util.GregorianCalendar()
-                val rows = repo.listRoutines(hero.id, if (manage) null else date).map { routine ->
+                val rows = repo.listRoutines(date = if (manage) null else date, source = routineSource).map { routine ->
                     PersonalRoutineRow(routine, routine.id in completed, date, RoutineDate.today(), now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE))
                 }
-                PersonalSnapshot(hero.id, rows, repo.balance(), completed)
+                PersonalSnapshot(hero.id, rows, repo.balance(), completed, repo.appliedItemId())
             }
         }) { result ->
             if (ticket != generation) return@run
             result.fold(onSuccess = { snapshot ->
                 heroId = snapshot.heroId; resolveStoredHero = false
-                findViewById<TextView>(R.id.routine_title).text = getString(R.string.routine_title, HeroCatalog.getOrDefault(heroId).name)
+                findViewById<TextView>(R.id.routine_title).text = getString(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.day_today else R.string.day_personal)
+                findViewById<TextView>(R.id.day_notice).visibility = if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
+                findViewById<Button>(R.id.personal_add).setText(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.day_choose else R.string.day_personal_add)
                 findViewById<TextView>(R.id.routine_date).text = selectedDate.label("yyyy년 M월 d일 E요일")
                 findViewById<TextView>(R.id.personal_summary).text = getString(R.string.personal_progress,
                     snapshot.rows.count { it.completed }, snapshot.rows.size, snapshot.balance)
+                findViewById<TextView>(R.id.day_badge).text = com.example.test.data.ShopCatalog.find(snapshot.badge.orEmpty())?.let { getString(R.string.personal_badge, it.title) }.orEmpty()
                 routineAdapter.submitList(snapshot.rows)
                 findViewById<TextView>(R.id.personal_empty).visibility = if (snapshot.rows.isEmpty()) View.VISIBLE else View.GONE
                 findViewById<Button>(R.id.personal_manage).setText(if (managementMode) R.string.personal_schedule else R.string.personal_manage)
@@ -168,9 +173,15 @@ class RoutineActivity : AppCompatActivity() {
                 return@run
             }
             result.fold(onSuccess = { value ->
-                if (value == null || value.first.heroId != heroId) {
+                if (value == null) {
                     if (requestedDetailId == id) requestedDetailId = -1
                     showMessage(R.string.routine_invalid); return@fold
+                }
+                if (value.first.source != routineSource) {
+                    startActivity(Intent(this, if (value.first.source == com.example.test.data.RoutineSource.HERO_DAY) MainActivity::class.java else RoutineActivity::class.java)
+                        .putExtra(USER_ROUTINE_ID, id).putExtra(SELECTED_DATE, date.iso))
+                    requestedDetailId = -1
+                    return@fold
                 }
                 if (!supportFragmentManager.isStateSaved && supportFragmentManager.findFragmentByTag(DETAIL_TAG) == null) {
                     PersonalRoutineDetailSheet.newInstance(value.first, date, value.second).showNow(supportFragmentManager, DETAIL_TAG)
@@ -185,7 +196,7 @@ class RoutineActivity : AppCompatActivity() {
         if (busy) return
         busy = true
         AppIo.run(this, {
-            val outcome = AppRepository(applicationContext).use { it.complete(id, date) }
+            val outcome = AppRepository(applicationContext).use { if (it.getRoutine(id)?.source == routineSource) it.complete(id, date) else CompletionOutcome.ROUTINE_UNAVAILABLE }
             runCatching { AlarmCoordinator(applicationContext).reconcile() }
             outcome
         }) { result ->
@@ -208,7 +219,7 @@ class RoutineActivity : AppCompatActivity() {
         if (busy) return
         busy = true
         val expectedScope = scopeVersion
-        AppIo.run(this, { AppRepository(applicationContext).use { it.getRoutine(id) } }) { result ->
+        AppIo.run(this, { AppRepository(applicationContext).use { it.getRoutine(id)?.takeIf { row -> row.source == routineSource } } }) { result ->
             busy = false
             if (expectedScope != scopeVersion || !lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) return@run
             result.fold(onSuccess = { it?.let(::showEditor) ?: showMessage(R.string.routine_invalid) }, onFailure = { showMessage(R.string.personal_storage_error) })
@@ -260,7 +271,7 @@ class RoutineActivity : AppCompatActivity() {
                 if (busy) return@setPositiveButton
                 busy = true
                 AppIo.run(this, {
-                    AppRepository(applicationContext).use { it.deleteRoutine(id) }
+                    AppRepository(applicationContext).use { if (it.getRoutine(id)?.source == routineSource) it.deleteRoutine(id) }
                     AlarmCoordinator(applicationContext).cancel(id)
                 }) { result -> busy = false; if (result.isFailure) showMessage(R.string.personal_storage_error); load() }
             }.create().also { it.show() }
@@ -272,7 +283,7 @@ class RoutineActivity : AppCompatActivity() {
             selectedDate.year, selectedDate.month - 1, selectedDate.day).also { it.show() }
     }
     private fun showMessage(message: Int) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>)
+    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?)
     companion object {
         const val HERO_ID = "hero_id"
         const val SELECTED_DATE = "selected_date"

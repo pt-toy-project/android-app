@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/ivHero"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:contentDescription="@null"
             android:scaleType="fitCenter"
             tools:src="@drawable/portrait_sejong" />

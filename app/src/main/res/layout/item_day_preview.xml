@@ -1,0 +1,8 @@
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" app:cardCornerRadius="16dp" app:cardElevation="0dp">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+<TextView android:id="@+id/day_preview_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" />
+<TextView android:id="@+id/day_preview_subtitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" />
+<com.google.android.material.chip.Chip android:id="@+id/day_grade" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" android:checkable="false" />
+<Button android:id="@+id/day_preview_details" style="@style/Widget.MaterialComponents.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/day_details" />
+<Button android:id="@+id/day_preview_add" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/day_personal_add" />
+</LinearLayout></com.google.android.material.card.MaterialCardView>

@@ -1,5 +1,37 @@
 # 역사 콘텐츠의 근거와 적용 방식
 
+## v3.0 자료 재확인 (2026-10-13)
+
+이 아래 v2 조사 기록은 기존 문서의 보존본이며 이번 환경의 열람 성공을 뜻하지 않습니다.
+v3에서는 역사 자료 URL 47개를 실제 curl로 요청했습니다. 모두 `curl (56) CONNECT tunnel failed, response 403`으로 실패했습니다. HTTP 상태 000은 본문 서버의 상태가 아니라 CONNECT 실패 결과입니다. 정책 설정만으로 성공을 주장하지 않습니다. 자세한 실제 요청 결과는 [source-access-v3.json](source-access-v3.json)에 있습니다.
+
+30명·240블록을 제공합니다. **모든 v3 블록은 MODERN**입니다. 기록에 없는 기상·식사·산책·휴식·취침은 앱 제안이며 고정 일과가 아닙니다. 기존 자료의 시간대와 사용자가 바꾸는 알림 시각을 분리합니다. RECORDED는 본문의 행동과 시각이 모두 확인된 경우에만 사용할 수 있고, RECONSTRUCTED는 확인된 일부 기록에 근거한 구성입니다. 이번 재확인 실패로 이 등급을 새로 부여하지 않았습니다. 원문 확인과 대조 후 등급을 올릴 수 있습니다.
+
+장영실·가쓰시카 호쿠사이는 개인 하루 근거가 특히 부족하고 이번 원문 재확인도 실패하여 제외했습니다. 두 후보의 조사 URL도 위 요청 결과에 포함되어 있습니다. 나머지 신규 15명도 고정 일과를 입증했다는 뜻으로 포함하지 않습니다. 저술·연구·교육·여행 주제를 연결한 앱 제안으로 포함합니다. 신규 한국 자료의 기사 번호와 일부 해외 자료 식별도 본문에서 재확인하지 못했으므로 정확한 자료 식별·구절 위치는 미확인입니다.
+
+셰익스피어는 작품 기반 창작 실천을 유지하고, 뉴턴·다 빈치·나이팅게일의 저술은 개인의 고정 일과로 바꾸지 않습니다. 프랭클린의 계획표와 계획을 지키기 어려웠다는 v2 회고 설명을 그대로 보존합니다.
+
+| 신규 인물 | 연결 자료/주제 | 실제 요청 URL | 확인 위치 | 등급 |
+|---|---|---|---|---|
+| 정약용 | 목민심서 / 살림에서 개선할 문제 하나 찾기 | https://encykorea.aks.ac.kr/Article/E0050540 | 미확인 · CONNECT 403 | MODERN |
+| 이황 | 성학십도 / 마음을 가다듬고 시작 | https://encykorea.aks.ac.kr/Article/E0034673 | 미확인 · CONNECT 403 | MODERN |
+| 이이 | 격몽요결 / 학습의 뜻 세우기 | https://encykorea.aks.ac.kr/Article/E0002368 | 미확인 · CONNECT 403 | MODERN |
+| 허준 | 동의보감 / 생활의 균형 살피기 | https://www.nl.go.kr/ | 미확인 · CONNECT 403 | MODERN |
+| 공자 | The Analects / 배운 것 다시 익히기 | https://www.gutenberg.org/ebooks/3330 | 미확인 · CONNECT 403 | MODERN |
+| 주희 | 주자어류 / 질문을 천천히 풀기 | https://ctext.org/zhuzi-yulei | 미확인 · CONNECT 403 | MODERN |
+| 서하객 | 서하객유기 / 가까운 길 관찰하기 | https://ctext.org/wiki.pl?if=gb&res=756968 | 미확인 · CONNECT 403 | MODERN |
+| 마쓰오 바쇼 | 오쿠노호소미치 / 걷다가 장면 찾기 | https://en.wikisource.org/wiki/The_Narrow_Road_to_the_Deep_North | 미확인 · CONNECT 403 | MODERN |
+| 에이다 러브레이스 | Notes on the Analytical Engine / 문제를 단계로 나누기 | https://www.fourmilab.ch/babbage/sketch.html | 미확인 · CONNECT 403 | MODERN |
+| 마리아 지빌라 메리안 | Metamorphosis insectorum Surinamensium / 생물의 변화 관찰 | https://www.biodiversitylibrary.org/bibliography/63607 | 미확인 · CONNECT 403 | MODERN |
+| 이븐 바투타 | 리흘라 / 낯선 관점 만나기 | https://www.britannica.com/biography/Ibn-Battuta | 미확인 · CONNECT 403 | MODERN |
+| 이븐 알하이삼 | Kitab al-Manazir / 관찰할 질문 만들기 | https://www.britannica.com/biography/Ibn-al-Haytham | 미확인 · CONNECT 403 | MODERN |
+| 라빈드라나트 타고르 | Sadhana / 자연과 관계 돌아보기 | https://www.gutenberg.org/ebooks/6842 | 미확인 · CONNECT 403 | MODERN |
+| 소르 후아나 이네스 데 라 크루스 | Respuesta a Sor Filotea / 분야를 넘는 질문 | https://www.britannica.com/biography/Sor-Juana-Ines-de-la-Cruz | 미확인 · CONNECT 403 | MODERN |
+| 마리아 몬테소리 | The Montessori Method / 집중을 돕는 환경 준비 | https://www.gutenberg.org/ebooks/39863 | 미확인 · CONNECT 403 | MODERN |
+
+블록별 고정 ID·설명·출처·확인 상태·시간은 [historical-catalog.json](historical-catalog.json)의 `heroDay`에 기록합니다. 기존 29개 템플릿 ID와 기존 인물 ID를 유지합니다. 원문·현대 번역·시·노래 가사를 새로 복사하지 않았으며 신규 활동 설명은 앱에서 직접 작성했습니다.
+
+
 자료 확인: 2026-10-13. 15명, 29개 템플릿. 앱은 자료를 한국어로 요약하며, 제안 시각과 실천 행동은 현대 생활에 맞춘 편집입니다. 특정 시각이 원문에 없는 경우 `historicalTime`을 임의로 채우지 않습니다.
 
 이 앱은 기록에서 확인되는 습관·연구 방식·자기 성찰·창작 지침을 구분합니다. 권장한 방법이 곧 저자의 실제 매일 행동이었다고 주장하지 않습니다. 셰익스피어의 하루 일과는 확인되지 않았으므로 작품에 기반한 창작 실천임을 표시합니다. 프랭클린의 표 역시 계획표이며, 본인이 정확히 지키기 어려웠다고 적은 부분을 함께 반영했습니다.
