@@ -1,4 +1,32 @@
-# Android Studio 없이 앱 확인하기
+# 위인의 하루 APK 다운로드
+
+**[v3.0 테스트 APK 다운로드](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3-debug.apk)**
+
+이 APK는 **기존 v2 앱과 서명 인증서가 달라 업데이트 설치가 불가능**합니다. 기존 서명 키가 이 환경에 없어 별도 테스트 파일로 제공합니다. 기존 앱이 없는 테스트 기기에서 사용할 수 있습니다. **기존 데이터를 보존하려면 v2 앱을 삭제하지 마세요.** 호환 업데이트에는 기존 키로 v3 APK를 다시 서명해야 합니다. 기존 v2 APK와 체크섬은 변경하지 않았습니다.
+
+| 항목 | 값 |
+|---|---|
+| 버전 | 3.0 / versionCode 3 |
+| 패키지 / 지원 기기 | com.example.test / Android 7.0(API 24)+ |
+| 대응 소스 커밋 | `1c0343ae2af50a960c8f6b6addad489227f3059f` |
+| 파일 크기 | 9,196,173 B |
+| APK SHA-256 | `5b1ec993f2f26408cb65631af7bc181ca4cf5dbcd69907e187405dcc64bcdb3e` |
+| 인증서 SHA-256 | `bf3489b7cb1b71f6f452b1e3caea6859e29365b69a37d5d8680c536dc5f81c4c` |
+| 검증 | JVM 71 / SQLite 19 통과, 앱·계측 APK 빌드 성공, lint 오류 0·경고 67, apksigner 검증 성공 |
+| 미실행 | Android 계측 48개, 실제 설치·알림·TalkBack·최대 글꼴·야간 대비 실측 |
+
+30명·240블록의 인물 하루, 개인 계획과 분리된 탭, DB v1→v2 보존 마이그레이션을 제공합니다. 신규 15명은 자체 제작 벡터 아바타를 사용하고 기존 사진 15장은 유지합니다. 역사 자료 URL 47개는 실제 요청했으나 CONNECT 403으로 본문 재확인에 실패했고, 모든 v3 하루 블록은 현대 적용 제안으로 표시합니다. 상세한 구현·검증·제한은 [v3 구현 보고서](../docs/implementation-v3.md)에 있습니다.
+
+파일 다운로드 후 브라우저/파일 앱의 설치 권한을 허용하여 새 테스트 기기에 설치합니다. 비공개 저장소라면 접근 권한이 있는 GitHub 계정으로 로그인해야 합니다. 코인은 현금 가치가 없는 로컬 포인트이며 로그인·서버 동기화·현금 결제는 없습니다.
+
+체크섬 파일: [android-app-v3-debug.apk.sha256](android-app-v3-debug.apk.sha256). 두 파일을 같은 디렉터리에 내려받아 확인합니다.
+
+```bash
+sha256sum --check android-app-v3-debug.apk.sha256
+```
+
+## 기존 v2 다운로드 안내 (보존)
+
 
 **[android-app-debug.apk 다운로드](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-debug.apk)**
 
