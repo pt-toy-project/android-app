@@ -29,6 +29,7 @@ class PersonalRoutineAdapter(
             com.example.test.CompactText.apply(title)
             val heroName = com.example.test.data.RoutineIdentity.displayName(row.routine.heroId)
             val block = com.example.test.Hero.HeroDayCatalog.find(row.routine.heroId, row.routine.templateId)
+            itemView.findViewById<TextView>(R.id.day_row_subtitle).visibility = View.GONE
             itemView.findViewById<TextView>(R.id.day_row_subtitle).text = if (row.routine.source == com.example.test.data.RoutineSource.HERO_DAY)
                 block?.description.orEmpty() else {
                     val schedule = if (row.routine.weekdayMask == 127) itemView.context.getString(R.string.redesign_everyday)

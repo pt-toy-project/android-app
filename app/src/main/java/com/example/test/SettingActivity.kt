@@ -40,6 +40,8 @@ class SettingActivity : AppCompatActivity() {
         applySystemBarInsets()
         ScreenToolbar.bind(this, R.string.nav_settings, back = true)
         setupBottomNavigation(0)
+        findViewById<TextView>(R.id.settings_build).text = getString(
+            R.string.compact_build_details, com.example.test.Hero.HeroCatalog.all.size)
         preferences = SettingsPreferences(applicationContext)
         status = findViewById(R.id.settings_alarm_status)
         permissionButton = findViewById(R.id.settings_notification_permission)

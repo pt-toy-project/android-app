@@ -24,7 +24,7 @@ data class HeroDayBlock(
 }
 
 object HeroDayCatalog {
-    const val NOTICE = "기록에 없는 활동과 시각은 앱 제안입니다. 알림 시각은 직접 바꿀 수 있습니다."
+    const val NOTICE = "기록에 없는 활동·시각은 앱 제안입니다."
     fun forHero(hero: Hero): HeroDay {
         val first = hero.routines.first()
         val last = hero.routines.getOrNull(1)

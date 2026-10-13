@@ -39,7 +39,7 @@ class HeroAdapter(
         holder.habitCount.setText(R.string.redesign_eight_blocks)
         holder.itemView.isFocusable = true
         holder.itemView.contentDescription = holder.itemView.context.getString(
-            R.string.hero_card_action, hero.name, hero.field, hero.info
+            R.string.hero_card_compact_action, hero.name, hero.field
         )
         holder.itemView.setOnClickListener { onHeroClick(hero) }
         holder.itemView.setOnLongClickListener {

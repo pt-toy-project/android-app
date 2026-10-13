@@ -6,7 +6,7 @@
             <TextView android:id="@+id/tvHeroName" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium"/>
             <TextView android:id="@+id/tvHeroField" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginTop="4dp"/>
             <TextView android:id="@+id/tvHeroInfo" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:visibility="gone"/>
-            <TextView android:id="@+id/tvHeroHabitCount" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelSmall" android:text="@string/redesign_eight_blocks" android:layout_marginTop="6dp" android:textColor="@color/ui_primary"/>
+            <TextView android:id="@+id/tvHeroHabitCount" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelSmall" android:text="@string/redesign_eight_blocks" android:layout_marginTop="6dp" android:textColor="@color/ui_primary"/>
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

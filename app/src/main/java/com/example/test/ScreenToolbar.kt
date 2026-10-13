@@ -8,7 +8,10 @@ import com.google.android.material.appbar.MaterialToolbar
 object ScreenToolbar {
     fun bind(activity: AppCompatActivity, title: Int, back: Boolean = false) {
         val toolbar = activity.findViewById<MaterialToolbar>(R.id.screen_toolbar) ?: return
-        toolbar.setTitle(title)
+        toolbar.title = if (activity is CharacterSelectActivity)
+            activity.getString(R.string.compact_catalog_title, com.example.test.Hero.HeroCatalog.all.size)
+        else activity.getString(title)
+        if (activity is MainActivity) toolbar.subtitle = activity.getString(R.string.compact_build_label)
         toolbar.menu.clear()
         toolbar.inflateMenu(R.menu.screen_menu)
         if (back) {
