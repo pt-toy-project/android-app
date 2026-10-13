@@ -1,5 +1,7 @@
 # v3 원격 다운로드 검증
 
+이 문서는 초기 v3 게시본의 검증 기록입니다. 후속 코드 개선 APK의 최신 체크섬과 소스는 [v3-build-manifest.json](v3-build-manifest.json)을 참고하세요.
+
 2026-10-13, `origin`이 `https://github.com/pt-toy-project/android-app.git`임을 확인하고 강제 푸시 없이 main에 반영했습니다.
 
 - 구현 소스 커밋: `1c0343a` (전체 ID: v3-build-manifest.json)
