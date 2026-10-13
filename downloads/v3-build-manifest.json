@@ -1,10 +1,10 @@
 {
   "versionCode": 3,
   "versionName": "3.0",
-  "sourceCommit": "1f0a58b0c0c76ccab22e6fe88dcbd3d51c1c1884",
+  "sourceCommit": "2c135772d036fc7884da6bceb0f973c209def987",
   "apk": "android-app-v3-debug.apk",
-  "sha256": "9e537c62d0932a6bc58879be677e9df02ca3b594c777932a01a0cb0aade59420",
-  "bytes": 9232295,
+  "sha256": "03689e36884533ec55a356a42d295f51138ccbbc73b85ecfdb0b014e1ccfc35d",
+  "bytes": 9233807,
   "certificateSha256": "bf3489b7cb1b71f6f452b1e3caea6859e29365b69a37d5d8680c536dc5f81c4c",
   "compatibleWithExistingV2": false,
   "jvmTests": 92,
@@ -14,6 +14,7 @@
   "robolectricExecuted": true,
   "robolectricSdk": 35,
   "lintErrors": 0,
-  "lintWarnings": 123,
-  "portraitResourceBytesIncrease": 0
+  "lintWarnings": 126,
+  "portraitResourceBytesIncrease": 0,
+  "uiBuildLabel": "3.0 · 간결 화면 1013"
 }
