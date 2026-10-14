@@ -22,6 +22,11 @@ import java.io.File
 @Config(sdk = [35], qualifiers = "w360dp-h800dp-mdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ScreenRenderTest {
+    @org.junit.Before fun returningUser() {
+        RuntimeEnvironment.getApplication().getSharedPreferences(TutorialActivity.PREFS, android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("completed", true).commit()
+    }
+
     private fun capture(activity: AppCompatActivity, name: String, dialogRoot: View? = null) {
         // Drain both the database action and the UI-triggered reload it schedules.
         repeat(2) {
@@ -122,6 +127,14 @@ class ScreenRenderTest {
             capture(activity, "quest-checklist", sheet.dialog!!.window!!.decorView)
             assertEquals(3, sheet.requireView().findViewById<android.widget.LinearLayout>(R.id.quest_detail_container).childCount)
         } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun renderWelcomeBackupAndGroupedSettings() {
+        listOf(TutorialActivity::class.java to "welcome", BackupActivity::class.java to "backup",
+            SettingActivity::class.java to "settings").forEach { (type, name) ->
+            val controller = Robolectric.buildActivity(type).setup().visible()
+            try { capture(controller.get(), name) } finally { controller.pause().stop().destroy() }
+        }
     }
 
 }

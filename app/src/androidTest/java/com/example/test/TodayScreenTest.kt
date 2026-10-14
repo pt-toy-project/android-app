@@ -11,6 +11,12 @@ import org.junit.runner.RunWith
 /** Device-only regressions complement the executable Robolectric screen tests. */
 @RunWith(AndroidJUnit4::class)
 class TodayScreenTest {
+    @org.junit.Before fun returningUser() {
+        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext
+            .getSharedPreferences(TutorialActivity.PREFS, android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("completed", true).commit()
+    }
+
     @Test fun launcherShowsProgressTimelineAndExplicitStartRoute() {
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->

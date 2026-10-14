@@ -20,17 +20,20 @@
     <com.google.android.material.chip.ChipGroup android:id="@+id/timeline_heroes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:singleSelection="true" app:selectionRequired="true"/>
     <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:id="@+id/timeline_next_card">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-            <TextView android:id="@+id/next_heading" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelLarge" android:text="@string/redesign_next"/>
+            <TextView android:id="@+id/next_heading" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelLarge" android:text="@string/experience_next"/>
             <TextView android:id="@+id/timeline_next" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleLarge" android:layout_marginTop="8dp"/>
             <TextView android:id="@+id/timeline_next_subtitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginTop="4dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/timeline_next_complete" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/timeline_complete"/>
+            <LinearLayout android:id="@+id/timeline_next_actions" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+            <com.google.android.material.button.MaterialButton android:id="@+id/timeline_next_open" android:layout_width="0dp" android:layout_weight="2" android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginTop="12dp" android:text="@string/experience_open"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/timeline_next_complete" style="@style/Widget.Material3.Button.TextButton" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/experience_done"/>
+            </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
     <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:id="@+id/timeline_empty_card">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
             <com.google.android.material.imageview.ShapeableImageView android:id="@+id/today_hero_portrait" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@null" app:shapeAppearanceOverlay="@style/ShapeAppearance.HeroDay.Avatar"/>
-            <TextView android:id="@+id/empty_heading" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleLarge" android:text="@string/redesign_empty_day" android:layout_marginTop="12dp"/>
-            <TextView android:id="@+id/personal_empty" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:text="@string/redesign_empty_subtitle" android:layout_marginTop="8dp"/>
+            <TextView android:id="@+id/empty_heading" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleLarge" android:text="@string/experience_empty" android:layout_marginTop="12dp"/>
+            <TextView android:id="@+id/personal_empty" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:text="@string/experience_empty_body" android:layout_marginTop="8dp"/>
             <com.google.android.material.button.MaterialButton android:id="@+id/empty_start" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/redesign_choose_day"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

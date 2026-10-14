@@ -11,7 +11,7 @@ object ScreenToolbar {
         toolbar.title = if (activity is CharacterSelectActivity)
             activity.getString(R.string.compact_catalog_title, com.example.test.Hero.HeroCatalog.all.size)
         else activity.getString(title)
-        if (activity is MainActivity) toolbar.subtitle = activity.getString(R.string.compact_build_label)
+        if (activity is MainActivity) { toolbar.setTitle(R.string.app_name); toolbar.subtitle = null }
         toolbar.menu.clear()
         toolbar.inflateMenu(R.menu.screen_menu)
         if (back) {

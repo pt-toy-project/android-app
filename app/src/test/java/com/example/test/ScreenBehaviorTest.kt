@@ -24,6 +24,11 @@ import android.os.Looper
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35], qualifiers = "w360dp-h800dp")
 class ScreenBehaviorTest {
+    @org.junit.Before fun returningUser() {
+        RuntimeEnvironment.getApplication().getSharedPreferences(TutorialActivity.PREFS, android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("completed", true).commit()
+    }
+
     private fun render(activity: AppCompatActivity) {
         val root = activity.window.decorView
         val density = activity.resources.displayMetrics.density

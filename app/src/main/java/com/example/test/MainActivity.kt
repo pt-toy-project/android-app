@@ -11,5 +11,8 @@ class MainActivity : TimelineActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         timelineHeader.findViewById<android.widget.TextView>(R.id.day_notice).text = com.example.test.Hero.HeroDayCatalog.NOTICE
+        if (savedInstanceState == null && TutorialActivity.needed(this) && intent.getLongExtra(TimelineActivity.USER_ROUTINE_ID, -1) <= 0) {
+            startActivity(android.content.Intent(this, TutorialActivity::class.java))
+        }
     }
 }

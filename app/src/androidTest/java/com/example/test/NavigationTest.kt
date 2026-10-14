@@ -19,6 +19,12 @@ import org.junit.runner.RunWith
 /** Device regressions for screen routing and task-root preservation. */
 @RunWith(AndroidJUnit4::class)
 class NavigationTest {
+    @org.junit.Before fun returningUser() {
+        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext
+            .getSharedPreferences(TutorialActivity.PREFS, android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("completed", true).commit()
+    }
+
     @Test
     fun routineButtonOpensRoutineAndBackReturnsToSameHome() {
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->

@@ -200,11 +200,21 @@ abstract class TimelineActivity : AppCompatActivity() {
                     isEnabled = next?.let(TimelinePresentation::canComplete) == true
                     setOnClickListener { next?.let { complete(it.routine.id, it.date) } }
                 }
+                timelineHeader.findViewById<Button>(R.id.timeline_next_open).apply {
+                    contentDescription = next?.let { getString(R.string.timeline_detail_accessibility, com.example.test.data.RoutineIdentity.displayName(it.routine.heroId), it.routine.title) }.orEmpty()
+                    setOnClickListener { next?.let { showDetail(it.routine.id) } }
+                }
+                val nextActions = timelineHeader.findViewById<LinearLayout>(R.id.timeline_next_actions)
+                val largeText = resources.configuration.fontScale >= 1.3f
+                nextActions.orientation = if (largeText) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
+                for (index in 0 until nextActions.childCount) nextActions.getChildAt(index).layoutParams = LinearLayout.LayoutParams(
+                    if (largeText) android.view.ViewGroup.LayoutParams.MATCH_PARENT else 0,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, if (largeText) 0f else if (index == 0) 2f else 1f)
                 CompactText.apply(timelineHeader.findViewById(R.id.timeline_next))
                 CompactText.apply(timelineHeader.findViewById(R.id.timeline_next_subtitle))
                 val personal = routineSource == com.example.test.data.RoutineSource.PERSONAL
-                timelineHeader.findViewById<TextView>(R.id.empty_heading).setText(if (snapshot.startedHeroes.isNotEmpty()) R.string.redesign_empty_schedule else if (personal) R.string.redesign_personal_empty else R.string.redesign_empty_day)
-                timelineHeader.findViewById<TextView>(R.id.personal_empty).setText(if (snapshot.startedHeroes.isNotEmpty()) R.string.redesign_check_schedule else if (personal) R.string.redesign_personal_hint else R.string.redesign_empty_subtitle)
+                timelineHeader.findViewById<TextView>(R.id.empty_heading).setText(if (snapshot.startedHeroes.isNotEmpty()) R.string.redesign_empty_schedule else if (personal) R.string.redesign_personal_empty else R.string.experience_empty)
+                timelineHeader.findViewById<TextView>(R.id.personal_empty).setText(if (snapshot.startedHeroes.isNotEmpty()) R.string.redesign_check_schedule else if (personal) R.string.redesign_personal_hint else R.string.experience_empty_body)
                 timelineHeader.findViewById<Button>(R.id.empty_start).setText(if (personal) R.string.redesign_add_plan else R.string.redesign_choose_day)
                 timelineHeader.findViewById<View>(R.id.timeline_empty_card).visibility = if (visibleRows.isEmpty()) View.VISIBLE else View.GONE
                 timelineHeader.findViewById<TextView>(R.id.timeline_section).setText(if (personal) R.string.redesign_my_flow else R.string.redesign_timeline)
@@ -217,7 +227,7 @@ abstract class TimelineActivity : AppCompatActivity() {
                 timelineHeader.findViewById<TextView>(R.id.timeline_wallet).text = getString(R.string.personal_wallet, snapshot.balance)
                 timelineHeader.findViewById<TextView>(R.id.day_badge).text = com.example.test.data.ShopCatalog.find(snapshot.badge.orEmpty())?.let { getString(R.string.personal_badge, it.title) }.orEmpty()
                 timelineHeader.findViewById<View>(R.id.day_badge).visibility = if (snapshot.badge.isNullOrBlank()) View.GONE else View.VISIBLE
-                routineAdapter.submitList(visibleRows)
+                routineAdapter.submitList(if (managementMode) visibleRows else visibleRows.filterNot { it.routine.id == next?.routine?.id })
                 timelineHeader.findViewById<Button>(R.id.personal_manage).setText(if (managementMode) R.string.personal_schedule else if (personal) R.string.redesign_manage_plans else R.string.redesign_manage)
                 (supportFragmentManager.findFragmentByTag(DETAIL_TAG) as? PersonalRoutineDetailSheet)?.apply {
                     updateCompletion(snapshot.completedIds, heroId, selectedDate)

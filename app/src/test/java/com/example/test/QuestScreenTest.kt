@@ -22,6 +22,11 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35], qualifiers = "w360dp-h800dp-mdpi")
 class QuestScreenTest {
+    @org.junit.Before fun returningUser() {
+        RuntimeEnvironment.getApplication().getSharedPreferences(TutorialActivity.PREFS, android.content.Context.MODE_PRIVATE)
+            .edit().putBoolean("completed", true).commit()
+    }
+
     private fun settle(activity: AppCompatActivity) {
         repeat(3) {
             shadowOf(Looper.getMainLooper()).idle()
@@ -71,11 +76,7 @@ class QuestScreenTest {
         try {
             val activity = controller.get()
             settle(activity)
-            val list = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_routine_list)
-            list.scrollToPosition(1)
-            settle(activity)
-            val row = list.findViewHolderForAdapterPosition(1)!!.itemView
-            assertTrue(row.findViewById<View>(R.id.timeline_detail).performClick())
+            assertTrue(activity.findViewById<View>(R.id.timeline_next_open).performClick())
             settle(activity)
             activity.supportFragmentManager.executePendingTransactions()
             val sheet = activity.supportFragmentManager.findFragmentByTag("personal_detail")!!

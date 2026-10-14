@@ -29,6 +29,8 @@ class SettingActivity : AppCompatActivity() {
     private lateinit var exactButton: MaterialButton
     private var refreshing = false
     private var refreshAgain = false
+    private var alarmDetails = ""
+    private var detailsDialog: androidx.appcompat.app.AlertDialog? = null
 
     private val requestNotificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
         reconcile()
@@ -42,6 +44,18 @@ class SettingActivity : AppCompatActivity() {
         setupBottomNavigation(0)
         findViewById<TextView>(R.id.settings_build).text = getString(
             R.string.compact_build_details, com.example.test.Hero.HeroCatalog.all.size)
+        findViewById<MaterialButton>(R.id.settings_backup).setOnClickListener {
+            startActivity(Intent(this, BackupActivity::class.java))
+        }
+        findViewById<MaterialButton>(R.id.settings_tutorial).setOnClickListener {
+            startActivity(Intent(this, TutorialActivity::class.java).putExtra("replay", true))
+        }
+        findViewById<MaterialButton>(R.id.settings_alarm_details).setOnClickListener {
+            detailsDialog?.dismiss()
+            detailsDialog = androidx.appcompat.app.AlertDialog.Builder(this).setTitle(R.string.settings_notifications_group)
+                .setMessage(alarmDetails.ifBlank { getString(R.string.settings_checking_alarms) })
+                .setPositiveButton(android.R.string.ok, null).show()
+        }
         preferences = SettingsPreferences(applicationContext)
         status = findViewById(R.id.settings_alarm_status)
         permissionButton = findViewById(R.id.settings_notification_permission)
@@ -129,13 +143,20 @@ class SettingActivity : AppCompatActivity() {
         }
         if (result.errors.isNotEmpty()) lines += getString(R.string.settings_alarm_errors)
         lines += getString(if (preferences.soundEnabled) R.string.settings_sound_on_notice else R.string.settings_sound_off_notice)
-        status.text = lines.joinToString("\n\n")
+        alarmDetails = lines.joinToString("\n\n")
+        status.text = when {
+            !preferences.alarmEnabled -> getString(R.string.experience_alarms_off)
+            result.notificationsBlocked -> getString(R.string.experience_alarm_permission)
+            result.errors.isNotEmpty() -> getString(R.string.settings_alarm_sync_failed)
+            else -> getString(R.string.settings_alarm_count, result.exactScheduled, result.inexactScheduled)
+        }
         updatePermissionButtons()
     }
 
     private fun updatePermissionButtons() {
         val notificationGranted = !needsNotificationPermission()
         permissionButton.setText(if (notificationGranted) R.string.settings_notification_controls else R.string.settings_allow_notifications)
+        permissionButton.visibility = if (notificationGranted) android.view.View.GONE else android.view.View.VISIBLE
         exactButton.visibility = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             !runCatching { getSystemService(AlarmManager::class.java).canScheduleExactAlarms() }.getOrDefault(false)) android.view.View.VISIBLE else android.view.View.GONE
     }
@@ -159,6 +180,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        detailsDialog?.dismiss()
         io.shutdown()
         super.onDestroy()
     }

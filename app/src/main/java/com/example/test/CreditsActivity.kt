@@ -14,6 +14,7 @@ import com.google.android.material.button.MaterialButton
 /** Bundled citations work offline. Only a user's HTTP(S) link click opens the browser. */
 class CreditsActivity : AppCompatActivity() {
     private lateinit var webView: WebView
+    private var googleCreditsDialog: androidx.appcompat.app.AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +22,11 @@ class CreditsActivity : AppCompatActivity() {
         applySystemBarInsets()
         ScreenToolbar.bind(this, R.string.redesign_credits, back = true)
         findViewById<MaterialButton>(R.id.credits_close).setOnClickListener { finish() }
+        findViewById<MaterialButton>(R.id.credits_google).setOnClickListener {
+            googleCreditsDialog?.dismiss()
+            googleCreditsDialog = androidx.appcompat.app.AlertDialog.Builder(this).setTitle(R.string.google_library_credits)
+                .setMessage(R.string.google_library_notice).setPositiveButton(android.R.string.ok, null).show()
+        }
         webView = findViewById(R.id.credits_webview)
         webView.settings.apply {
             textZoom = (resources.configuration.fontScale * 100).toInt()
@@ -63,6 +69,7 @@ class CreditsActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        googleCreditsDialog?.dismiss()
         webView.stopLoading()
         (webView.parent as? android.view.ViewGroup)?.removeView(webView)
         webView.destroy()

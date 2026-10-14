@@ -1,0 +1,57 @@
+[
+  {
+    "artifact": "credentials",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/credentials/credentials/1.5.0/credentials-1.5.0.pom",
+    "httpStatus": "200",
+    "error": "",
+    "licenses": [
+      {
+        "name": "The Apache Software License, Version 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+      }
+    ]
+  },
+  {
+    "artifact": "credentials-play-services-auth",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/credentials/credentials-play-services-auth/1.5.0/credentials-play-services-auth-1.5.0.pom",
+    "httpStatus": "200",
+    "error": "",
+    "licenses": [
+      {
+        "name": "The Apache Software License, Version 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+      }
+    ]
+  },
+  {
+    "artifact": "googleid",
+    "url": "https://dl.google.com/dl/android/maven2/com/google/android/libraries/identity/googleid/googleid/1.1.1/googleid-1.1.1.pom",
+    "httpStatus": "200",
+    "error": "",
+    "licenses": [
+      {
+        "name": "Android Software Development Kit License",
+        "url": "https://developer.android.com/studio/terms.html"
+      }
+    ]
+  },
+  {
+    "artifact": "play-services-auth",
+    "url": "https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-auth/21.4.0/play-services-auth-21.4.0.pom",
+    "httpStatus": "200",
+    "error": "",
+    "licenses": [
+      {
+        "name": "Android Software Development Kit License",
+        "url": "https://developer.android.com/studio/terms.html"
+      }
+    ]
+  },
+  {
+    "artifact": "Google SDK terms",
+    "url": "https://developer.android.com/studio/terms.html",
+    "httpStatus": "000",
+    "error": "curl (56) CONNECT tunnel failed, response 403",
+    "licenses": []
+  }
+]
