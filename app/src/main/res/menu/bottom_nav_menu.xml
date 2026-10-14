@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/nav_home" android:icon="@android:drawable/ic_menu_view" android:title="@string/nav_home" />
-<item android:id="@+id/nav_hero" android:icon="@android:drawable/ic_menu_myplaces" android:title="@string/nav_hero" />
-<item android:id="@+id/nav_routine" android:icon="@android:drawable/ic_menu_agenda" android:title="@string/nav_routine" />
-<item android:id="@+id/nav_myroom" android:icon="@android:drawable/ic_menu_info_details" android:title="@string/nav_myroom" />
+<item android:id="@+id/nav_home" android:icon="@drawable/nav_today_v3" android:title="@string/nav_home" />
+<item android:id="@+id/nav_hero" android:icon="@drawable/nav_heroes_v3" android:title="@string/nav_hero" />
+<item android:id="@+id/nav_routine" android:icon="@drawable/nav_plan_v3" android:title="@string/nav_routine" />
+<item android:id="@+id/nav_myroom" android:icon="@drawable/nav_shop_v3" android:title="@string/nav_myroom" />
 </menu>

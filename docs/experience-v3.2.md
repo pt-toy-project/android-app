@@ -23,3 +23,5 @@ Robolectric/Android 35에서 첫 실행/건너뛰기/완료/다시 보기/알림
 Native Graphics로 첫 화면·오늘·설정·백업·체크 화면을 렌더링해 확인했다. 캡처는 검증 산출물이며 실기기 캡처가 아니다. 기존 15장 사진·벡터 아바타·이미지 크레딧·history-credits.html은 바이트 단위로 유지했다. 인물 이미지 증가 0 B. Google SDK 표준 로그인 버튼 등을 위한 의존성 내부 비트맵은 APK 압축 전 기준 28,040 B 증가했다. AI 이미지·신규 인물 사진 작업은 없었다.
 
 versionName 3.2 / versionCode 5 / com.example.test. 현재 v3 계열 인증서 bf3489b7cb1b71f6f452b1e3caea6859e29365b69a37d5d8680c536dc5f81c4c를 유지한다. 원래 v2 키 부재로 v2 호환 업데이트 제한은 남는다. APK 체크섬·대응 소스는 downloads/v3-build-manifest.json을 기준으로 한다.
+
+하단 탭을 앱 자체 작성 선 벡터로 통일했다. APK의 전체 drawable/mipmap 리소스는 XML을 포함한 압축 전 기준 966,119→1,021,363 B, 55,244 B 증가다. 이 중 SDK 비트맵 증가는 28,040 B, 새 앱 탭 벡터는 3,128 B다. 인물 사진·아바타 원본의 증가는 0 B다.
