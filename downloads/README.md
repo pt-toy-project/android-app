@@ -10,9 +10,9 @@
 |---|---|
 | 버전 | 3.2 / versionCode 5 |
 | 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
-| 대응 소스 | `c6487d40c5b9bffab28dc5046a8723b9071ec4e6` |
-| APK 크기 | 10,772,891 B |
-| APK SHA-256 | `d9275d1a1df9833dd88178534e4281627085f58776259ad95ba347850f9825e0` |
+| 대응 소스 | `79225fa3f366b4c487c3d46380aa73fe535ad23a` |
+| APK 크기 | 10,773,762 B |
+| APK SHA-256 | `467f8fec2841e0bae3719eeeca1672c36d134e8ef9f94a324006e734fde92d11` |
 | 인증서 SHA-256 | `bf3489b7cb1b71f6f452b1e3caea6859e29365b69a37d5d8680c536dc5f81c4c` |
 | 검증 | JVM 119개·SQLite 21개 통과, 앱·계측 APK 빌드, lint 오류 0·경고 154, apksigner 성공 |
 | 미실행 | 실제 Google 로그인·Drive API·기기 설치/업데이트·TalkBack·OS 알림·계측 50개 실행 |
@@ -21,7 +21,7 @@
 
 Robolectric/Android 35에서 첫 실행/건너뛰기/완료/다시 보기, 실제 SQLite 백업·복원과 실패 시 보존, 문서 선택창 실행, 화면 렌더링을 확인했습니다. 실제 파일 앱과 Google 계정 테스트는 별도입니다. [구현·검증 범위](../docs/experience-v3.2.md)를 참고하세요.
 
-기존 15장 인물 사진·벡터 아바타·원래 크레딧은 그대로이고 인물 이미지 증가 0 B입니다. 새 Google SDK 표준 로그인 버튼 등의 의존성 비트맵은 APK 압축 전 기준 28,040 B 증가했습니다. AI 이미지·신규 인물 사진·프로필 사진 다운로드는 없습니다. AndroidX 라이선스와 Google SDK 라이선스 선언은 공식 POM을 실제 확인했고, Google 약관 본문은 CONNECT 403으로 미확인입니다. 신규 SDK 배포 조건과 앱 등록·개인정보처리방침·스토어 데이터 보안 검토가 남습니다.
+기존 15장 인물 사진·벡터 아바타·원래 크레딧은 그대로이고 인물 이미지 증가 0 B입니다. 새 Google SDK 표준 로그인 버튼 등의 의존성 비트맵은 APK 압축 전 기준 28,040 B 증가했습니다. 앱 자체 작성 탭 벡터는 3,128 B이며 전체 drawable/mipmap 리소스(XML 포함)는 압축 전 기준 55,244 B 증가했습니다. AI 이미지·신규 인물 사진·프로필 사진 다운로드는 없습니다. AndroidX 라이선스와 Google SDK 라이선스 선언은 공식 POM을 실제 확인했고, Google 약관 본문은 CONNECT 403으로 미확인입니다. 신규 SDK 배포 조건과 앱 등록·개인정보처리방침·스토어 데이터 보안 검토가 남습니다.
 
 체크섬: [android-app-v3.2-debug.apk.sha256](android-app-v3.2-debug.apk.sha256).
 

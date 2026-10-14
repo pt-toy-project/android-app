@@ -1,10 +1,10 @@
 {
   "versionCode": 5,
   "versionName": "3.2",
-  "sourceCommit": "c6487d40c5b9bffab28dc5046a8723b9071ec4e6",
+  "sourceCommit": "79225fa3f366b4c487c3d46380aa73fe535ad23a",
   "apk": "android-app-v3.2-debug.apk",
-  "sha256": "d9275d1a1df9833dd88178534e4281627085f58776259ad95ba347850f9825e0",
-  "bytes": 10772891,
+  "sha256": "467f8fec2841e0bae3719eeeca1672c36d134e8ef9f94a324006e734fde92d11",
+  "bytes": 10773762,
   "certificateSha256": "bf3489b7cb1b71f6f452b1e3caea6859e29365b69a37d5d8680c536dc5f81c4c",
   "compatibleWithExistingV2": false,
   "sameCertificateAsPublishedV3": true,
@@ -26,5 +26,7 @@
   "googleLoginExecuted": false,
   "googleDriveExecuted": false,
   "localBackupRestoreExecuted": true,
-  "sdkBitmapBytesIncreaseUncompressed": 28040
+  "sdkBitmapBytesIncreaseUncompressed": 28040,
+  "appNavigationVectorBytesUncompressed": 3128,
+  "drawableMipmapResourcesIncreaseUncompressed": 55244
 }
