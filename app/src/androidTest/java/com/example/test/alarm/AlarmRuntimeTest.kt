@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -44,6 +45,12 @@ class AlarmRuntimeTest {
         assertTrue("Enable exact alarms on this test device before running", AlarmCoordinator(context).canUseExactAlarms())
     }
     @After fun after() {
+        // Both notification routes may create screens outside the scenario's initial activity.
+        instrumentation.runOnMainSync {
+            listOf(Stage.RESUMED, Stage.STARTED, Stage.PAUSED, Stage.STOPPED).flatMap {
+                ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(it).toList()
+            }.distinct().forEach { it.finish() }
+        }
         ids.forEach { AlarmCoordinator(context).cancel(it) }
         ExperienceReminder(context).cancelFocus()
         com.example.test.focus.FocusTimerStore(context).clear()
@@ -83,9 +90,12 @@ class AlarmRuntimeTest {
             }
             repo.balance()
         }
-        ActivityScenario.launch(MainActivity::class.java).use {
-            val scheduled = AlarmCoordinator(context).reconcile()
-            assertTrue(scheduled.errors.isEmpty())
+        val scheduled = AlarmCoordinator(context).reconcile()
+        assertTrue(scheduled.errors.isEmpty())
+        // ActivityScenario tracks Intent.filterEquals. Reusing the notification's address keeps
+        // onNewIntent observable through destruction, while testing the real PendingIntent below.
+        val start = Intent(context, MainActivity::class.java).setData(Uri.parse(AlarmIdentity.uri("open", ids.first())))
+        ActivityScenario.launch<MainActivity>(start).use {
             await(75_000) { ids.all { id -> notifications.activeNotifications.any { it.tag == "routine:$id" } } }
             val posted = ids.map { id -> notifications.activeNotifications.single { it.tag == "routine:$id" }.notification }
             for ((index, notification) in posted.withIndex()) {

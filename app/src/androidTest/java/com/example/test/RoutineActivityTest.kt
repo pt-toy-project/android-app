@@ -2,10 +2,10 @@ package com.example.test
 
 import android.content.Intent
 import android.os.SystemClock
+import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -56,7 +56,12 @@ class RoutineActivityTest {
     @Test fun chosenHeroAndDateSurviveRecreation() {
         launch().use { scenario ->
             val date = RoutineDate(2024, 2, 29)
-            onView(withId(R.id.iv_calendar)).perform(click())
+            awaitUi(scenario) { it.hasWindowFocus() && it.findViewById<View>(R.id.iv_calendar).isShown }
+            lateinit var decor: View
+            scenario.onActivity { decor = it.window.decorView }
+            onView(withId(R.id.iv_calendar))
+                .inRoot(androidx.test.espresso.matcher.RootMatchers.withDecorView(org.hamcrest.Matchers.`is`(decor)))
+                .perform(click())
             onView(isAssignableFrom(DatePicker::class.java)).perform(object : ViewAction {
                 override fun getConstraints(): Matcher<android.view.View> = isAssignableFrom(DatePicker::class.java)
                 override fun getDescription() = "Select leap day"
@@ -68,22 +73,24 @@ class RoutineActivityTest {
             onView(withId(android.R.id.button1)).perform(click())
             scenario.recreate()
             awaitUi(scenario) { it.findViewById<TextView>(R.id.routine_date).text.toString() == date.label("yyyy년 M월 d일 E요일") }
-            scenario.onActivity { assertEquals(context.getString(R.string.routine_title, HeroCatalog.getOrDefault("einstein").name), it.findViewById<TextView>(R.id.routine_title).text.toString()) }
+            scenario.onActivity { assertEquals(context.getString(R.string.redesign_personal_title), it.findViewById<TextView>(R.id.routine_title).text.toString()) }
+            AppRepository(context).use { assertEquals("einstein", it.selectedHeroId) }
         }
     }
 
     @Test fun rapidClicksOpenOneDetailWithTheClickedRoutine() {
         launch().use { scenario ->
-            awaitUi(scenario) { it.findViewById<RecyclerView>(R.id.rv_routine_list).findViewHolderForAdapterPosition(0) != null }
+            awaitUi(scenario) { it.findViewById<TextView>(R.id.timeline_next).text.toString() == fixture.title }
             scenario.onActivity { activity ->
-                val row = requireNotNull(activity.findViewById<RecyclerView>(R.id.rv_routine_list).findViewHolderForAdapterPosition(0)).itemView
-                row.performClick(); row.performClick()
+                val start = activity.findViewById<View>(R.id.timeline_next_open)
+                start.performClick(); start.performClick()
             }
             awaitUi(scenario) { it.supportFragmentManager.fragments.filterIsInstance<PersonalRoutineDetailSheet>().isNotEmpty() }
             scenario.onActivity { activity ->
                 val sheets = activity.supportFragmentManager.fragments.filterIsInstance<PersonalRoutineDetailSheet>()
                 assertEquals(1, sheets.size)
-                assertEquals("아인슈타인", sheets.single().requireView().findViewById<TextView>(R.id.personal_detail_hero).text.toString())
+                assertEquals(fixture.id, sheets.single().requireArguments().getLong(RoutineActivity.USER_ROUTINE_ID))
+                assertEquals(HeroCatalog.getOrDefault("einstein").name, sheets.single().requireView().findViewById<TextView>(R.id.personal_detail_hero).text.toString())
                 assertFalse(sheets.single().requireView().findViewById<TextView>(R.id.personal_detail_title).text.isBlank())
             }
         }

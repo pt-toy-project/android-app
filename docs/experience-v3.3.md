@@ -20,3 +20,24 @@
 최종 결과는 README와 `downloads/v3-build-manifest.json`에 기록한다. Gradle 네 가지 작업·DB 검증과 Android 가상 기기 실행을 구분한다. `AlarmRuntimeTest`는 실제 AlarmManager 예약을 기다리며 수신기 함수를 직접 호출하지 않는다. 시험 알림, 두 출처의 루틴 알림과 실제 화면 연결, 중복 완료·중복 보상 방지를 확인한다. 전용 테스트 기기를 사용하며 테스트 전 DB/설정 사본을 복원한다. 실제 사용자의 휴대폰에서 실행하지 않는다.
 
 Google 로그인/Drive의 프로젝트 등록값과 실제 실행은 여전히 별도 작업이다. 현재 APK는 계정 없이 사용 가능하며, Google 로그인이 성공했다고 표시하지 않는다. 새 라이브러리는 추가하지 않는다. 기존 역사 자료 접근 실패와 Google 약관 미확인 상태를 보존한다.
+
+### 이 환경에서 확인한 업데이트
+
+Android 35 AOSP/x86_64 AVD, Android Emulator 37.2.12, CPU 가속 없음·SwiftShader·오디오 출력 없음. 전용 AVD의 v3.2 APK에 v2 fixture를 넣어 DB 3으로 실제 이전한 뒤 v3.3을 `adb install -r`로 설치했다. 두 설치 모두 Success이며 package manager에서 versionCode 6 / versionName 3.3을 확인했다. 업데이트 전후 DB 9개 테이블의 모든 행이 동일했고 잔액 80·루틴 ID 41/42·완료·구매/적용·이전 기록을 보존했다. 사용자의 휴대폰 데이터나 설치 결과를 대신하는 검증은 아니다.
+
+가상 기기 부팅 초기 시스템 watchdog 재시작은 테스트 기기의 `watchdog_timeout_millis=600000`으로 조정했다. emulator의 `-prop ro.hw_timeout_multiplier=10`은 미지원 경고가 있어 적용된 설정으로 간주하지 않았다. 첫 계측 실행은 Java 테스트 시작 전에 프로세스 startup ANR로 종료됐으며 성공으로 집계하지 않는다. 최종 알림 실행 결과는 다운로드 안내에 기록한다.
+
+테스트 APK와 앱을 기기에서 사전 컴파일한 뒤 재실행해 테스트 시작이 가능해졌다. 10초 시험은 ActivityScenario로 설정 화면을 중지한 뒤 실제 AlarmManager 수신과 활성 알림·소리 채널 URI를 확인했고 잔액이 변하지 않았다. 화면의 수신기를 직접 호출해 통과시킨 테스트가 아니다.
+
+정규 알림은 동일 인물/블록을 HERO_DAY와 PERSONAL에 각각 채택하고 실제 다음 분의 AlarmManager 전달을 기다렸다. 두 알림의 contentIntent를 보내 MainActivity/RoutineActivity와 실제 루틴 ID를 확인했다. 완료 액션을 양쪽에서 두 번씩 보내도 잔액은 10만 늘고 같은 날짜 완료로 조회됐다. 알림 진입이 onNewIntent의 주소를 바꾸므로 테스트의 첫 화면 주소를 같은 URI로 맞춰 ActivityScenario가 종료까지 추적하게 수정했다. 완료/화면 연결 단언은 유지했고 수신기를 직접 호출하지 않았다. 수정 후 이 테스트는 기기에서 통과했다.
+
+기존 계측 테스트의 개인 화면 제목과 아인슈타인 표시명을 현재 화면/기존 카탈로그 기준으로 고쳤다. 빠른 연속 탭은 헤더가 아닌 실제 ‘실천 시작’ 버튼에서 실행하고 상세의 루틴 ID까지 확인한다. 날짜 테스트는 실제 창 포커스와 달력 버튼 표시를 기다린 뒤 해당 활동의 decor로 Root를 지정한다. 기존 날짜/선택 보존·미래 완료 보호·상세 중복 방지 단언은 유지한다. 알림 테스트에서 직접 연 개인 화면도 종료해 후속 테스트에 창을 남기지 않게 했다.
+
+달력 테스트의 포커스 오류 조사에서 dumpsys window의 실제 포커스가 `Application Not Responding: com.android.systemui`였고 스크린샷에도 System UI 응답 없음 창이 표시됐다. 앱 예외로 기록하지 않는다. 테스트 AVD의 시스템 오류 창을 닫고 실제 RoutineActivity 창 포커스를 확인해 재실행했다. `hide_error_dialogs`는 일시 변경 후 0으로 되돌렸으며 앱 오류를 숨겨 통과시키지 않는다. 실제 스피커·진동·TalkBack·Doze·다른 제조사 실기기 테스트는 하지 않았다.
+
+### 최종 결과
+
+- Gradle 요청 네 가지 작업 성공. JVM 127개·SQLite 21개 통과. lint 오류 0·경고 166. 테스트와 lint를 끄거나 단언을 완화하지 않았다.
+- Android 35 계측 52개 빌드. 서로 다른 5개 실행 결과: 알림 시험·정규 알림/출처/보상·미래 완료 보호·빠른 연속 탭 4개 통과. 달력/회전 1개는 이 AVD의 반복적인 System UI ANR로 실제 창 포커스를 확보하지 못해 실패. 나머지 47개 미실행. 실패를 성공/건너뛰기로 집계하지 않는다. 달력 날짜 보존은 Robolectric 회귀를 통과했으며 실기기 재확인이 필요하다.
+- 실제 v3.2 → v3.3 AVD 업데이트 설치와 모든 기존 DB 행·잔액 보존을 확인했다. 실제 휴대폰 설치/스피커/진동·TalkBack·Doze·Google 계정/Drive는 미실행.
+- 기존 15장 사진·기본 아바타·기존 크레딧·v1/v2 DB 자산은 바이트 그대로다. 비트맵 증가 0 B, v3.2 대비 자체 벡터를 포함한 drawable/mipmap 압축 전 증가 1,536 B. APK SHA-256은 다운로드 manifest에 기록한다.
