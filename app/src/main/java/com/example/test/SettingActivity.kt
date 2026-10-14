@@ -91,6 +91,20 @@ class SettingActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.settings_system_notifications).setOnClickListener {
             openSystemSettings(notificationSettingsIntent())
         }
+        findViewById<MaterialButton>(R.id.settings_alarm_preview).setOnClickListener { button ->
+            button.isEnabled = false
+            AppIo.run(this, { com.example.test.alarm.ExperienceReminder(applicationContext).preview() }) { result ->
+                button.isEnabled = true
+                val message = when (result.getOrDefault(com.example.test.alarm.ReminderResult.FAILED)) {
+                    com.example.test.alarm.ReminderResult.EXACT -> R.string.polish_preview_scheduled
+                    com.example.test.alarm.ReminderResult.APPROXIMATE -> R.string.polish_preview_approximate
+                    com.example.test.alarm.ReminderResult.DISABLED -> R.string.polish_preview_off
+                    com.example.test.alarm.ReminderResult.BLOCKED -> R.string.polish_preview_blocked
+                    com.example.test.alarm.ReminderResult.FAILED -> R.string.polish_preview_error
+                }
+                findViewById<TextView>(R.id.settings_preview_status).apply { setText(message); visibility = android.view.View.VISIBLE }
+            }
+        }
         findViewById<MaterialButton>(R.id.layout_etc).setOnClickListener {
             startActivity(Intent(this, CreditsActivity::class.java))
         }

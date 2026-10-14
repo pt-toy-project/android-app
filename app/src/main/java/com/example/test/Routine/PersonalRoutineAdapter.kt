@@ -49,7 +49,7 @@ class PersonalRoutineAdapter(
             com.example.test.CompactText.apply(itemView.findViewById(R.id.day_row_subtitle))
             itemView.findViewById<android.widget.Button>(R.id.timeline_complete).apply {
                 isEnabled = TimelinePresentation.canComplete(row)
-                setText(if (row.completed) R.string.routine_status_completed else R.string.timeline_complete)
+                setText(if (row.completed) R.string.routine_status_completed else R.string.experience_done)
                 contentDescription = itemView.context.getString(R.string.timeline_complete_accessibility, heroName, row.routine.title)
                 setOnClickListener { if (bindingAdapterPosition != RecyclerView.NO_POSITION) onComplete(getItem(bindingAdapterPosition)) }
             }
@@ -62,8 +62,8 @@ class PersonalRoutineAdapter(
             actions.orientation = if (expanded) android.widget.LinearLayout.VERTICAL else android.widget.LinearLayout.HORIZONTAL
             for (index in 0 until actions.childCount) {
                 actions.getChildAt(index).layoutParams = android.widget.LinearLayout.LayoutParams(
-                    if (expanded) android.view.ViewGroup.LayoutParams.MATCH_PARENT else 0,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, if (expanded) 0f else 1f)
+                    if (expanded) android.view.ViewGroup.LayoutParams.MATCH_PARENT else android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT)
             }
             val due = RoutineTime.parse(row.routine.time)?.minutes ?: Int.MAX_VALUE
             val (label, color) = when {
@@ -77,7 +77,7 @@ class PersonalRoutineAdapter(
             itemView.contentDescription = heroName + ", " + itemView.context.getString(R.string.routine_accessibility, row.routine.time, row.routine.title, itemView.context.getString(label)) + ", " + time.text + ", " + (block?.grade?.label.orEmpty())
         }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_routine, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_timeline_block, parent, false))
     override fun onBindViewHolder(holder: Holder, position: Int) = holder.bind(getItem(position))
     companion object {
         private val DIFF = object : DiffUtil.ItemCallback<PersonalRoutineRow>() {

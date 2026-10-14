@@ -44,6 +44,10 @@ class PersonalRoutineDetailSheet : BottomSheetDialogFragment(R.layout.dialog_per
         view.findViewById<Button>(R.id.personal_detail_complete).setOnClickListener { dispatch("complete") }
         view.findViewById<Button>(R.id.personal_detail_edit).setOnClickListener { dispatch("edit") }
         view.findViewById<Button>(R.id.personal_detail_delete).setOnClickListener { dispatch("delete") }
+        view.findViewById<Button>(R.id.personal_detail_focus).setOnClickListener {
+            startActivity(Intent(requireContext(), FocusActivity::class.java)
+                .putExtra(TimelineActivity.USER_ROUTINE_ID, args.getLong(RoutineActivity.USER_ROUTINE_ID)))
+        }
         refreshDateBoundary()
     }
 
@@ -97,6 +101,8 @@ class PersonalRoutineDetailSheet : BottomSheetDialogFragment(R.layout.dialog_per
         val date = RoutineDate.parse(args.getString(RoutineActivity.SELECTED_DATE))
         val adoption = RoutineDate.parse(args.getString("created"))
         val completed = args.getBoolean("completed")
+        view.findViewById<Button>(R.id.personal_detail_focus).visibility = if (!completed && args.getBoolean("enabled") &&
+            date == today && adoption != null && date >= adoption && RoutineRules.scheduledOn(args.getInt("days"), date)) View.VISIBLE else View.GONE
         view.findViewById<Button>(R.id.personal_detail_complete).apply {
             setText(if (completed) R.string.routine_status_completed else R.string.personal_complete_reward)
             isEnabled = !submitted && !completed && args.getBoolean("enabled") && date != null && date <= today &&

@@ -121,7 +121,12 @@ class BackupActivity : AppCompatActivity() {
                     work({
                         val coordinator = com.example.test.alarm.AlarmCoordinator(applicationContext)
                         coordinator.cancelAll()
-                        try { BackupStore(applicationContext).restore(bytes) }
+                        try {
+                            BackupStore(applicationContext).restore(bytes)
+                            // A restored ID may refer to a different plan; an old timer must not follow it.
+                            com.example.test.alarm.ExperienceReminder(applicationContext).cancelFocus()
+                            com.example.test.focus.FocusTimerStore(applicationContext).clear()
+                        }
                         finally { runCatching { coordinator.reconcile() } }
                     }) { status.setText(R.string.backup_restored); findViewById<View>(R.id.backup_undo).visibility = View.VISIBLE }
                 }.show()

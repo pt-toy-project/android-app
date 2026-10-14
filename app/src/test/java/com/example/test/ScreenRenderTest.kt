@@ -22,6 +22,25 @@ import java.io.File
 @Config(sdk = [35], qualifiers = "w360dp-h800dp-mdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ScreenRenderTest {
+    @Test fun renderFocusTimerWithActualSessionAndExpandedText() {
+        val context = RuntimeEnvironment.getApplication()
+        val id = com.example.test.data.AppRepository(context).use { it.addPersonalPlan("읽고 생각 정리하기", "08:00") }
+        com.example.test.focus.FocusTimerStore(context).start(id, "읽고 생각 정리하기", 10)
+        val controller = Robolectric.buildActivity(FocusActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            capture(activity, "focus-running")
+            assertEquals(activity.getString(R.string.polish_focus_running), activity.findViewById<android.widget.TextView>(R.id.focus_phase).text.toString())
+            activity.findViewById<View>(R.id.focus_primary).performClick()
+            assertEquals(com.example.test.focus.FocusPhase.PAUSED, com.example.test.focus.FocusTimerStore(context).read()!!.phase)
+            RuntimeEnvironment.setFontScale(2f)
+            controller.recreate()
+            capture(controller.get(), "focus-large-font")
+            assertEquals(controller.get().getString(R.string.polish_focus_paused), controller.get().findViewById<android.widget.TextView>(R.id.focus_phase).text.toString())
+            assertTrue(controller.get().findViewById<View>(R.id.focus_primary).height >= 48)
+            com.example.test.data.AppRepository(context).use { assertEquals(0L, it.balance()) }
+        } finally { controller.pause().stop().destroy() }
+    }
     @org.junit.Before fun returningUser() {
         RuntimeEnvironment.getApplication().getSharedPreferences(TutorialActivity.PREFS, android.content.Context.MODE_PRIVATE)
             .edit().putBoolean("completed", true).commit()

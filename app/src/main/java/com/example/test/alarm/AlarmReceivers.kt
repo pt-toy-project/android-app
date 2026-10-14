@@ -8,7 +8,7 @@ import android.util.Log
 import java.util.concurrent.Executors
 
 /** goAsync keeps the receiver alive while the small local database/scheduling operation runs. */
-private object ReceiverWork {
+internal object ReceiverWork {
     private val executor = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "routine-alarm-receiver").apply { isDaemon = true }
     }

@@ -66,3 +66,9 @@ Android 개발 문서:
 - https://github.com/aosp-mirror/platform_frameworks_base/blob/master/core/java/android/app/NotificationManager.java
 
 처음 조사 시 developer.android.com은 네트워크 정책에 의해 403으로 접근할 수 없었습니다. 당시에는 Android SDK 37 API와 위 AOSP 구현/문서 주석으로 정확한 알람 권한, 권한 부여·철회 방송의 차이, 유휴 전달 제한, 알림 권한을 확인했습니다. 2026-10-13에 위 Android 웹 가이드 3개를 HTTP 200으로 재확인했습니다. 정확한 알람 특별 권한과 inexact 대안, 권한 철회 시 예약 취소, 부팅 복원, Android 13 알림 권한, 변경할 수 없는 채널 동작을 가이드와 대조했습니다.
+
+## 3.3 시험 알림과 집중 종료
+
+`ExperienceReminder`는 루틴의 정규/미루기 주소와 분리한 PendingIntent를 사용한다. 시험은 ELAPSED_REALTIME_WAKEUP으로 10초 뒤 예약하고 실제 수신 시 알림/소리 설정을 다시 읽는다. 집중 종료는 기기 내부 타이머의 현재 UUID·실행 상태·단조 증가 시계를 확인한다. 이전 이벤트·중복 수신·일시정지·재설정은 완료 기록이나 코인에 영향을 주지 않는다. 정확한 알람 특수 권한이 없으면 setAndAllowWhileIdle로 예약하며 지연 가능성을 화면에 안내한다. 소리 채널은 기존 routine_reminders, 무음은 routine_reminders_silent를 재사용한다.
+
+전용 Android 35 AVD를 소프트웨어 CPU로 실행해 실제 OS 예약 테스트를 시도한다. 최종 실행 여부와 결과는 README에 기록한다. 가상 기기의 오디오 출력은 끈 환경이므로 알림 채널의 소리 URI 확인과 실제 스피커 청취를 구분한다. 실기기의 절전/Doze·제조사 백그라운드 정책·TalkBack 확인은 별도로 필요하다.

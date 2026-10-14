@@ -78,6 +78,12 @@ abstract class TimelineActivity : AppCompatActivity() {
         timelineHeader.findViewById<Button>(R.id.personal_history).setOnClickListener {
             startActivity(Intent(this, HistoryActivity::class.java).putExtra(HERO_ID, heroId))
         }
+        timelineHeader.findViewById<View>(R.id.timeline_finished_history).setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java).putExtra(HERO_ID, dayFilter ?: heroId))
+        }
+        timelineHeader.findViewById<View>(R.id.timeline_focus_resume).setOnClickListener {
+            startActivity(Intent(this, FocusActivity::class.java))
+        }
         supportFragmentManager.setFragmentResultListener(PersonalRoutineDetailSheet.RESULT_KEY, this) { _, result ->
             val id = result.getLong(USER_ROUTINE_ID, -1)
             val date = RoutineDate.parse(result.getString(SELECTED_DATE)) ?: return@setFragmentResultListener
@@ -184,6 +190,14 @@ abstract class TimelineActivity : AppCompatActivity() {
                 timelineHeader.findViewById<View>(R.id.personal_manage).visibility = if (snapshot.startedHeroes.isEmpty()) View.GONE else View.VISIBLE
                 timelineHeader.findViewById<View>(R.id.personal_create).visibility = if (routineSource == com.example.test.data.RoutineSource.PERSONAL && visibleRows.isNotEmpty()) View.VISIBLE else View.GONE
                 val finished = visibleRows.count { it.completed }
+                timelineHeader.findViewById<View>(R.id.timeline_finished_card).visibility = if (!managementMode &&
+                    selectedDate == RoutineDate.today() && visibleRows.isNotEmpty() && finished == visibleRows.size) View.VISIBLE else View.GONE
+                val focus = com.example.test.focus.FocusTimerStore(applicationContext).read()
+                timelineHeader.findViewById<Button>(R.id.timeline_focus_resume).apply {
+                    visibility = if (focus != null && focus.phase != com.example.test.focus.FocusPhase.FINISHED && selectedDate == RoutineDate.today()) View.VISIBLE else View.GONE
+                    text = focus?.let { getString(R.string.polish_focus_active, it.title) }.orEmpty()
+                    CompactText.apply(this)
+                }
                 timelineHeader.findViewById<com.google.android.material.progressindicator.LinearProgressIndicator>(R.id.timeline_progress).apply {
                     max = visibleRows.size.coerceAtLeast(1)
                     progress = finished

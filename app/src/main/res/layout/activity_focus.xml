@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/ui_background">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/screen_toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" app:title="@string/polish_focus_title"/>
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="24dp" android:orientation="vertical" android:gravity="center_horizontal">
+            <TextView android:id="@+id/focus_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleLarge" android:gravity="center" android:textStyle="bold" android:layout_marginTop="20dp"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:gravity="center" android:text="@string/polish_focus_note" android:layout_marginTop="8dp"/>
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="32dp" app:cardBackgroundColor="@color/ui_primary_container">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal">
+                    <TextView android:id="@+id/focus_phase" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:textAppearance="?attr/textAppearanceTitleMedium" android:accessibilityLiveRegion="polite"/>
+                    <TextView android:id="@+id/focus_clock" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:textSize="56sp" android:textStyle="bold" android:fontFamily="sans-serif" android:textColor="@color/ui_primary" android:layout_marginTop="12dp"/>
+                    <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/focus_progress" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:max="1000" app:trackThickness="6dp" app:trackCornerRadius="3dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.chip.ChipGroup android:id="@+id/focus_durations" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" app:singleSelection="true" app:selectionRequired="true"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/focus_primary" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" android:layout_marginTop="20dp" android:text="@string/polish_focus_start"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/focus_reset" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/polish_focus_reset"/>
+            <TextView android:id="@+id/focus_alert" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodySmall" android:gravity="center" android:layout_marginTop="12dp" android:accessibilityLiveRegion="polite"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

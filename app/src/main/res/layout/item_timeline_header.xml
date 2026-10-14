@@ -18,6 +18,14 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
     <com.google.android.material.chip.ChipGroup android:id="@+id/timeline_heroes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:singleSelection="true" app:selectionRequired="true"/>
+    <com.google.android.material.button.MaterialButton android:id="@+id/timeline_focus_resume" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginBottom="8dp" android:visibility="gone"/>
+    <com.google.android.material.card.MaterialCardView android:id="@+id/timeline_finished_card" style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:visibility="gone">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleLarge" android:text="@string/polish_all_done"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:text="@string/polish_all_done_body" android:layout_marginTop="8dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/timeline_finished_history" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/polish_view_record"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
     <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:id="@+id/timeline_next_card">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
             <TextView android:id="@+id/next_heading" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelLarge" android:text="@string/experience_next"/>

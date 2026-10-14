@@ -15,7 +15,7 @@ object ScreenToolbar {
         toolbar.menu.clear()
         toolbar.inflateMenu(R.menu.screen_menu)
         if (back) {
-            toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert)
+            toolbar.setNavigationIcon(R.drawable.ic_back_v3)
             toolbar.setNavigationContentDescription(R.string.personal_back)
             toolbar.setNavigationOnClickListener { activity.finish() }
         }

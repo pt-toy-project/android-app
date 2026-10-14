@@ -72,6 +72,21 @@ class AlarmCoordinator(context: Context) {
         manager.canScheduleExactAlarms()
     }.getOrDefault(false)
 
+    /** Uses the same sound/channel choice as routine reminders; never writes completion or coins. */
+    internal fun postUtility(title: String, text: String, open: PendingIntent, id: Int): Boolean = synchronized(LOCK) {
+        createChannels()
+        if (!settings.alarmEnabled || !notificationsAllowed()) return@synchronized false
+        if (Build.VERSION.SDK_INT >= 33 && context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED) return@synchronized false
+        val notification = NotificationCompat.Builder(context, channelId())
+            .setSmallIcon(R.drawable.ic_alarm_notification).setContentTitle(title).setContentText(text)
+            .setContentIntent(open).setAutoCancel(true).setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        if (Build.VERSION.SDK_INT < 26 && settings.soundEnabled) notification.setDefaults(NotificationCompat.DEFAULT_SOUND)
+        if (!settings.soundEnabled) notification.setSilent(true)
+        NotificationManagerCompat.from(context).notify("experience", id, notification.build())
+        true
+    }
+
     fun cancel(routineId: Long) = synchronized(LOCK) {
         if (routineId <= 0) return@synchronized
         cancelAlarm(routineId, AlarmIdentity.REGULAR)
