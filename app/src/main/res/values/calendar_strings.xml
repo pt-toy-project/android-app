@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="calendar_month_view">월간 달력</string>
+    <string name="calendar_day_view">일간 보기</string>
+    <string name="calendar_previous">이전</string>
+    <string name="calendar_next">다음</string>
+    <string name="calendar_previous_month">이전 달</string>
+    <string name="calendar_next_month">다음 달</string>
+    <string name="calendar_previous_day">이전 날짜</string>
+    <string name="calendar_next_day">다음 날짜</string>
+    <string name="calendar_today">오늘로</string>
+    <string name="calendar_scope">오늘 + 나만의 계획 · 전체 실천 기록</string>
+    <string name="calendar_month_summary">실천한 날 %1$d일 · 완료 %2$d개 · +%3$d코인</string>
+    <string name="calendar_complete">루틴 완료\n%1$d / %2$d</string>
+    <string name="calendar_checks">세부 체크\n%1$d / %2$d</string>
+    <string name="calendar_coins">획득 코인\n+%1$d</string>
+    <string name="calendar_day_accessibility">%1$s, 루틴 완료 %2$d개, 세부 체크 %3$d개%4$s</string>
+    <string name="calendar_selected">, 선택됨</string>
+    <string name="calendar_current">, 오늘</string>
+    <string name="calendar_future">예정된 실천을 미리 볼 수 있어요. 미래 날짜는 완료할 수 없어요.</string>
+    <string name="calendar_empty">아직 기록이 없어요. 작은 실천 하나부터 시작해 보세요.</string>
+    <string name="calendar_recorded">완료와 세부 체크는 따로 기록돼요. 루틴을 완료하면 한 번만 보상받아요.</string>
+    <string name="calendar_schedule_note">완료·체크는 저장된 기록, 예정 수는 현재 루틴 설정 기준이에요. 같은 실천의 보상은 한 번만 계산해요.</string>
+    <string name="calendar_open_day">일간 실천으로 돌아가기</string>
+    <string name="calendar_loading">기록을 불러오는 중…</string>
+    <string name="calendar_error">기록을 불러오지 못했어요. 날짜를 다시 선택해 주세요.</string>
+    <string name="calendar_rings">루틴 완료 %1$d / %2$d, 세부 체크 %3$d / %4$d</string>
+</resources>

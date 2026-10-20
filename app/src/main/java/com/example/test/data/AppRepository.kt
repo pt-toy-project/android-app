@@ -199,6 +199,57 @@ class AppRepository(
         }
     }
 
+    /** Whole-app calendar: immutable earned records survive deletion and are never counted twice.
+     * Schedule denominators reflect current settings; this is not a historical schedule snapshot.
+     * Bounded range queries avoid the paginated history API's 100-record default limit.
+     */
+    fun calendarActivity(start: RoutineDate, end: RoutineDate): List<com.example.test.Routine.DayActivity> {
+        require(start <= end)
+        val dates = mutableListOf<RoutineDate>()
+        var day = start
+        while (day <= end) {
+            require(dates.size < 62) { "Calendar range is limited to 62 days" }
+            dates += day
+            if (day == end) break
+            day = day.plusDays(1)
+        }
+        val earned = db.rawQuery(
+            "SELECT local_date,COUNT(*),SUM(coins) FROM completion_records WHERE local_date BETWEEN ? AND ? GROUP BY local_date",
+            arrayOf(start.iso, end.iso)
+        ).use { cursor -> buildMap {
+            while (cursor.moveToNext()) put(cursor.getString(0), cursor.getInt(1) to cursor.getLong(2))
+        } }
+        val checks = db.rawQuery(
+            "SELECT local_date,COUNT(*) FROM quest_checks WHERE local_date BETWEEN ? AND ? GROUP BY local_date",
+            arrayOf(start.iso, end.iso)
+        ).use { cursor -> buildMap {
+            while (cursor.moveToNext()) put(cursor.getString(0), cursor.getInt(1))
+        } }
+        val routines = listRoutines()
+        val questSizes = routines.associate { routine -> routine.id to
+            (com.example.test.Hero.HeroDayCatalog.find(routine.heroId, routine.templateId)?.quests?.size ?: 0) }
+        return dates.map { date ->
+            val scheduled = routines.filter { it.enabled && date.iso >= it.createdOn && RoutineRules.scheduledOn(it.weekdayMask, date) }
+            // Completion rewards share a hero/template identity across the two sources.
+            val planned = scheduled.distinctBy { it.heroId to it.templateId }.size
+            val record = earned[date.iso]
+            com.example.test.Routine.DayActivity(date, planned, record?.first ?: 0,
+                scheduled.sumOf { questSizes.getValue(it.id) }, checks[date.iso] ?: 0, record?.second ?: 0)
+        }
+    }
+
+    /** Achievements are derived from retained records and never grant additional rewards. */
+    fun progressSummary(today: RoutineDate = todayProvider()): ProgressSummary {
+        val earned = db.rawQuery("SELECT COUNT(*),COALESCE(SUM(coins),0) FROM completion_records WHERE local_date<=?", arrayOf(today.iso)).use {
+            it.moveToFirst(); it.getInt(0) to it.getLong(1)
+        }
+        val dates = db.rawQuery(
+            "SELECT local_date FROM completion_records WHERE local_date<=? UNION SELECT local_date FROM quest_checks WHERE local_date<=?",
+            arrayOf(today.iso, today.iso)
+        ).use { cursor -> buildSet { while (cursor.moveToNext()) RoutineDate.parse(cursor.getString(0))?.let(::add) } }
+        return ProgressSummary(earned.first, dates.size, earned.second, ProgressSummary.streak(dates, today))
+    }
+
     fun completedCount(heroId: String, date: RoutineDate): Int = db.rawQuery(
         "SELECT count(*) FROM completion_records WHERE hero_id=? AND local_date=?", arrayOf(heroId, date.iso)
     ).use { it.moveToFirst(); it.getInt(0) }

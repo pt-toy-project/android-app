@@ -72,6 +72,11 @@ class BackupActivity : AppCompatActivity() {
 
     private fun renderAccount() {
         val session = GoogleAccountSession(this)
+        val available = GoogleAccountSession.available()
+        findViewById<View>(R.id.backup_sign_in).visibility = if (available && session.email == null) View.VISIBLE else View.GONE
+        listOf(R.id.backup_google_upload, R.id.backup_google_restore).forEach {
+            findViewById<View>(it).visibility = if (available) View.VISIBLE else View.GONE
+        }
         findViewById<TextView>(R.id.backup_account).text = session.email ?: getString(R.string.account_not_signed_in)
         findViewById<View>(R.id.backup_sign_out).visibility = if (session.email == null) View.GONE else View.VISIBLE
         findViewById<TextView>(R.id.backup_google_notice).setText(

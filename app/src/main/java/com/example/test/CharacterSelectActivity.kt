@@ -49,6 +49,32 @@ class CharacterSelectActivity : AppCompatActivity() {
                 renderResults()
             }
         }
+        findViewById<View>(R.id.hero_reset_filters).setOnClickListener {
+            selectedField = HeroCatalog.ALL_FIELDS
+            selectedGoal = com.example.test.Hero.HeroQuestCatalog.goals.first()
+            findViewById<ChipGroup>(R.id.hero_fields).apply { removeAllViews() }
+            bindFields()
+            findViewById<com.google.android.material.textfield.MaterialAutoCompleteTextView>(R.id.hero_goal)
+                .setText(selectedGoal, false)
+            search.setText("")
+            search.clearFocus()
+            renderResults()
+        }
+        val suggestions = this@CharacterSelectActivity.findViewById<ChipGroup>(R.id.hero_goal_suggestions)
+        listOf("공부·연구", "글쓰기·창작", "탐험·관찰").forEach { goal ->
+            suggestions.addView(Chip(this).apply {
+                id = View.generateViewId(); text = goal; tag = goal; isCheckable = true
+                minHeight = (48 * resources.displayMetrics.density).toInt()
+                setOnClickListener {
+                    selectedGoal = goal
+                    selectedField = HeroCatalog.ALL_FIELDS
+                    this@CharacterSelectActivity.findViewById<ChipGroup>(R.id.hero_fields).removeAllViews(); bindFields()
+                    search.setText("")
+                    this@CharacterSelectActivity.findViewById<com.google.android.material.textfield.MaterialAutoCompleteTextView>(R.id.hero_goal).setText(goal, false)
+                    renderResults()
+                }
+            })
+        }
         search.setText(savedInstanceState?.getString(QUERY).orEmpty())
         search.doAfterTextChanged { renderResults() }
         renderResults()
@@ -73,6 +99,10 @@ class CharacterSelectActivity : AppCompatActivity() {
     }
 
     private fun renderResults() {
+        val suggestions = findViewById<ChipGroup>(R.id.hero_goal_suggestions)
+        for (index in 0 until suggestions.childCount) {
+            (suggestions.getChildAt(index) as Chip).isChecked = suggestions.getChildAt(index).tag == selectedGoal
+        }
         val query = search.text.toString().trim()
         val rows = HeroCatalog.filterByField(selectedField).filter { hero ->
             val goal = com.example.test.Hero.HeroQuestCatalog.goalFor(hero.id)
@@ -81,6 +111,7 @@ class CharacterSelectActivity : AppCompatActivity() {
                     .any { it.contains(query, ignoreCase = true) })
         }
         heroAdapter.submitList(rows)
+        findViewById<View>(R.id.hero_empty_actions).visibility = if (rows.isEmpty()) View.VISIBLE else View.GONE
         findViewById<View>(R.id.heroEmptyState).visibility = if (rows.isEmpty()) View.VISIBLE else View.GONE
         findViewById<View>(R.id.heroRecyclerView).visibility = if (rows.isEmpty()) View.GONE else View.VISIBLE
         findViewById<TextView>(R.id.heroResultCount).text = getString(R.string.hero_result_count, rows.size, HeroCatalog.all.size)

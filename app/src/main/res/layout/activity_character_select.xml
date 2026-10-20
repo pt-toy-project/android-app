@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/ui_background">
     <com.google.android.material.appbar.MaterialToolbar android:id="@+id/screen_toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" app:title="@string/nav_hero"/>
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="20dp" android:paddingEnd="20dp">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/progress_recommend_heading" android:textAppearance="?attr/textAppearanceTitleLarge" android:textStyle="bold" android:layout_marginTop="16dp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/progress_recommend_body" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginTop="6dp"/>
+        <com.google.android.material.chip.ChipGroup android:id="@+id/hero_goal_suggestions" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:singleSelection="true"/>
         <TextView android:id="@+id/hero_browser_heading" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceHeadlineSmall" android:text="@string/redesign_browse" android:textStyle="bold"/>
         <TextView android:id="@+id/hero_browser_subtitle" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:text="@string/redesign_browse_subtitle" android:layout_marginTop="6dp"/>
         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:hint="@string/hero_search_hint" app:endIconMode="clear_text">
@@ -19,9 +24,14 @@
         <TextView android:id="@+id/heroResultCount" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceLabelLarge" android:accessibilityLiveRegion="polite" android:layout_marginBottom="8dp"/>
         <TextView android:id="@+id/heroAlarmStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodySmall" android:text="@string/hero_alarm_restore_error" android:visibility="gone"/>
     </LinearLayout>
-    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-        <androidx.recyclerview.widget.RecyclerView android:id="@+id/heroRecyclerView" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingBottom="20dp" android:clipToPadding="false"/>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/heroRecyclerView" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingBottom="20dp" android:clipToPadding="false"/>
+        <LinearLayout android:id="@+id/hero_empty_actions" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
         <TextView android:id="@+id/heroEmptyState" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyLarge" android:text="@string/hero_empty_state" android:padding="24dp" android:visibility="gone"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/hero_reset_filters" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="24dp" android:minHeight="48dp" android:text="@string/upgrade_reset_filters"/>
+        </LinearLayout>
     </FrameLayout>
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
     <include layout="@layout/layout_bottom_nav"/>
 </LinearLayout>

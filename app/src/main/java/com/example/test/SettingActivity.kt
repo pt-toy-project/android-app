@@ -44,6 +44,7 @@ class SettingActivity : AppCompatActivity() {
         setupBottomNavigation(0)
         findViewById<TextView>(R.id.settings_build).text = getString(
             R.string.compact_build_details, com.example.test.Hero.HeroCatalog.all.size)
+        findViewById<MaterialButton>(R.id.settings_progress).setOnClickListener { startActivity(Intent(this, ProgressActivity::class.java)) }
         findViewById<MaterialButton>(R.id.settings_backup).setOnClickListener {
             startActivity(Intent(this, BackupActivity::class.java))
         }
@@ -72,13 +73,13 @@ class SettingActivity : AppCompatActivity() {
         alarm.setOnCheckedChangeListener { _, enabled ->
             preferences.alarmEnabled = enabled
             if (enabled && needsNotificationPermission()) {
-                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                requestOrOpenNotificationSettings()
             }
             reconcile()
         }
         permissionButton.setOnClickListener {
             if (needsNotificationPermission()) {
-                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                requestOrOpenNotificationSettings()
             } else {
                 openSystemSettings(notificationSettingsIntent())
             }
@@ -113,6 +114,17 @@ class SettingActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         reconcile()
+    }
+
+    private fun requestOrOpenNotificationSettings() {
+        val history = getSharedPreferences("notification_permission_ui", MODE_PRIVATE)
+        if (needsNotificationPermission() &&
+            (!history.getBoolean("requested", false) || shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS))) {
+            history.edit().putBoolean("requested", true).apply()
+            requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            openSystemSettings(notificationSettingsIntent())
+        }
     }
 
     private fun needsNotificationPermission() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&

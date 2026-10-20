@@ -3,6 +3,12 @@
     <com.google.android.material.appbar.MaterialToolbar android:id="@+id/screen_toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" app:title="@string/backup_title"/>
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:text="@string/backup_local_title" android:layout_marginTop="24dp"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:text="@string/backup_local_note" android:layout_marginTop="8dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/backup_export" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_marginTop="12dp" android:text="@string/backup_export"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/backup_import" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/backup_import"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/backup_undo" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/backup_undo" android:visibility="gone"/>
+            <TextView android:id="@+id/backup_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginTop="16dp" android:accessibilityLiveRegion="polite"/>
             <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" app:cardBackgroundColor="@color/ui_primary_container" app:strokeWidth="0dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
                     <TextView android:id="@+id/backup_account" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium"/>
@@ -13,12 +19,6 @@
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.button.MaterialButton android:id="@+id/backup_google_upload" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_marginTop="16dp" android:text="@string/backup_google_upload"/>
             <com.google.android.material.button.MaterialButton android:id="@+id/backup_google_restore" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/backup_google_restore"/>
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:text="@string/backup_local_title" android:layout_marginTop="24dp"/>
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:text="@string/backup_local_note" android:layout_marginTop="8dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/backup_export" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_marginTop="12dp" android:text="@string/backup_export"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/backup_import" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/backup_import"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/backup_undo" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/backup_undo" android:visibility="gone"/>
-            <TextView android:id="@+id/backup_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:layout_marginTop="16dp" android:accessibilityLiveRegion="polite"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

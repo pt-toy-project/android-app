@@ -4,21 +4,17 @@ import android.content.Intent
 import android.os.SystemClock
 import android.view.View
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.TextView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.test.Hero.HeroCatalog
 import com.example.test.Routine.RoutineDate
 import com.example.test.data.AppRepository
 import com.example.test.data.UserRoutine
-import org.hamcrest.Matcher
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
@@ -54,23 +50,16 @@ class RoutineActivityTest {
     }
 
     @Test fun chosenHeroAndDateSurviveRecreation() {
-        launch().use { scenario ->
-            val date = RoutineDate(2024, 2, 29)
-            awaitUi(scenario) { it.hasWindowFocus() && it.findViewById<View>(R.id.iv_calendar).isShown }
-            lateinit var decor: View
-            scenario.onActivity { decor = it.window.decorView }
-            onView(withId(R.id.iv_calendar))
-                .inRoot(androidx.test.espresso.matcher.RootMatchers.withDecorView(org.hamcrest.Matchers.`is`(decor)))
-                .perform(click())
-            onView(isAssignableFrom(DatePicker::class.java)).perform(object : ViewAction {
-                override fun getConstraints(): Matcher<android.view.View> = isAssignableFrom(DatePicker::class.java)
-                override fun getDescription() = "Select leap day"
-                override fun perform(controller: UiController, view: android.view.View) {
-                    (view as DatePicker).updateDate(date.year, date.month - 1, date.day)
-                    controller.loopMainThreadUntilIdle()
-                }
-            })
-            onView(withId(android.R.id.button1)).perform(click())
+        val date = RoutineDate(2024, 2, 29)
+        ActivityScenario.launch<RoutineActivity>(Intent(context, RoutineActivity::class.java)
+            .putExtra(RoutineActivity.HERO_ID, "einstein")
+            .putExtra(RoutineActivity.SELECTED_DATE, "2024-02-28")).use { scenario ->
+            awaitUi(scenario) { it.findViewById<View>(R.id.iv_calendar).isShown }
+            scenario.onActivity { activity ->
+                activity.findViewById<View>(R.id.iv_calendar).performClick()
+                val calendar = activity.findViewById<View>(R.id.activity_calendar)
+                assertTrue(calendar.findViewWithTag<View>("calendar:${date.iso}").performClick())
+            }
             scenario.recreate()
             awaitUi(scenario) { it.findViewById<TextView>(R.id.routine_date).text.toString() == date.label("yyyy년 M월 d일 E요일") }
             scenario.onActivity { assertEquals(context.getString(R.string.redesign_personal_title), it.findViewById<TextView>(R.id.routine_title).text.toString()) }

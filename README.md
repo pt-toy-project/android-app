@@ -2,6 +2,12 @@
 
 > "위인의 하루 루틴을 따라하고, 코인을 모아 아이템을 구매하는 동기부여 Android 앱"
 
+## v3.5 개발 작업본
+
+계정 없는 시작·백업·타이머 개선에 월간 실천 달력, 목표별 인물 추천, 통계와 달성 배지를 더했습니다. 밝은 회색 바탕과 파란색 강조, 넓은 여백으로 화면을 정리했으며 다크 모드도 지원합니다. [v3.5 구현·검증 결과](docs/upgrade-v3.5.md), [앞선 v3.4 개선](docs/upgrade-v3.4.md), [기기 검증을 위한 다음 작업 프롬프트](docs/next-upgrade-prompt.md)를 참고하세요.
+
+v3.5 APK는 이 작업 환경의 로컬 빌드입니다. 아래 게시된 v3.3 APK와 서명이 달라 기존 배포본 위의 업데이트 설치는 아직 준비되지 않았습니다. 기존 앱과 데이터를 삭제하지 마세요.
+
 ## APK 다운로드 및 설치
 
 **[v3.3 테스트 APK 다운로드 — 집중 타이머·알림 시험](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.3-debug.apk)**
@@ -100,6 +106,6 @@ Lint 보고서: `app/build/reports/lint-results-debug.html`
 - [ScreenRenderTest](app/src/test/java/com/example/test/ScreenRenderTest.kt): 실제 View 렌더링·집중 화면·큰 글꼴·회전 후 상태 보존.
 - [RoutineActivityTest](app/src/androidTest/java/com/example/test/RoutineActivityTest.kt): 날짜·인물 선택 보존과 실천 시작 빠른 연속 탭의 상세 중복 방지.
 
-JVM 127개·SQLite 21개와 네 가지 Gradle 작업을 통과했습니다. lint 오류 0·경고 166입니다. Android 35 가상 기기에서 v3.2 → v3.3 업데이트 설치가 성공했고 모든 DB 행·기존 루틴 ID·완료 기록·구매/적용·80포인트를 비교해 보존을 확인했습니다. 실제 휴대폰 업데이트와 스피커 청취·TalkBack·절전/Doze는 미실행입니다. OS 알림 테스트의 최종 결과와 APK 체크섬은 [다운로드 안내](downloads/README.md)에 기록합니다.
+이하 내용은 **v3.3의 이전 검증 기록**입니다. 최신 v3.5 결과는 위의 구현·검증 문서를 참고하세요. v3.3은 JVM 127개·SQLite 21개와 네 가지 Gradle 작업을 통과했습니다. lint 오류 0·경고 166입니다. Android 35 가상 기기에서 v3.2 → v3.3 업데이트 설치가 성공했고 모든 DB 행·기존 루틴 ID·완료 기록·구매/적용·80포인트를 비교해 보존을 확인했습니다. 실제 휴대폰 업데이트와 스피커 청취·TalkBack·절전/Doze는 미실행입니다. OS 알림 테스트의 최종 결과와 APK 체크섬은 [다운로드 안내](downloads/README.md)에 기록합니다.
 
 Android 35에서 알림 시험·정규 예약/출처 연결/중복 보상·미래 완료 보호·빠른 연속 탭 등 계측 4개를 통과했습니다. 실행한 5개 중 달력/회전 1개는 가상 기기의 반복 System UI ANR로 창 포커스를 확보하지 못해 실패했고 나머지 47개는 미실행입니다. 이 제한을 통과로 표시하지 않습니다.

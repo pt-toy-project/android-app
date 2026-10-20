@@ -33,8 +33,9 @@ class TutorialAndBackupScreenTest {
         val controller = Robolectric.buildActivity(TutorialActivity::class.java).setup().visible()
         try {
             val activity = controller.get()
-            assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.intro_google).visibility)
-            repeat(4) { assertTrue(activity.findViewById<View>(R.id.intro_next).performClick()) }
+            assertEquals(View.GONE, activity.findViewById<View>(R.id.intro_google).visibility)
+            activity.findViewById<View>(R.id.intro_learn).performClick()
+            repeat(3) { assertTrue(activity.findViewById<View>(R.id.intro_next).performClick()) }
             assertFalse(TutorialActivity.needed(activity))
             assertEquals(CharacterSelectActivity::class.java.name, shadowOf(activity).nextStartedActivity.component!!.className)
         } finally { controller.pause().stop().destroy() }

@@ -1,6 +1,5 @@
 package com.example.test
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -22,9 +21,7 @@ abstract class TimelineActivity : AppCompatActivity() {
     protected abstract val timelineLayout: Int
     protected abstract val routineSource: com.example.test.data.RoutineSource
     protected lateinit var timelineHeader: View
-    private lateinit var dateAdapter: DateAdapter
     private lateinit var routineAdapter: PersonalRoutineAdapter
-    private lateinit var datesView: RecyclerView
     private var heroId = HeroCatalog.default.id
     private var selectedDate = RoutineDate.today()
     private var managementMode = false
@@ -36,7 +33,10 @@ abstract class TimelineActivity : AppCompatActivity() {
     private var busy = false
     private var alarmRequested = false
     private var transientDialog: AlertDialog? = null
-    private var datePicker: DatePickerDialog? = null
+    private lateinit var activityCalendar: com.example.test.calendar.ActivityCalendarView
+    private var calendarExpanded = false
+    private var calendarMonth: RoutineDate? = null
+    private var calendarData: List<DayActivity>? = null
     private val handler = Handler(Looper.getMainLooper())
     private val refresh = object : Runnable {
         override fun run() {
@@ -56,6 +56,7 @@ abstract class TimelineActivity : AppCompatActivity() {
         resolveStoredHero = incomingHero == null
         heroId = HeroCatalog.getOrDefault(incomingHero).id
         selectedDate = RoutineDate.parse(savedInstanceState?.getString(SELECTED_DATE) ?: intent.getStringExtra(SELECTED_DATE)) ?: RoutineDate.today()
+        calendarExpanded = savedInstanceState?.getBoolean("calendar_expanded") ?: intent.getBooleanExtra("calendar_expanded", false)
         managementMode = savedInstanceState?.getBoolean(MANAGE) ?: false
         dayFilter = savedInstanceState?.getString("day_filter") ?: incomingHero?.takeIf { routineSource == com.example.test.data.RoutineSource.HERO_DAY }
         requestedDetailId = savedInstanceState?.getLong(USER_ROUTINE_ID, -1) ?: intent.getLongExtra(USER_ROUTINE_ID, -1)
@@ -65,12 +66,14 @@ abstract class TimelineActivity : AppCompatActivity() {
         findViewById<RecyclerView>(R.id.rv_routine_list).apply {
             layoutManager = LinearLayoutManager(this@TimelineActivity); adapter = androidx.recyclerview.widget.ConcatAdapter(TimelineHeaderAdapter(timelineHeader), routineAdapter)
         }
-        dateAdapter = DateAdapter { date -> scopeVersion++; requestedDetailId = -1; selectedDate = date; renderDates(); load() }
-        datesView = timelineHeader.findViewById<RecyclerView>(R.id.rv_date_selector).apply {
-            layoutManager = LinearLayoutManager(this@TimelineActivity, LinearLayoutManager.HORIZONTAL, false)
-            adapter = dateAdapter
+        activityCalendar = timelineHeader.findViewById(R.id.activity_calendar)
+        activityCalendar.onDateSelected = ::selectDate
+        activityCalendar.onOpenDay = { calendarExpanded = false; renderDates(); scrollToCalendar() }
+        timelineHeader.findViewById<View>(R.id.iv_calendar).setOnClickListener {
+            calendarExpanded = !calendarExpanded
+            renderDates()
+            scrollToCalendar()
         }
-        timelineHeader.findViewById<View>(R.id.iv_calendar).setOnClickListener { showDatePicker() }
         timelineHeader.findViewById<Button>(R.id.personal_add).setOnClickListener {
             startActivity(Intent(this, CharacterSelectActivity::class.java).putExtra("personal_mode", routineSource == com.example.test.data.RoutineSource.PERSONAL))
         }
@@ -107,12 +110,19 @@ abstract class TimelineActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent); setIntent(intent)
+        if (intent.hasExtra("calendar_expanded")) calendarExpanded = intent.getBooleanExtra("calendar_expanded", false)
         scopeVersion++; dayFilter = null
         intent.getStringExtra(HERO_ID)?.let { heroId = HeroCatalog.getOrDefault(it).id; resolveStoredHero = false; if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) dayFilter = heroId }
         RoutineDate.parse(intent.getStringExtra(SELECTED_DATE))?.let { selectedDate = it; renderDates() }
         requestedDetailId = intent.getLongExtra(USER_ROUTINE_ID, -1)
         (supportFragmentManager.findFragmentByTag(DETAIL_TAG) as? PersonalRoutineDetailSheet)?.dismissAllowingStateLoss()
         load()
+        if (intent.hasExtra("calendar_expanded")) scrollToCalendar()
+    }
+
+    private fun scrollToCalendar() {
+        (findViewById<RecyclerView>(R.id.rv_routine_list).layoutManager as? LinearLayoutManager)
+            ?.scrollToPositionWithOffset(0, 0)
     }
 
     override fun onResume() {
@@ -129,16 +139,29 @@ abstract class TimelineActivity : AppCompatActivity() {
         }
     }
     override fun onPause() { handler.removeCallbacks(refresh); super.onPause() }
-    override fun onStop() { datePicker?.dismiss(); datePicker = null; transientDialog?.dismiss(); transientDialog = null; super.onStop() }
+    override fun onStop() { transientDialog?.dismiss(); transientDialog = null; super.onStop() }
     override fun onSaveInstanceState(out: Bundle) {
         out.putString(HERO_ID, heroId); out.putString(SELECTED_DATE, selectedDate.iso); out.putBoolean(MANAGE, managementMode)
         out.putLong(USER_ROUTINE_ID, requestedDetailId)
         out.putString("day_filter", dayFilter)
+        out.putBoolean("calendar_expanded", calendarExpanded)
         super.onSaveInstanceState(out)
     }
 
     private fun renderDates() {
-        val week = selectedDate.week(); dateAdapter.submitDates(week, selectedDate); datesView.scrollToPosition(week.indexOf(selectedDate))
+        timelineHeader.findViewById<View>(R.id.routine_date).visibility = if (calendarExpanded) View.GONE else View.VISIBLE
+        timelineHeader.findViewById<Button>(R.id.iv_calendar).apply {
+            setText(if (calendarExpanded) R.string.calendar_day_view else R.string.calendar_month_view)
+            contentDescription = text
+        }
+        activityCalendar.bind(selectedDate, calendarExpanded,
+            calendarData.takeIf { calendarMonth == ActivityCalendar.monthStart(selectedDate) })
+    }
+
+    private fun selectDate(date: RoutineDate) {
+        scopeVersion++; requestedDetailId = -1; selectedDate = date
+        (supportFragmentManager.findFragmentByTag(DETAIL_TAG) as? PersonalRoutineDetailSheet)?.dismissAllowingStateLoss()
+        renderDates(); load()
     }
 
     protected fun reloadTimeline(selectedHero: String? = null) {
@@ -169,11 +192,14 @@ abstract class TimelineActivity : AppCompatActivity() {
                     PersonalRoutineRow(routine, routine.id in completed, date, RoutineDate.today(), now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE), questChecks[routine.id].orEmpty())
                 }
                 PersonalSnapshot(hero.id, rows, repo.balance(), completed, repo.appliedItemId(),
-                    adopted.map { it.heroId }.distinct(), adopted.any { it.enabled && it.alarmEnabled })
+                    adopted.map { it.heroId }.distinct(), adopted.any { it.enabled && it.alarmEnabled },
+                    repo.calendarActivity(ActivityCalendar.monthStart(date).week().first(), ActivityCalendar.days(date).last().week().last()))
             }
         }) { result ->
             if (ticket != generation) return@run
             result.fold(onSuccess = { snapshot ->
+                calendarData = snapshot.activity; calendarMonth = ActivityCalendar.monthStart(date)
+                renderDates()
                 heroId = snapshot.heroId; resolveStoredHero = false
                 timelineHeader.findViewById<TextView>(R.id.routine_title).text = getString(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.redesign_day_title else R.string.redesign_personal_title)
                 timelineHeader.findViewById<TextView>(R.id.day_notice).visibility = if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
@@ -194,8 +220,14 @@ abstract class TimelineActivity : AppCompatActivity() {
                     selectedDate == RoutineDate.today() && visibleRows.isNotEmpty() && finished == visibleRows.size) View.VISIBLE else View.GONE
                 val focus = com.example.test.focus.FocusTimerStore(applicationContext).read()
                 timelineHeader.findViewById<Button>(R.id.timeline_focus_resume).apply {
-                    visibility = if (focus != null && focus.phase != com.example.test.focus.FocusPhase.FINISHED && selectedDate == RoutineDate.today()) View.VISIBLE else View.GONE
-                    text = focus?.let { getString(R.string.polish_focus_active, it.title) }.orEmpty()
+                    visibility = if (focus != null && focus.routineId !in snapshot.completedIds && selectedDate == RoutineDate.today()) View.VISIBLE else View.GONE
+                    text = focus?.let {
+                        when {
+                            it.phase == com.example.test.focus.FocusPhase.FINISHED || it.remainingMillis == 0L -> getString(R.string.upgrade_focus_finished, it.title)
+                            it.phase == com.example.test.focus.FocusPhase.PAUSED -> getString(R.string.upgrade_focus_paused, it.title)
+                            else -> getString(R.string.upgrade_focus_running, it.title, (it.remainingMillis + 59_999) / 60_000)
+                        }
+                    }.orEmpty()
                     CompactText.apply(this)
                 }
                 timelineHeader.findViewById<com.google.android.material.progressindicator.LinearProgressIndicator>(R.id.timeline_progress).apply {
@@ -249,7 +281,7 @@ abstract class TimelineActivity : AppCompatActivity() {
                 if (requestedDetailId > 0) {
                     showDetail(requestedDetailId)
                 }
-            }, onFailure = { timelineHeader.findViewById<TextView>(R.id.personal_summary).setText(R.string.personal_storage_error) })
+            }, onFailure = { activityCalendar.showError(); timelineHeader.findViewById<TextView>(R.id.personal_summary).setText(R.string.personal_storage_error) })
         }
     }
 
@@ -402,13 +434,8 @@ abstract class TimelineActivity : AppCompatActivity() {
             }.create().also { it.show() }
     }
 
-    private fun showDatePicker() {
-        if (datePicker?.isShowing == true) return
-        datePicker = DatePickerDialog(this, { _, year, month, day -> scopeVersion++; requestedDetailId = -1; selectedDate = RoutineDate(year, month + 1, day); renderDates(); load() },
-            selectedDate.year, selectedDate.month - 1, selectedDate.day).also { it.show() }
-    }
     private fun showMessage(message: Int) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?, val startedHeroes: List<String>, val requestedAlarm: Boolean)
+    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?, val startedHeroes: List<String>, val requestedAlarm: Boolean, val activity: List<DayActivity>)
     companion object {
         const val HERO_ID = "hero_id"
         const val SELECTED_DATE = "selected_date"

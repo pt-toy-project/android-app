@@ -30,8 +30,9 @@ class TutorialActivity : AppCompatActivity() {
             }
         }
         findViewById<View>(R.id.intro_next).setOnClickListener {
-            if (page == 3) finishTutorial(true) else { page++; render() }
+            if (page == 0 || page == 3) finishTutorial(true) else { page++; render() }
         }
+        findViewById<View>(R.id.intro_learn).setOnClickListener { page = 1; render() }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { if (page > 0) { page--; render() } else finishTutorial(false) }
         })
@@ -44,10 +45,11 @@ class TutorialActivity : AppCompatActivity() {
         val subtitles = intArrayOf(R.string.intro_body_welcome, R.string.intro_body_hero, R.string.intro_body_quest, R.string.intro_body_backup)
         findViewById<TextView>(R.id.intro_title).setText(titles[page])
         findViewById<TextView>(R.id.intro_body).setText(subtitles[page])
-        findViewById<View>(R.id.intro_google).visibility = if (page == 0) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.intro_google).visibility = if (page == 0 && GoogleAccountSession.available()) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.intro_learn).visibility = if (page == 0) View.VISIBLE else View.GONE
         findViewById<TextView>(R.id.intro_account_status).apply {
             visibility = if (page == 0) View.VISIBLE else View.GONE
-            setText(if (GoogleAccountSession.available()) R.string.account_optional else R.string.account_not_configured)
+            setText(if (GoogleAccountSession.available()) R.string.account_optional else R.string.upgrade_guest_note)
         }
         findViewById<TextView>(R.id.intro_demo_title).setText(when (page) {
             2 -> R.string.intro_demo_quest

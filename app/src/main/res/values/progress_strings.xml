@@ -1,0 +1,17 @@
+<resources>
+    <string name="progress_title">통계와 배지</string>
+    <string name="progress_heading">작은 실천이\n쌓이고 있어요</string>
+    <string name="progress_body">로그인 없이, 내가 남긴 기록으로 돌아봐요.</string>
+    <string name="progress_totals">실천한 날 %1$d일 · 연속 %2$d일\n누적 완료 %3$d회 · 획득 %4$d코인</string>
+    <string name="progress_badges">차곡차곡, 달성 배지</string>
+    <string name="progress_badge_first">첫 걸음을 뗐어요</string>
+    <string name="progress_badge_ten">열 번의 작은 약속</string>
+    <string name="progress_badge_thirty">꾸준함이 자라고 있어요</string>
+    <string name="progress_badge_hundred">백 번을 해낸 나</string>
+    <string name="progress_badge_earned">달성 · 루틴 %1$d회 완료</string>
+    <string name="progress_badge_remaining">%1$d / %2$d회 · %3$d회 더 하면 달성</string>
+    <string name="progress_month_open">월간 기록 살펴보기</string>
+    <string name="progress_notice">연속 실천은 완료 또는 세부 체크를 남긴 날로 계산해요. 오늘 아직 시작하지 않았다면 어제까지의 연속 기록을 보여줘요. 획득 코인은 사용 전 누적 금액이에요.</string>
+    <string name="progress_recommend_heading">오늘은 무엇을 해볼까요?</string>
+    <string name="progress_recommend_body">관심 있는 목표를 고르면 어울리는 인물을 보여드려요.</string>
+</resources>

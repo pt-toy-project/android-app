@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ui_background">#101B1C</color>
-    <color name="ui_surface">#192829</color>
-    <color name="ui_primary">#86D6C5</color>
-    <color name="ui_on_primary">#06392F</color>
-    <color name="ui_primary_container">#23483F</color>
-    <color name="ui_on_container">#C0EDDB</color>
-    <color name="ui_outline">#354C48</color>
-    <color name="ui_text">#E0EDEA</color>
-    <color name="ui_secondary">#ADC2BA</color>
+    <color name="ui_background">#101318</color>
+    <color name="ui_surface">#1C2027</color>
+    <color name="ui_primary">#9CC6FF</color>
+    <color name="ui_on_primary">#102D52</color>
+    <color name="ui_primary_container">#233957</color>
+    <color name="ui_on_container">#D9E8FF</color>
+    <color name="ui_outline">#333B48</color>
+    <color name="ui_text">#F0F2F5</color>
+    <color name="ui_secondary">#ACB6C5</color>
 </resources>

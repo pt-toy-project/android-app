@@ -21,6 +21,7 @@ object ScreenToolbar {
         }
         toolbar.setOnMenuItemClickListener { item ->
             val destination = when (item.itemId) {
+                R.id.screen_progress -> ProgressActivity::class.java
                 R.id.screen_history -> HistoryActivity::class.java
                 R.id.screen_settings -> SettingActivity::class.java
                 R.id.screen_credits -> CreditsActivity::class.java

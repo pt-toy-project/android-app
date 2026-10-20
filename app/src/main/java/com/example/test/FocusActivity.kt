@@ -28,6 +28,10 @@ class FocusActivity : AppCompatActivity() {
     private var title = ""
     private var minutes = 10
     private var decision: AlertDialog? = null
+    private var routineMissing = false
+    private var incomingHandled = false
+    private var alertResult: ReminderResult? = null
+    private var finishingTimer = false
     private val tick = object : Runnable {
         override fun run() { render(); handler.postDelayed(this, 1000) }
     }
@@ -39,6 +43,13 @@ class FocusActivity : AppCompatActivity() {
         ScreenToolbar.bind(this, R.string.polish_focus_title, back = true)
         store = FocusTimerStore(applicationContext)
         minutes = savedInstanceState?.getInt("minutes", 10) ?: 10
+        routineId = savedInstanceState?.getLong("routineId") ?: 0L
+        title = savedInstanceState?.getString("routineTitle").orEmpty()
+        routineMissing = savedInstanceState?.getBoolean("routineMissing") ?: false
+        incomingHandled = savedInstanceState?.getBoolean("incomingHandled") ?: false
+        findViewById<View>(R.id.focus_notification_settings).setOnClickListener {
+            startActivity(Intent(this, SettingActivity::class.java))
+        }
         val group = findViewById<ChipGroup>(R.id.focus_durations)
         listOf(5, 10, 25).forEach { value ->
             group.addView(Chip(this).apply {
@@ -61,21 +72,21 @@ class FocusActivity : AppCompatActivity() {
             decision?.dismiss()
             decision = AlertDialog.Builder(this).setMessage(R.string.polish_focus_reset_confirm)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.polish_focus_reset) { _, _ -> store.clear(); cancelAlert(); render() }.show()
+                .setPositiveButton(R.string.polish_focus_reset) { _, _ -> store.clear(); alertResult = null; cancelAlert(); render() }.show()
         }
         val current = store.read()
         if (current != null) { routineId = current.routineId; title = current.title }
         val incomingId = intent.getLongExtra(TimelineActivity.USER_ROUTINE_ID, 0)
-        if (incomingId > 0 && (current == null || current.routineId != incomingId)) {
+        if (!incomingHandled && incomingId > 0 && (current == null || current.routineId != incomingId)) {
             AppIo.run(this, { AppRepository(applicationContext).use { it.getRoutine(incomingId) } }) { result ->
                 val routine = result.getOrNull()
-                if (routine == null) { if (current == null) findViewById<TextView>(R.id.focus_alert).setText(R.string.polish_focus_missing); return@run }
-                fun useIncoming() { store.clear(); cancelAlert(); routineId = routine.id; title = routine.title; render() }
+                if (routine == null) { if (current == null) { routineMissing = true; render() }; return@run }
+                fun useIncoming() { routineMissing = false; incomingHandled = true; store.clear(); alertResult = null; cancelAlert(); routineId = routine.id; title = routine.title; render() }
                 if (current == null || current.phase == FocusPhase.FINISHED) useIncoming()
                 else {
                     decision?.dismiss()
                     decision = AlertDialog.Builder(this).setTitle(R.string.polish_focus_other).setMessage(current.title)
-                        .setNegativeButton(R.string.polish_focus_keep, null)
+                        .setNegativeButton(R.string.polish_focus_keep) { _, _ -> incomingHandled = true }
                         .setPositiveButton(R.string.polish_focus_replace) { _, _ -> useIncoming() }.show()
                 }
             }
@@ -89,13 +100,22 @@ class FocusActivity : AppCompatActivity() {
     }
     override fun onPause() { handler.removeCallbacks(tick); super.onPause() }
     override fun onDestroy() { decision?.dismiss(); super.onDestroy() }
-    override fun onSaveInstanceState(outState: Bundle) { outState.putInt("minutes", minutes); super.onSaveInstanceState(outState) }
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("minutes", minutes)
+        outState.putLong("routineId", routineId)
+        outState.putString("routineTitle", title)
+        outState.putBoolean("incomingHandled", incomingHandled)
+        outState.putBoolean("routineMissing", routineMissing)
+        super.onSaveInstanceState(outState)
+    }
 
     private fun render() {
         val session = store.read()
-        if (session?.phase == FocusPhase.RUNNING && session.remainingMillis == 0L) {
+        if (!finishingTimer && session?.phase == FocusPhase.RUNNING && session.remainingMillis == 0L) {
+            finishingTimer = true
             // Let the receiver post the same-channel alert, also when the activity is visible.
             AppIo.run(this, { ExperienceReminder(applicationContext).finishFocusIfDue() }) { result ->
+                finishingTimer = false
                 if (result.isSuccess && store.read()?.phase == FocusPhase.FINISHED) render()
             }
         }
@@ -117,7 +137,7 @@ class FocusActivity : AppCompatActivity() {
         } ?: 0
         findViewById<View>(R.id.focus_durations).visibility = if (session == null) View.VISIBLE else View.GONE
         findViewById<MaterialButton>(R.id.focus_primary).apply {
-            isEnabled = routineId > 0 && title.isNotBlank()
+            isEnabled = !routineMissing && routineId > 0 && title.isNotBlank()
             setText(when {
                 finished -> R.string.polish_focus_back
                 session?.phase == FocusPhase.RUNNING -> R.string.polish_focus_pause
@@ -126,17 +146,28 @@ class FocusActivity : AppCompatActivity() {
             })
         }
         findViewById<View>(R.id.focus_reset).visibility = if (session == null) View.GONE else View.VISIBLE
-        if (finished) findViewById<TextView>(R.id.focus_alert).setText(R.string.polish_focus_reward_notice)
+        val alert = when {
+            routineMissing -> getString(R.string.polish_focus_missing)
+            finished -> getString(R.string.polish_focus_reward_notice)
+            session?.phase != FocusPhase.RUNNING -> ""
+            alertResult == ReminderResult.APPROXIMATE -> getString(R.string.polish_focus_alert_approximate)
+            alertResult == ReminderResult.BLOCKED -> getString(R.string.upgrade_focus_blocked)
+            alertResult == ReminderResult.DISABLED -> getString(R.string.polish_focus_alert_off)
+            alertResult == ReminderResult.FAILED -> getString(R.string.polish_preview_error)
+            else -> ""
+        }
+        findViewById<TextView>(R.id.focus_alert).text = alert
+        findViewById<View>(R.id.focus_notification_settings).visibility =
+            if (!routineMissing && !finished && session?.phase == FocusPhase.RUNNING && alert.isNotBlank()) View.VISIBLE else View.GONE
     }
 
     private fun scheduleAlert() {
+        val token = store.read()?.token ?: return
         AppIo.run(this, { ExperienceReminder(applicationContext).scheduleFocus() }) { result ->
-            findViewById<TextView>(R.id.focus_alert).text = when (result.getOrDefault(ReminderResult.FAILED)) {
-                ReminderResult.EXACT -> ""
-                ReminderResult.APPROXIMATE -> getString(R.string.polish_focus_alert_approximate)
-                ReminderResult.FAILED -> getString(R.string.polish_preview_error)
-                else -> getString(R.string.polish_focus_alert_off)
-            }
+            // A response for an old timer must not replace the current completion message.
+            if (store.read()?.token != token) return@run
+            alertResult = result.getOrDefault(ReminderResult.FAILED)
+            render()
         }
     }
     private fun cancelAlert() { AppIo.run(this, { ExperienceReminder(applicationContext).cancelFocus() }) { } }
@@ -144,7 +175,7 @@ class FocusActivity : AppCompatActivity() {
         val id = store.read()?.routineId ?: routineId
         AppIo.run(this, { AppRepository(applicationContext).use { it.getRoutine(id) } }) { result ->
             val routine = result.getOrNull()
-            if (routine == null) findViewById<TextView>(R.id.focus_alert).setText(R.string.polish_focus_missing)
+            if (routine == null) { routineMissing = true; render() }
             else {
                 startActivity(Intent(this, if (routine.source == RoutineSource.HERO_DAY) MainActivity::class.java else RoutineActivity::class.java)
                     .putExtra(TimelineActivity.USER_ROUTINE_ID, routine.id).putExtra(TimelineActivity.SELECTED_DATE, com.example.test.Routine.RoutineDate.today().iso)

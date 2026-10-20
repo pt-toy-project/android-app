@@ -46,7 +46,7 @@ class ScreenRenderTest {
             .edit().putBoolean("completed", true).commit()
     }
 
-    private fun capture(activity: AppCompatActivity, name: String, dialogRoot: View? = null) {
+    private fun capture(activity: AppCompatActivity, name: String, dialogRoot: View? = null, width: Int = 360, height: Int = 800) {
         // Drain both the database action and the UI-triggered reload it schedules.
         repeat(2) {
             shadowOf(Looper.getMainLooper()).idle()
@@ -60,11 +60,11 @@ class ScreenRenderTest {
             assertTrue(idle)
         }
         val root = dialogRoot ?: activity.window.decorView
-        root.measure(View.MeasureSpec.makeMeasureSpec(360, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(800, View.MeasureSpec.EXACTLY))
-        root.layout(0, 0, 360, 800)
+        root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+        root.layout(0, 0, width, height)
         shadowOf(Looper.getMainLooper()).idle()
-        val bitmap = Bitmap.createBitmap(360, 800, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         root.draw(Canvas(bitmap))
         val renderedColors = buildSet {
             for (x in 0 until bitmap.width step 12) for (y in 0 until bitmap.height step 12) add(bitmap.getPixel(x, y))
@@ -154,6 +154,106 @@ class ScreenRenderTest {
             val controller = Robolectric.buildActivity(type).setup().visible()
             try { capture(controller.get(), name) } finally { controller.pause().stop().destroy() }
         }
+    }
+
+    @Test
+    @Config(qualifiers = "w320dp-h568dp-night-mdpi")
+    fun renderSmallNightScreensWithDoubleFontAndReadableTimer() {
+        RuntimeEnvironment.setFontScale(2f)
+        val context = RuntimeEnvironment.getApplication()
+        val id = com.example.test.data.AppRepository(context).use { it.addPersonalPlan("집중해서 한 쪽 읽기", "08:00") }
+        com.example.test.focus.FocusTimerStore(context).start(id, "집중해서 한 쪽 읽기", 25)
+        listOf(TutorialActivity::class.java to "welcome-small-night",
+            CharacterSelectActivity::class.java to "heroes-small-night",
+            BackupActivity::class.java to "backup-small-night",
+            FocusActivity::class.java to "focus-small-night").forEach { (type, name) ->
+            val controller = Robolectric.buildActivity(type).setup().visible()
+            try {
+                val activity = controller.get()
+                capture(activity, name, width = 320, height = 568)
+                if (activity is FocusActivity) {
+                    val clock = activity.findViewById<android.widget.TextView>(R.id.focus_clock)
+                    assertEquals(1, clock.lineCount)
+                    assertTrue("Timer must fit available width", clock.layout.getLineWidth(0) <= clock.width - clock.paddingLeft - clock.paddingRight)
+                }
+                if (activity is CharacterSelectActivity) {
+                    val list = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.heroRecyclerView)
+                    assertTrue("Catalog must remain reachable below filters", list.height > 0)
+                }
+            } finally { controller.pause().stop().destroy() }
+        }
+    }
+
+    private fun seedCalendar(): com.example.test.Routine.RoutineDate {
+        val selected = com.example.test.Routine.RoutineDate(2024, 2, 29)
+        var today = com.example.test.Routine.RoutineDate(2024, 2, 1)
+        com.example.test.data.AppRepository(RuntimeEnvironment.getApplication(), todayProvider = { today }).use { repo ->
+            val hero = com.example.test.Hero.HeroCatalog.default
+            val ids = repo.startHeroDay(hero)
+            today = selected
+            listOf(1, 3, 8, 12, 18, 22, 27, 29).forEach { day ->
+                val date = com.example.test.Routine.RoutineDate(2024, 2, day)
+                ids.take(day % 4 + 1).forEach { repo.complete(it, date, selected) }
+                val quest = com.example.test.Hero.HeroDayCatalog.forHero(hero).blocks.first().quests.first()
+                repo.setQuestChecked(ids.first(), quest.id, date, true)
+            }
+        }
+        return selected
+    }
+
+    @Test fun renderMonthlyCalendarFromSavedRecordsAndEarnedBadges() {
+        val selected = seedCalendar()
+        val intent = Intent(RuntimeEnvironment.getApplication(), MainActivity::class.java)
+            .putExtra(TimelineActivity.SELECTED_DATE, selected.iso).putExtra("calendar_expanded", true)
+        val controller = Robolectric.buildActivity(MainActivity::class.java, intent).setup().visible()
+        try {
+            val a = controller.get()
+            capture(a, "calendar-month", height = 1000)
+            assertTrue("Month rows must keep a natural height", a.findViewById<View>(R.id.calendar_grid).height <= 6 * 80)
+            assertEquals(a.getString(R.string.calendar_coins, 20L), a.findViewById<android.widget.TextView>(R.id.calendar_coins).text.toString())
+            a.findViewById<View>(R.id.calendar_open_day).performClick()
+            capture(a, "calendar-day")
+            val action = a.findViewById<View>(R.id.timeline_next_open)
+            val bounds = android.graphics.Rect()
+            assertTrue("Daily primary action remains visible", action.getGlobalVisibleRect(bounds))
+        } finally { controller.pause().stop().destroy() }
+        val progress = Robolectric.buildActivity(ProgressActivity::class.java).setup().visible()
+        try { capture(progress.get(), "progress-badges") } finally { progress.pause().stop().destroy() }
+    }
+
+    @Test
+    @Config(qualifiers = "w320dp-h568dp-night-mdpi")
+    fun renderSmallMonthlyCalendarWithDoubleFontAndAllSevenColumns() {
+        val selected = seedCalendar()
+        RuntimeEnvironment.setFontScale(2f)
+        val intent = Intent(RuntimeEnvironment.getApplication(), MainActivity::class.java)
+            .putExtra(TimelineActivity.SELECTED_DATE, selected.iso).putExtra("calendar_expanded", true)
+        val controller = Robolectric.buildActivity(MainActivity::class.java, intent).setup().visible()
+        try {
+            val a = controller.get()
+            capture(a, "calendar-small-night", width = 320, height = 568)
+            val grid = a.findViewById<android.widget.LinearLayout>(R.id.calendar_grid)
+            assertTrue("Month must not expand into unbounded vertical space", grid.height <= 6 * 100)
+            for (i in 0 until grid.childCount) {
+                val row = grid.getChildAt(i) as android.widget.LinearLayout
+                assertEquals(7, row.childCount)
+                for (j in 0 until row.childCount) {
+                    val cell = row.getChildAt(j)
+                    assertTrue("Day column must fit", cell.left >= 0 && cell.right <= grid.width)
+                    if (cell.tag != null) assertTrue("Date tap target must have enough height", cell.height >= 48)
+                }
+            }
+            a.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_routine_list).scrollBy(0, 700)
+            capture(a, "calendar-detail-small-night", width = 320, height = 568)
+            a.findViewById<View>(R.id.calendar_open_day).performClick()
+            capture(a, "calendar-day-small-night", width = 320, height = 568)
+            val bounds = android.graphics.Rect()
+            assertTrue("Returning from a scrolled month must reveal day navigation",
+                a.findViewById<View>(R.id.calendar_previous).getGlobalVisibleRect(bounds))
+        } finally { controller.pause().stop().destroy() }
+        val progress = Robolectric.buildActivity(ProgressActivity::class.java).setup().visible()
+        try { capture(progress.get(), "progress-small-night", width = 320, height = 568) }
+        finally { progress.pause().stop().destroy() }
     }
 
 }

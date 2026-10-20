@@ -1,0 +1,14 @@
+<resources>
+    <item name="calendar_previous" type="id"/>
+    <item name="calendar_next" type="id"/>
+    <item name="calendar_today" type="id"/>
+    <item name="calendar_grid" type="id"/>
+    <item name="calendar_selected_title" type="id"/>
+    <item name="calendar_month_summary" type="id"/>
+    <item name="calendar_day_rings" type="id"/>
+    <item name="calendar_completed" type="id"/>
+    <item name="calendar_checked" type="id"/>
+    <item name="calendar_coins" type="id"/>
+    <item name="calendar_notice" type="id"/>
+    <item name="calendar_open_day" type="id"/>
+</resources>
