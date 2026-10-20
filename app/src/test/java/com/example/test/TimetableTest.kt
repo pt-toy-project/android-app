@@ -86,6 +86,15 @@ class TimetableTest {
         assertEquals(3, preview.entries[1].weekday)
     }
 
+    @Test fun anonymizedRealShareStructureIncludesSiblingAccountDataWithoutImportingIt() {
+        val fixture = javaClass.classLoader!!.getResourceAsStream("everytime-share-anonymized.xml")!!
+        val preview = fixture.use(EverytimeShareImporter::parse)
+        assertEquals(10, preview.entries.size)
+        assertEquals(1, preview.unscheduled)
+        assertTrue(preview.entries.all { it.title.startsWith("예시 수업") })
+        assertTrue(preview.entries.all { it.location == "예시 강의실" })
+    }
+
     @Test fun privateInvalidAndUnsafeShareResponsesAreRejected() {
         val responses = listOf("<response><table status=\"-2\"/></response>" to EverytimeShareImporter.Problem.PRIVATE,
             "<response>-1</response>" to EverytimeShareImporter.Problem.UNAVAILABLE,

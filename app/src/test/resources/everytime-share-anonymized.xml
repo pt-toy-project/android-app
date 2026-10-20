@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='utf-8'?>
+<response>
+  <table year="2026" semester="2" status="1" identifier="SamplePublicLink">
+    <subject id="1">
+      <internal value="SAMPLE1" />
+      <name value="예시 수업 1" />
+      <professor value="예시 교수" />
+      <time value="">
+        <data day="1" starttime="156" endtime="174" place="예시 강의실" />
+        <data day="3" starttime="156" endtime="174" place="예시 강의실" />
+      </time>
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+    <subject id="2">
+      <internal value="SAMPLE2" />
+      <name value="예시 수업 2" />
+      <professor value="예시 교수" />
+      <time value="">
+        <data day="1" starttime="108" endtime="144" place="예시 강의실" />
+      </time>
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+    <subject id="3">
+      <internal value="SAMPLE3" />
+      <name value="예시 수업 3" />
+      <professor value="예시 교수" />
+      <time value="" />
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+    <subject id="4">
+      <internal value="SAMPLE4" />
+      <name value="예시 수업 4" />
+      <professor value="예시 교수" />
+      <time value="">
+        <data day="0" starttime="108" endtime="156" place="예시 강의실" />
+      </time>
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+    <subject id="5">
+      <internal value="SAMPLE5" />
+      <name value="예시 수업 5" />
+      <professor value="예시 교수" />
+      <time value="">
+        <data day="1" starttime="174" endtime="192" place="예시 강의실" />
+      </time>
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+    <subject id="6">
+      <internal value="SAMPLE6" />
+      <name value="예시 수업 6" />
+      <professor value="예시 교수" />
+      <time value="">
+        <data day="5" starttime="216" endtime="276" place="예시 강의실" />
+      </time>
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+    <subject id="7">
+      <internal value="SAMPLE7" />
+      <name value="예시 수업 7" />
+      <professor value="예시 교수" />
+      <time value="">
+        <data day="1" starttime="192" endtime="210" place="예시 강의실" />
+        <data day="3" starttime="192" endtime="210" place="예시 강의실" />
+      </time>
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+    <subject id="8">
+      <internal value="SAMPLE8" />
+      <name value="예시 수업 8" />
+      <professor value="예시 교수" />
+      <time value="">
+        <data day="2" starttime="180" endtime="216" place="예시 강의실" />
+      </time>
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+    <subject id="9">
+      <internal value="SAMPLE9" />
+      <name value="예시 수업 9" />
+      <professor value="예시 교수" />
+      <time value="">
+        <data day="2" starttime="108" endtime="144" place="예시 강의실" />
+      </time>
+      <place value="예시 강의실" />
+      <credit value="3" />
+      <closed value="0" />
+    </subject>
+  </table>
+  <user name="예시 사용자" />
+  <primaryTables>
+    <table status="1" identifier="OtherSample" />
+  </primaryTables>
+</response>

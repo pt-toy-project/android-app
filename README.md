@@ -2,17 +2,17 @@
 
 > "위인의 하루 루틴을 따라하고, 코인을 모아 아이템을 구매하는 동기부여 Android 앱"
 
-## v3.7 테스트 버전
+## v3.8 테스트 버전
 
 월간 달력이 좁아져 날짜가 겹치던 문제를 고치고, 에브리타임의 공개 시간표 공유 URL에서 수업을 미리 본 뒤 추가하는 기능을 넣었습니다. 로그인이나 서버 가입 없이 직접 입력·CSV·공개 URL 중에서 선택할 수 있습니다. 시간표와 기존 루틴·완료 기록·코인·파일 백업은 유지합니다.
 
-**[v3.7 테스트 APK 다운로드](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.7-debug.apk)**
+**[v3.8 테스트 APK 다운로드](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.8-debug.apk)**
 
 **기존 배포 v3.3과 서명이 달라 덮어쓰기 설치할 수 없습니다. 기존 앱과 데이터를 삭제하지 마세요.** 기존 배포 키로 재빌드한 뒤 업데이트 설치를 검증해야 합니다. 현재 APK는 별도 테스트 환경용입니다.
 
-버전은 3.7 / versionCode 10이며 Android 7.0 이상을 지원합니다. JVM 162개·SQLite 22개 통과, lint 오류 0개입니다. 앱·기기 테스트 APK를 빌드했지만 실제 기기 실행과 업데이트 설치 검증은 미실행입니다. 클라우드에서 에브리타임 공개 API 접근이 제한되어 실제 URL 가져오기 성공은 검증하지 못했습니다.
+버전은 3.8 / versionCode 11이며 Android 7.0 이상을 지원합니다. 실제 공개 URL 응답을 확인하고 Android용 XML 파서로 교체했습니다. JVM·SQLite 검사와 APK 빌드 결과는 [v3.8 검증 보고서](docs/upgrade-v3.8.md)에 있습니다. 실제 기기에서의 가져오기와 업데이트 설치는 아직 검증하지 못했습니다.
 
-[다운로드·체크섬·서명 안내](downloads/README.md) · [v3.7 변경과 검증 범위](docs/upgrade-v3.7.md) · [v3.6 시간표·위젯](docs/upgrade-v3.6.md)
+[다운로드·체크섬·서명 안내](downloads/README.md) · [v3.8 오류 수정과 검증 범위](docs/upgrade-v3.8.md) · [v3.7 달력·시간표](docs/upgrade-v3.7.md)
 
 ## 프로젝트 소개
 본 프로젝트는 캡스톤 디자인을 준비하며 팀원 간의 협업 경험을 쌓기 위해 진행된 토이 프로젝트입니다. 사용자가 역사적 위인들의 훌륭한 습관과 하루 루틴을 직접 체험하고 실천할 수 있도록 돕습니다. 루틴 달성 시 코인을 지급하여 사용자의 지속적인 동기를 유발합니다.

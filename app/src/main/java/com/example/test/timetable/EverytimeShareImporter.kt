@@ -1,15 +1,14 @@
 package com.example.test.timetable
 
+import android.util.Xml
 import com.example.test.data.TimetableStore
-import org.w3c.dom.Element
-import org.w3c.dom.Node
+import org.xmlpull.v1.XmlPullParser
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.StringReader
 import java.net.HttpURLConnection
 import java.net.URL
-import javax.xml.XMLConstants
-import javax.xml.parsers.DocumentBuilderFactory
 
 /** Reads only the public timetable behind a validated share URL, without cookies or a login. */
 object EverytimeShareImporter {
@@ -53,60 +52,77 @@ object EverytimeShareImporter {
     /** Five-minute units and Monday=0 follow the public share page's own timetable renderer. */
     fun parse(input: InputStream): Preview {
         val bytes = try { bounded(input) } catch (_: Exception) { throw ImportError(Problem.FORMAT) }
-        val document = try {
-            val factory = DocumentBuilderFactory.newInstance().apply {
-                setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true)
-                setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
-                setFeature("http://xml.org/sax/features/external-general-entities", false)
-                setFeature("http://xml.org/sax/features/external-parameter-entities", false)
-                setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
-                isXIncludeAware = false
-                isExpandEntityReferences = false
+        val xml = bytes.toString(Charsets.UTF_8)
+        // Reject declarations before Android's pull parser can resolve an external entity.
+        if (Regex("<!\\s*(DOCTYPE|ENTITY)", RegexOption.IGNORE_CASE).containsMatchIn(xml))
+            throw ImportError(Problem.FORMAT)
+        try {
+            val parser = Xml.newPullParser().apply { setInput(StringReader(xml)) }
+            val rows = ArrayList<TimetableEntry>()
+            var tableFound = false
+            var inTable = false
+            var subject: Subject? = null
+            var unscheduled = 0
+            var responseText = ""
+            while (parser.next() != XmlPullParser.END_DOCUMENT) {
+                when (parser.eventType) {
+                    XmlPullParser.START_TAG -> when {
+                        parser.depth == 1 && parser.name != "response" -> throw ImportError(Problem.FORMAT)
+                        parser.depth == 2 && parser.name == "table" && !tableFound -> {
+                            tableFound = true
+                            inTable = true
+                            when (parser.getAttributeValue(null, "status")) {
+                                "-2" -> throw ImportError(Problem.PRIVATE)
+                                "-1" -> throw ImportError(Problem.UNAVAILABLE)
+                            }
+                        }
+                        inTable && parser.depth == 3 && parser.name == "subject" -> subject = Subject()
+                        subject != null && parser.depth == 4 -> when (parser.name) {
+                            "name" -> subject.name = parser.value("value")
+                            "professor" -> subject.professor = parser.value("value")
+                            "place" -> subject.place = parser.value("value")
+                        }
+                        subject != null && parser.depth == 5 && parser.name == "data" -> {
+                            val day = parser.value("day").toIntOrNull() ?: throw ImportError(Problem.FORMAT)
+                            val start = parser.value("starttime").toIntOrNull() ?: throw ImportError(Problem.FORMAT)
+                            val end = parser.value("endtime").toIntOrNull() ?: throw ImportError(Problem.FORMAT)
+                            subject.slots.add(Slot(day + 1, start * 5, end * 5, parser.value("place")))
+                        }
+                    }
+                    XmlPullParser.TEXT -> if (!tableFound && parser.depth == 1) responseText += parser.text
+                    XmlPullParser.END_TAG -> when {
+                        inTable && parser.depth == 3 && parser.name == "subject" && subject != null -> {
+                            val finished = subject
+                            if (finished.slots.isEmpty()) unscheduled++
+                            for (slot in finished.slots) {
+                                val row = TimetableEntry(title = finished.name, weekday = slot.day,
+                                    startMinute = slot.start, endMinute = slot.end,
+                                    location = slot.place.ifBlank { finished.place }, instructor = finished.professor).normalized()
+                                rows.add(row)
+                                if (rows.size > TimetableStore.MAX_ENTRIES) throw ImportError(Problem.TOO_MANY)
+                            }
+                            subject = null
+                        }
+                        inTable && parser.depth == 2 && parser.name == "table" -> inTable = false
+                    }
+                }
             }
-            factory.newDocumentBuilder().parse(ByteArrayInputStream(bytes))
-        } catch (_: Exception) { throw ImportError(Problem.FORMAT) }
-        val root = document.documentElement ?: throw ImportError(Problem.FORMAT)
-        if (root.tagName != "response") throw ImportError(Problem.FORMAT)
-        if (root.textContent.trim() == "-1") throw ImportError(Problem.UNAVAILABLE)
-        val table = root.getElementsByTagName("table").item(0) as? Element ?: throw ImportError(Problem.UNAVAILABLE)
-        when (table.getAttribute("status")) {
-            "-2" -> throw ImportError(Problem.PRIVATE)
-            "-1" -> throw ImportError(Problem.UNAVAILABLE)
+            if (responseText.trim() == "-1") throw ImportError(Problem.UNAVAILABLE)
+            if (responseText.trim() == "-2") throw ImportError(Problem.PRIVATE)
+            if (!tableFound) throw ImportError(Problem.UNAVAILABLE)
+            if (rows.isEmpty()) throw ImportError(Problem.EMPTY)
+            return Preview(rows.distinctBy { it.identity }, unscheduled)
+        } catch (error: ImportError) {
+            throw error
+        } catch (_: Exception) {
+            throw ImportError(Problem.FORMAT)
         }
-        val subjects = table.getElementsByTagName("subject")
-        val rows = ArrayList<TimetableEntry>()
-        var unscheduled = 0
-        for (index in 0 until subjects.length) {
-            val subject = subjects.item(index) as? Element ?: throw ImportError(Problem.FORMAT)
-            val name = subject.childValue("name")
-            val professor = subject.childValue("professor")
-            val fallbackPlace = subject.childValue("place")
-            val times = subject.getElementsByTagName("data")
-            if (times.length == 0) { unscheduled++; continue }
-            for (position in 0 until times.length) {
-                val slot = times.item(position) as? Element ?: throw ImportError(Problem.FORMAT)
-                val weekday = (slot.getAttribute("day").toIntOrNull() ?: throw ImportError(Problem.FORMAT)) + 1
-                val start = (slot.getAttribute("starttime").toIntOrNull() ?: throw ImportError(Problem.FORMAT)) * 5
-                val end = (slot.getAttribute("endtime").toIntOrNull() ?: throw ImportError(Problem.FORMAT)) * 5
-                val place = slot.getAttribute("place").ifBlank { fallbackPlace }
-                val row = try { TimetableEntry(title = name, weekday = weekday, startMinute = start,
-                    endMinute = end, location = place, instructor = professor).normalized() }
-                catch (_: IllegalArgumentException) { throw ImportError(Problem.FORMAT) }
-                rows.add(row)
-                if (rows.size > TimetableStore.MAX_ENTRIES) throw ImportError(Problem.TOO_MANY)
-            }
-        }
-        if (rows.isEmpty()) throw ImportError(Problem.EMPTY)
-        return Preview(rows.distinctBy { it.identity }, unscheduled)
     }
 
-    private fun Element.childValue(tag: String): String {
-        val child = childNodes.asSequence().filterIsInstance<Element>().firstOrNull { it.tagName == tag }
-        return child?.getAttribute("value").orEmpty().trim()
-    }
-    private fun org.w3c.dom.NodeList.asSequence(): Sequence<Node> = sequence {
-        for (index in 0 until length) yield(item(index))
-    }
+    private class Subject(var name: String = "", var professor: String = "", var place: String = "",
+        val slots: MutableList<Slot> = ArrayList())
+    private data class Slot(val day: Int, val start: Int, val end: Int, val place: String)
+    private fun XmlPullParser.value(name: String) = getAttributeValue(null, name).orEmpty().trim()
     private fun bounded(input: InputStream): ByteArray {
         val out = ByteArrayOutputStream()
         val buffer = ByteArray(8192)

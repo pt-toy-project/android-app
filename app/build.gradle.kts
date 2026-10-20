@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.test"
         minSdk = 24
         targetSdk = 37
-        versionCode = 10
-        versionName = "3.7"
+        versionCode = 11
+        versionName = "3.8"
         val googleClient = providers.gradleProperty("googleWebClientId").orElse("").get()
         require(googleClient.isEmpty() || googleClient.matches(Regex("[A-Za-z0-9.-]+\\.apps\\.googleusercontent\\.com")))
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleClient\"")
