@@ -1,4 +1,29 @@
-# 위인의 하루 v3.7 테스트 APK
+# 위인의 하루 v3.8 테스트 APK
+
+**[v3.8 테스트 APK 다운로드 — 에타 시간표 가져오기 오류 수정](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.8-debug.apk)**
+
+v3.7에서 공유 링크의 수업 XML을 휴대폰에서 읽지 못하던 문제를 수정했습니다. 실제 공개 응답을 확인하고 Android XML 파서로 교체했으며, 익명화한 응답 구조로 테스트했습니다. **수정 APK를 실제 휴대폰에 설치해 가져오기 성공을 확인한 것은 아닙니다.**
+
+**기존 v3.3 배포 APK와 서명이 다릅니다. v3.3 위에 업데이트 설치할 수 없으므로 기존 앱과 데이터를 삭제하지 마세요.** v3.7 테스트 APK와는 서명·버전 조건이 맞지만 실제 덮어쓰기 설치는 검증하지 않았습니다.
+
+| 항목 | 값 |
+| --- | --- |
+| 버전 | 3.8 / versionCode 11 |
+| 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
+| APK 크기 | 9,243,049 B |
+| APK SHA-256 | `491bf3caf1e0583358ca0168be45234e8aa190fc47eed1dfa807881d27cff588` |
+| 인증서 SHA-256 | `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0` |
+| 검증 | JVM 163개·SQLite 22개 통과, lint 오류 0개·경고 184개, 앱·기기 테스트 APK 빌드 및 앱 APK 서명 검증 성공 |
+| 미실행 | 실제 기기 계측·업데이트 설치·휴대폰에서의 에타 가져오기 |
+
+[구현·검증 보고서](../docs/upgrade-v3.8.md) · [빌드 정보](v3.8-build-manifest.json) · [체크섬](android-app-v3.8-debug.apk.sha256)
+
+```bash
+cd downloads
+sha256sum --check android-app-v3.8-debug.apk.sha256
+```
+
+## v3.7 이전 테스트 APK
 
 **[v3.7 테스트 APK 다운로드 — 달력 폭 수정·에타 공개 시간표 가져오기](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.7-debug.apk)**
 
