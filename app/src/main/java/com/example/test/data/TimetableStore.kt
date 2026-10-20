@@ -31,13 +31,17 @@ class TimetableStore(context: Context, name: String = "historical_routines.db") 
         return saved
     }
     /** Duplicate import is a no-op. Any invalid batch/limit failure rolls back the entire operation. */
-    fun import(entries: List<TimetableEntry>): Int {
+    fun import(entries: List<TimetableEntry>, sharedLink: String? = null): Int {
+        val validLink = sharedLink?.let { requireNotNull(EverytimeLink.parse(it)) }
         val added = transaction {
             require(entries.isNotEmpty() && entries.size <= MAX_ENTRIES)
             val existing = this.entries().map { it.identity }.toSet()
             val additions = entries.map { it.normalized().copy(id = 0) }.distinctBy { it.identity }.filter { it.identity !in existing }
             require(existing.size + additions.size <= MAX_ENTRIES)
             additions.forEach { db.insertOrThrow("timetable_entries", null, values(it)) }
+            if (validLink != null) db.insertWithOnConflict("app_metadata", null, ContentValues().apply {
+                put("key", "timetable_shared_link"); put("value", validLink)
+            }, android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE)
             additions.size
         }
         if (refreshSurfaces) TimetableSurfaces.refresh(context)

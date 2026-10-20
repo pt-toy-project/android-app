@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import com.example.test.Routine.RoutineDate
 import com.example.test.data.TimetableStore
 import com.example.test.timetable.EverytimeLink
+import com.example.test.timetable.EverytimeShareImporter
 import com.example.test.timetable.TimetableCsv
 import com.example.test.timetable.TimetableEditor
 import com.example.test.timetable.TimetableEntry
@@ -33,7 +34,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.Calendar
 
-/** Weekly classes are local data. A shared Everytime URL is only opened in the user's browser. */
+/** Weekly classes are local data; public share links can be imported without an account. */
 class TimetableActivity : AppCompatActivity() {
     private var week = RoutineDate.today().week().first()
     private var listMode = false
@@ -48,7 +49,7 @@ class TimetableActivity : AppCompatActivity() {
             setBusy(true)
             AppIo.run(this, { requireNotNull(contentResolver.openInputStream(uri)).use(TimetableCsv::read) }) { result ->
                 setBusy(false)
-                result.onSuccess(::previewImport).onFailure { status(R.string.timetable_import_error) }
+                result.onSuccess { previewImport(it) }.onFailure { status(R.string.timetable_import_error) }
             }
         }
     }
@@ -142,17 +143,50 @@ class TimetableActivity : AppCompatActivity() {
             addView(field, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) }) }
         transient?.dismiss()
         transient = com.google.android.material.dialog.MaterialAlertDialogBuilder(this).setTitle(R.string.timetable_everytime)
-            .setView(view).setNegativeButton(android.R.string.cancel, null).setPositiveButton(R.string.timetable_link_open, null).create().also { dialog ->
+            .setView(view).setNegativeButton(android.R.string.cancel, null)
+            .setNeutralButton(R.string.timetable_link_open, null)
+            .setPositiveButton(R.string.timetable_link_import, null).create().also { dialog ->
                 dialog.setOnShowListener {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                         val link = EverytimeLink.parse(input.text.toString())
                         if (link == null) field.error = getString(R.string.timetable_link_invalid)
                         else {
                             field.error = null
+                            dialog.setCancelable(false)
                             dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-                            AppIo.run(this, { TimetableStore(applicationContext).use { it.saveSharedLink(link) } }) { result ->
+                            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).isEnabled = false
+                            setBusy(true)
+                            AppIo.run(this, { EverytimeShareImporter.fetch(link) }) { result ->
+                                setBusy(false)
+                                dialog.setCancelable(true)
                                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
-                                if (result.isSuccess) { sharedLink = link; dialog.dismiss(); status(R.string.timetable_link_saved)
+                                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).isEnabled = true
+                                result.onSuccess { preview ->
+                                    dialog.dismiss()
+                                    previewImport(preview.entries, link, preview.unscheduled)
+                                }.onFailure { error ->
+                                    field.error = getString(when ((error as? EverytimeShareImporter.ImportError)?.problem) {
+                                        EverytimeShareImporter.Problem.PRIVATE -> R.string.timetable_link_private
+                                        EverytimeShareImporter.Problem.EMPTY -> R.string.timetable_link_empty
+                                        EverytimeShareImporter.Problem.UNAVAILABLE -> R.string.timetable_link_unavailable
+                                        EverytimeShareImporter.Problem.TOO_MANY -> R.string.timetable_link_too_many
+                                        EverytimeShareImporter.Problem.FORMAT -> R.string.timetable_link_format
+                                        else -> R.string.timetable_link_connection
+                                    })
+                                }
+                            }
+                        }
+                    }
+                    dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                        val link = EverytimeLink.parse(input.text.toString())
+                        if (link == null) field.error = getString(R.string.timetable_link_invalid)
+                        else {
+                            field.error = null
+                            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).isEnabled = false
+                            AppIo.run(this, { TimetableStore(applicationContext).use { it.saveSharedLink(link) } }) { result ->
+                                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).isEnabled = true
+                                if (result.isSuccess) {
+                                    sharedLink = link; dialog.dismiss(); status(R.string.timetable_link_saved)
                                     try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link))) }
                                     catch (_: ActivityNotFoundException) { status(R.string.timetable_browser_missing) }
                                 } else field.error = getString(R.string.timetable_save_error)
@@ -163,19 +197,23 @@ class TimetableActivity : AppCompatActivity() {
                 dialog.show()
             }
     }
-    private fun previewImport(rows: List<TimetableEntry>) {
+    private fun previewImport(rows: List<TimetableEntry>, sourceLink: String? = null, unscheduled: Int = 0) {
         transient?.dismiss()
         transient = com.google.android.material.dialog.MaterialAlertDialogBuilder(this).setTitle(R.string.timetable_import_review)
-            .setMessage(getString(R.string.timetable_import_note, rows.size))
+            .setMessage(if (sourceLink == null) getString(R.string.timetable_import_note, rows.size)
+                else getString(R.string.timetable_everytime_review, rows.size, unscheduled))
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(R.string.timetable_import_confirm, null).create().also { dialog ->
                 dialog.setOnShowListener {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                         if (busy) return@setOnClickListener
                         setBusy(true); dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-                        AppIo.run(this, { TimetableStore(applicationContext).use { it.import(rows) } }) { result ->
+                        AppIo.run(this, { TimetableStore(applicationContext).use { it.import(rows, sourceLink) } }) { result ->
                             setBusy(false)
-                            result.onSuccess { count -> dialog.dismiss(); findViewById<TextView>(R.id.timetable_status).text = getString(R.string.timetable_imported, count); load() }
+                            result.onSuccess { count ->
+                                dialog.dismiss(); if (sourceLink != null) sharedLink = sourceLink
+                                findViewById<TextView>(R.id.timetable_status).text = getString(R.string.timetable_imported, count); load()
+                            }
                                 .onFailure { dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true; status(R.string.timetable_import_error) }
                         }
                     }

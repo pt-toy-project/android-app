@@ -60,11 +60,16 @@ abstract class TimelineActivity : AppCompatActivity() {
         managementMode = savedInstanceState?.getBoolean(MANAGE) ?: false
         dayFilter = savedInstanceState?.getString("day_filter") ?: incomingHero?.takeIf { routineSource == com.example.test.data.RoutineSource.HERO_DAY }
         requestedDetailId = savedInstanceState?.getLong(USER_ROUTINE_ID, -1) ?: intent.getLongExtra(USER_ROUTINE_ID, -1)
-        timelineHeader = layoutInflater.inflate(R.layout.item_timeline_header, null)
+        val timelineList = findViewById<RecyclerView>(R.id.rv_routine_list)
+        timelineList.layoutManager = LinearLayoutManager(this)
+        // Inflating against RecyclerView preserves MATCH_PARENT in its layout params.
+        // A detached header measured as WRAP_CONTENT can squeeze a seven-day month
+        // into a narrow card on real devices, even when Robolectric looks correct.
+        timelineHeader = layoutInflater.inflate(R.layout.item_timeline_header, timelineList, false)
         ScreenToolbar.bind(this, if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.nav_home else R.string.nav_routine)
         routineAdapter = PersonalRoutineAdapter(onComplete = { complete(it.routine.id, it.date) }) { showDetail(it.routine.id) }
-        findViewById<RecyclerView>(R.id.rv_routine_list).apply {
-            layoutManager = LinearLayoutManager(this@TimelineActivity); adapter = androidx.recyclerview.widget.ConcatAdapter(TimelineHeaderAdapter(timelineHeader), routineAdapter)
+        timelineList.apply {
+            adapter = androidx.recyclerview.widget.ConcatAdapter(TimelineHeaderAdapter(timelineHeader), routineAdapter)
         }
         activityCalendar = timelineHeader.findViewById(R.id.activity_calendar)
         activityCalendar.onDateSelected = ::selectDate

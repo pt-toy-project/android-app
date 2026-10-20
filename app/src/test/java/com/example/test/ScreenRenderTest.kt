@@ -278,4 +278,22 @@ class ScreenRenderTest {
         finally { progress.pause().stop().destroy() }
     }
 
+    @Test
+    @Config(qualifiers = "w393dp-h851dp-night-mdpi")
+    fun monthHeaderFillsPhoneWidthAtLargeFont() {
+        RuntimeEnvironment.setFontScale(2f)
+        val intent = Intent(RuntimeEnvironment.getApplication(), MainActivity::class.java)
+            .putExtra("calendar_expanded", true)
+        val controller = Robolectric.buildActivity(MainActivity::class.java, intent).setup().visible()
+        try {
+            val activity = controller.get()
+            capture(activity, "calendar-wide-font-night", width = 393, height = 851)
+            val list = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_routine_list)
+            val calendar = activity.findViewById<com.example.test.calendar.ActivityCalendarView>(R.id.activity_calendar)
+            assertEquals(list.width - list.paddingLeft - list.paddingRight, calendar.width)
+            val month = calendar.findViewById<android.widget.TextView>(R.id.calendar_month_summary)
+            assertTrue(month.width >= 280)
+        } finally { controller.pause().stop().destroy() }
+    }
+
 }

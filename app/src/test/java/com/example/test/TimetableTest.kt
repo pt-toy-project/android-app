@@ -3,6 +3,7 @@ package com.example.test
 import android.database.sqlite.SQLiteDatabase
 import com.example.test.data.TimetableStore
 import com.example.test.timetable.EverytimeLink
+import com.example.test.timetable.EverytimeShareImporter
 import com.example.test.timetable.TimetableAgenda
 import com.example.test.timetable.TimetableCsv
 import com.example.test.timetable.TimetableEntry
@@ -30,13 +31,15 @@ class TimetableTest {
         val name = "timetable_${UUID.randomUUID()}.db"
         try {
             TimetableStore(context, name).use { store ->
-                assertEquals(1, store.import(listOf(expected)))
+                assertEquals(1, store.import(listOf(expected), "https://everytime.kr/@Example123"))
+                assertEquals("https://everytime.kr/@Example123", store.sharedLink())
                 assertEquals(0, store.import(listOf(expected)))
                 assertEquals(1, store.entries().size)
                 assertThrows(IllegalArgumentException::class.java) {
-                    store.import((1..201).map { expected.copy(title = "수업 $it") })
+                    store.import((1..201).map { expected.copy(title = "수업 $it") }, "https://everytime.kr/@Other123")
                 }
                 assertEquals(1, store.entries().size)
+                assertEquals("https://everytime.kr/@Example123", store.sharedLink())
                 val sameId = store.save(expected)
                 assertEquals(store.entries().single().id, sameId)
                 store.saveSharedLink("https://everytime.kr/@Example123")
@@ -65,5 +68,33 @@ class TimetableTest {
         listOf("http://everytime.kr/@Example123", "https://everytime.kr.evil.test/@Example123",
             "https://everytime.kr/@Example123?token=abc", "https://user@everytime.kr/@Example123")
             .forEach { assertNull(EverytimeLink.parse(it)) }
+    }
+
+    @Test fun publicShareResponseMapsFiveMinuteSlotsAndSkipsUnscheduledClasses() {
+        val xml = """<response><table status="1">
+            <subject id="1"><name value="자료구조"/><professor value="김 교수"/><place value="기본 강의실"/>
+                <time><data day="0" starttime="108" endtime="132" place="501호"/>
+                <data day="2" starttime="114" endtime="138" place=""/></time></subject>
+            <subject id="2"><name value="시간 미정"/><time/></subject>
+        </table></response>"""
+        val preview = EverytimeShareImporter.parse(xml.byteInputStream())
+        assertEquals(2, preview.entries.size)
+        assertEquals(1, preview.unscheduled)
+        assertEquals(TimetableEntry(title = "자료구조", weekday = 1, startMinute = 540,
+            endMinute = 660, location = "501호", instructor = "김 교수"), preview.entries[0])
+        assertEquals("기본 강의실", preview.entries[1].location)
+        assertEquals(3, preview.entries[1].weekday)
+    }
+
+    @Test fun privateInvalidAndUnsafeShareResponsesAreRejected() {
+        val responses = listOf("<response><table status=\"-2\"/></response>" to EverytimeShareImporter.Problem.PRIVATE,
+            "<response>-1</response>" to EverytimeShareImporter.Problem.UNAVAILABLE,
+            "<!DOCTYPE response [<!ENTITY x SYSTEM \"file:///etc/passwd\">]><response>&x;</response>" to EverytimeShareImporter.Problem.FORMAT)
+        responses.forEach { (xml, reason) ->
+            val error = assertThrows(EverytimeShareImporter.ImportError::class.java) {
+                EverytimeShareImporter.parse(xml.byteInputStream())
+            }
+            assertEquals(reason, error.problem)
+        }
     }
 }
