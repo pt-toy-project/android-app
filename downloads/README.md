@@ -1,4 +1,29 @@
-# 위인의 하루 v3.6 테스트 APK
+# 위인의 하루 v3.7 테스트 APK
+
+**[v3.7 테스트 APK 다운로드 — 달력 폭 수정·에타 공개 시간표 가져오기](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.7-debug.apk)**
+
+월간 달력이 좁은 열로 압축되는 문제를 수정했습니다. 시간표 공유 URL을 붙여넣으면 공개된 수업을 가져와 확인 후 로컬 시간표에 추가할 수 있습니다. 로그인·비밀번호·쿠키는 받지 않습니다. 직접 입력과 CSV도 사용할 수 있습니다. 클라우드에서 에브리타임 API 접근이 제한되어 실제 공유 링크 가져오기 성공은 아직 검증하지 못했습니다.
+
+**기존 v3.3 배포 APK와 서명이 다릅니다. 이 테스트 APK는 v3.3 위에 업데이트 설치할 수 없습니다. 기존 앱이나 데이터를 삭제하지 마세요.** v3.6 테스트 APK와는 서명·버전 조건이 맞지만 실제 덮어쓰기 설치는 검증하지 않았습니다.
+
+| 항목 | 값 |
+| --- | --- |
+| 버전 | 3.7 / versionCode 10 |
+| 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
+| APK 크기 | 11,046,848 B |
+| APK SHA-256 | `652aed3f308a09109d6e0ed312535f3b5bb274320fd5b28a69bd5c9001575259` |
+| 인증서 SHA-256 | `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0` |
+| 검증 | JVM 162개·SQLite 22개 통과, lint 오류 0개·경고 185개, 앱·기기 테스트 APK 빌드 및 앱 APK 서명 검증 성공 |
+| 미실행 | 실제 기기 계측·업데이트 설치·에타 API 실수업 응답 |
+
+[구현·검증 보고서](../docs/upgrade-v3.7.md) · [빌드 정보](v3.7-build-manifest.json) · [체크섬](android-app-v3.7-debug.apk.sha256) · [달력 화면](../docs/screenshots/v3.7-calendar-wide-font-night.png)
+
+```bash
+cd downloads
+sha256sum --check android-app-v3.7-debug.apk.sha256
+```
+
+## v3.6 이전 테스트 APK
 
 **[v3.6 테스트 APK 다운로드 — 시간표·홈 위젯·알림창 카드](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.6-debug.apk)**
 
