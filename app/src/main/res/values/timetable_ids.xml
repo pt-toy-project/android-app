@@ -1,0 +1,11 @@
+<resources>
+    <item name="timetable_editor_name" type="id"/>
+    <item name="timetable_editor_location" type="id"/>
+    <item name="timetable_editor_instructor" type="id"/>
+    <item name="timetable_editor_day" type="id"/>
+    <item name="timetable_editor_start" type="id"/>
+    <item name="timetable_editor_end" type="id"/>
+    <item name="timetable_editor_error" type="id"/>
+    <item name="timetable_import_confirm" type="id"/>
+    <item name="timetable_link_input" type="id"/>
+</resources>

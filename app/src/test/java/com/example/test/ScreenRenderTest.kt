@@ -158,6 +158,28 @@ class ScreenRenderTest {
 
     @Test
     @Config(qualifiers = "w320dp-h568dp-night-mdpi")
+    fun renderTimetableOnSmallDarkScreenAndLargeText() {
+        val context = RuntimeEnvironment.getApplication()
+        com.example.test.data.TimetableStore(context).use { it.save(
+            com.example.test.timetable.TimetableEntry(title = "컴퓨터 그래픽스", weekday = 2,
+                startMinute = 840, endMinute = 960, location = "공학관 310호")
+        ) }
+        val controller = Robolectric.buildActivity(TimetableActivity::class.java).setup().visible()
+        try {
+            capture(controller.get(), "timetable-week-dark", width = 320, height = 568)
+            assertNotNull(controller.get().findViewById<View>(R.id.timetable_content))
+            controller.get().findViewById<android.widget.ScrollView>(R.id.timetable_scroll).scrollTo(0, 720)
+            capture(controller.get(), "timetable-grid-dark", width = 320, height = 568)
+            RuntimeEnvironment.setFontScale(2f)
+            controller.recreate()
+            capture(controller.get(), "timetable-large-font-dark", width = 320, height = 568)
+            assertTrue(controller.get().findViewById<View>(R.id.timetable_add).height >= 48)
+            assertTrue(controller.get().window.decorView.findViewWithTag<View>("day-header:1").height >= 80)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test
+    @Config(qualifiers = "w320dp-h568dp-night-mdpi")
     fun renderSmallNightScreensWithDoubleFontAndReadableTimer() {
         RuntimeEnvironment.setFontScale(2f)
         val context = RuntimeEnvironment.getApplication()

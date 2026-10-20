@@ -6,6 +6,7 @@ import com.example.test.Hero.HeroCatalog
 import com.example.test.Hero.HeroDayCatalog
 import com.example.test.Routine.RoutineDate
 import com.example.test.data.*
+import com.example.test.timetable.TimetableEntry
 import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
@@ -42,10 +43,12 @@ class BackupStoreTest {
             }
             context.getSharedPreferences("app_settings", Context.MODE_PRIVATE).edit()
                 .putBoolean("sound_enabled", false).putBoolean("alarm_enabled", false).commit()
+            TimetableStore(context, name).use { it.save(TimetableEntry(title = "컴퓨터 그래픽스", weekday = 2, startMinute = 840, endMinute = 960)) }
             val store = BackupStore(context, name)
             val before = databaseRows(name)
             val bytes = store.export()
             assertEquals(80L, store.preview(bytes).balance)
+            assertEquals(1, store.preview(bytes).classes)
             AppRepository(context, name).use { it.addPersonalPlan("새로 쓴 계획 🌿", "08:15") }
             context.getSharedPreferences("app_settings", Context.MODE_PRIVATE).edit()
                 .putBoolean("sound_enabled", true).putBoolean("alarm_enabled", true).commit()
@@ -55,6 +58,28 @@ class BackupStoreTest {
             assertFalse(SettingsPreferences(context).soundEnabled)
             assertTrue(store.hasSafetyBackup())
             assertTrue(store.preview(store.safetyBackup()).routines > store.preview(bytes).routines)
+        } finally { context.deleteDatabase(name) }
+    }
+
+
+    @Test fun oldV3BackupKeepsCurrentTimetableAndSharedLink() {
+        val name = "legacy_${UUID.randomUUID()}.db"
+        try {
+            TimetableStore(context, name).use {
+                it.save(TimetableEntry(title = "강의", weekday = 1, startMinute = 540, endMinute = 600))
+                it.saveSharedLink("https://everytime.kr/@Example123")
+                it.setNotificationEnabled(true)
+            }
+            val store = BackupStore(context, name)
+            val legacy = editPayload(store.export()) { it.getJSONObject("tables").remove("timetable_entries") }
+            val legacyEnvelope = JSONObject(legacy.toString(Charsets.UTF_8)).put("databaseVersion", 3)
+            assertNull(store.preview(legacyEnvelope.toString().toByteArray()).classes)
+            store.restore(legacyEnvelope.toString().toByteArray())
+            TimetableStore(context, name).use {
+                assertEquals(1, it.entries().size)
+                assertEquals("https://everytime.kr/@Example123", it.sharedLink())
+                assertTrue(it.notificationEnabled())
+            }
         } finally { context.deleteDatabase(name) }
     }
 

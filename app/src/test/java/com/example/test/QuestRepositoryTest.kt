@@ -139,7 +139,7 @@ class QuestRepositoryTest {
             }
             AppRepository(context, fresh, "prefs_$fresh").close()
             SQLiteDatabase.openDatabase(path.path, null, SQLiteDatabase.OPEN_READONLY).use { upgraded ->
-                assertEquals(3, upgraded.version)
+                assertEquals(4, upgraded.version)
                 tables.forEach { assertEquals(it, before[it], rows(upgraded, "SELECT * FROM $it ORDER BY 1")) }
                 val structure = "SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name"
                 SQLiteDatabase.openDatabase(context.getDatabasePath(fresh).path, null, SQLiteDatabase.OPEN_READONLY).use {

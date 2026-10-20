@@ -37,6 +37,10 @@ fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
                 navigateTo(CharacterSelectActivity::class.java)
                 true
             }
+            R.id.nav_timetable -> {
+                navigateTo(TimetableActivity::class.java)
+                true
+            }
             R.id.nav_myroom -> {
                 navigateTo(ShopActivity::class.java)
                 true

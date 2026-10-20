@@ -87,6 +87,9 @@ abstract class TimelineActivity : AppCompatActivity() {
         timelineHeader.findViewById<View>(R.id.timeline_focus_resume).setOnClickListener {
             startActivity(Intent(this, FocusActivity::class.java))
         }
+        timelineHeader.findViewById<View>(R.id.timeline_timetable_open).setOnClickListener {
+            startActivity(Intent(this, TimetableActivity::class.java))
+        }
         supportFragmentManager.setFragmentResultListener(PersonalRoutineDetailSheet.RESULT_KEY, this) { _, result ->
             val id = result.getLong(USER_ROUTINE_ID, -1)
             val date = RoutineDate.parse(result.getString(SELECTED_DATE)) ?: return@setFragmentResultListener
@@ -191,15 +194,22 @@ abstract class TimelineActivity : AppCompatActivity() {
                 val rows = repo.listRoutines(date = if (manage) null else date, source = routineSource).map { routine ->
                     PersonalRoutineRow(routine, routine.id in completed, date, RoutineDate.today(), now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE), questChecks[routine.id].orEmpty())
                 }
+                val classes = com.example.test.data.TimetableStore(applicationContext).use { it.entries() }
                 PersonalSnapshot(hero.id, rows, repo.balance(), completed, repo.appliedItemId(),
                     adopted.map { it.heroId }.distinct(), adopted.any { it.enabled && it.alarmEnabled },
-                    repo.calendarActivity(ActivityCalendar.monthStart(date).week().first(), ActivityCalendar.days(date).last().week().last()))
+                    repo.calendarActivity(ActivityCalendar.monthStart(date).week().first(), ActivityCalendar.days(date).last().week().last()), classes)
             }
         }) { result ->
             if (ticket != generation) return@run
             result.fold(onSuccess = { snapshot ->
                 calendarData = snapshot.activity; calendarMonth = ActivityCalendar.monthStart(date)
                 renderDates()
+                timelineHeader.findViewById<View>(R.id.timeline_timetable_card).visibility =
+                    if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
+                val classRows = snapshot.classes.filter { it.weekday == com.example.test.timetable.TimetableEntry.weekday(RoutineDate.today()) }
+                timelineHeader.findViewById<TextView>(R.id.timeline_timetable_summary).text =
+                    if (classRows.isEmpty()) getString(R.string.timetable_widget_no_class)
+                    else classRows.sortedBy { it.startMinute }.joinToString(" · ", limit = 2) { "${it.timeLabel} ${it.title}" }
                 heroId = snapshot.heroId; resolveStoredHero = false
                 timelineHeader.findViewById<TextView>(R.id.routine_title).text = getString(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.redesign_day_title else R.string.redesign_personal_title)
                 timelineHeader.findViewById<TextView>(R.id.day_notice).visibility = if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
@@ -435,7 +445,7 @@ abstract class TimelineActivity : AppCompatActivity() {
     }
 
     private fun showMessage(message: Int) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?, val startedHeroes: List<String>, val requestedAlarm: Boolean, val activity: List<DayActivity>)
+    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?, val startedHeroes: List<String>, val requestedAlarm: Boolean, val activity: List<DayActivity>, val classes: List<com.example.test.timetable.TimetableEntry>)
     companion object {
         const val HERO_ID = "hero_id"
         const val SELECTED_DATE = "selected_date"

@@ -85,7 +85,7 @@ class HeroDayRepositoryTest {
                 assertTrue(r.startHeroDay(HeroCatalog.default).all { it > 41 })
             }
             assertFalse(settings.getBoolean("alarm_enabled", true))
-            SQLiteDatabase.openDatabase(target.path, null, SQLiteDatabase.OPEN_READONLY).use { assertEquals(3, it.version) }
+            SQLiteDatabase.openDatabase(target.path, null, SQLiteDatabase.OPEN_READONLY).use { assertEquals(4, it.version) }
         } finally { context.deleteSharedPreferences("app_settings_fixture_$preferences") }
     }
 }

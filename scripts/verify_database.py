@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
 
-SCHEMA = (Path(__file__).resolve().parents[1] / "app/src/main/assets/database/schema_v3.sql").read_text(encoding="utf-8")
+SCHEMA = (Path(__file__).resolve().parents[1] / "app/src/main/assets/database/schema_v4.sql").read_text(encoding="utf-8")
 LONG_MAX = 2**63 - 1
 
 
@@ -209,6 +209,8 @@ class DatabaseV2Test(unittest.TestCase):
             for table in tables:
                 after = db.execute(f"SELECT * FROM {table}").fetchall()
                 self.assertEqual(before[table], [row[:-1] for row in after] if table == "user_routines" else after)
+            db.executescript("BEGIN IMMEDIATE;" + (root / "app/src/main/assets/database/migration_3_4.sql").read_text() + "PRAGMA user_version=4;COMMIT;")
+            self.assertEqual((4,), db.execute("PRAGMA user_version").fetchone())
             fresh = connect(); fresh.executescript(SCHEMA)
             def structure(database):
                 return sorted(database.execute("SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'").fetchall())
@@ -285,6 +287,8 @@ class DatabaseV3QuestTest(unittest.TestCase):
             before = {t: db.execute(f"SELECT * FROM {t}").fetchall() for t in tables}
             db.executescript("BEGIN IMMEDIATE;" + (root / "app/src/main/assets/database/migration_2_3.sql").read_text() + "PRAGMA user_version=3;COMMIT;")
             self.assertEqual(before, {t: db.execute(f"SELECT * FROM {t}").fetchall() for t in tables})
+            db.executescript("BEGIN IMMEDIATE;" + (root / "app/src/main/assets/database/migration_3_4.sql").read_text() + "PRAGMA user_version=4;COMMIT;")
+            self.assertEqual((4,), db.execute("PRAGMA user_version").fetchone())
             fresh = connect(); fresh.executescript(SCHEMA)
             sql = "SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name"
             self.assertEqual(fresh.execute(sql).fetchall(), db.execute(sql).fetchall())
@@ -308,6 +312,21 @@ class DatabaseV3QuestTest(unittest.TestCase):
         self.assertEqual((2,), db.execute("SELECT count(*) FROM quest_checks").fetchone())
         db.close()
 
+
+
+class DatabaseV4TimetableTest(unittest.TestCase):
+    def test_classes_have_constraints_and_do_not_credit_wallet(self):
+        db = connect(); db.executescript(SCHEMA)
+        db.execute("INSERT INTO timetable_entries(title,weekday,start_minute,end_minute,location) VALUES(?,?,?,?,?)", ("데이터 통신", 2, 540, 720, "501호"))
+        with self.assertRaises(sqlite3.IntegrityError):
+            db.execute("INSERT INTO timetable_entries(title,weekday,start_minute,end_minute,location) VALUES(?,?,?,?,?)", ("데이터 통신", 2, 540, 720, "501호"))
+        for day, start, end in ((0,540,600),(8,540,600),(2,600,600),(2,1440,1500),(2,-1,600)):
+            with self.subTest(day=day,start=start,end=end), self.assertRaises(sqlite3.IntegrityError):
+                db.execute("INSERT INTO timetable_entries(title,weekday,start_minute,end_minute) VALUES(?,?,?,?)", ("잘못된 수업",day,start,end))
+        self.assertEqual((0,), db.execute("SELECT balance FROM wallet").fetchone())
+        self.assertEqual((0,), db.execute("SELECT count(*) FROM completion_records").fetchone())
+        self.assertEqual(("ok",), db.execute("PRAGMA integrity_check").fetchone())
+        db.close()
 
 
 if __name__ == "__main__":

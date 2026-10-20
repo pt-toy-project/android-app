@@ -2,19 +2,17 @@
 
 > "위인의 하루 루틴을 따라하고, 코인을 모아 아이템을 구매하는 동기부여 Android 앱"
 
-## v3.5 테스트 버전
+## v3.6 테스트 버전
 
-계정 없는 시작·백업·타이머 개선에 월간 실천 달력, 목표별 인물 추천, 통계와 달성 배지를 더했습니다. 밝은 회색 바탕과 파란색 강조, 넓은 여백으로 화면을 정리했으며 다크 모드도 지원합니다.
+주간 시간표, 오늘 수업 요약, 홈 화면 위젯과 선택형 알림창 카드를 추가했습니다. 수업을 직접 입력하거나 앱의 CSV 파일 형식으로 가져올 수 있습니다. 에브리타임 공유 링크는 저장·열기만 지원하며 자동 수업 가져오기는 다음 단계입니다. 루틴·완료 기록·코인·구매와 파일 백업·복원은 유지합니다.
 
-**[v3.5 테스트 APK 다운로드](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.5-debug.apk)**
+**[v3.6 테스트 APK 다운로드](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.6-debug.apk)**
 
 **기존 배포 v3.3과 서명이 달라 덮어쓰기 설치할 수 없습니다. 기존 앱과 데이터를 삭제하지 마세요.** 기존 배포 키로 재빌드한 뒤 업데이트 설치를 검증해야 합니다. 현재 APK는 별도 테스트 환경용입니다.
 
-버전은 3.5 / versionCode 8이며 Android 7.0 이상을 지원합니다. JVM 154개·SQLite 21개 통과, lint 오류 0·경고 174개입니다. 기기 테스트 APK는 빌드했으며 실제 기기 실행과 업데이트 설치 검증은 미실행입니다. Google 로그인 없이 핵심 기능과 파일 백업·복원을 사용할 수 있습니다.
+버전은 3.6 / versionCode 9이며 Android 7.0 이상을 지원합니다. JVM 159개·SQLite 22개 통과, lint 오류 0개입니다. 앱·기기 테스트 APK를 빌드했으며 실제 기기 실행과 업데이트 설치 검증은 미실행입니다. Google 로그인 없이 핵심 기능과 파일 백업·복원을 사용할 수 있습니다.
 
-[다운로드·체크섬·서명 안내](downloads/README.md) · [v3.5 구현·검증 결과](docs/upgrade-v3.5.md) · [앞선 v3.4 개선](docs/upgrade-v3.4.md) · [다음 작업 프롬프트](docs/next-upgrade-prompt.md)
-
-화면 미리보기: [월간 달력](docs/screenshots/v3.5-calendar.png) · [통계와 배지](docs/screenshots/v3.5-progress.png). Robolectric에서 시험 기록으로 렌더링한 화면입니다.
+[다운로드·체크섬·서명 안내](downloads/README.md) · [v3.6 구현·검증 결과](docs/upgrade-v3.6.md) · [v3.5 달력·통계 개선](docs/upgrade-v3.5.md) · [시간표 화면 미리보기](docs/screenshots/v3.6-timetable-dark.png)
 
 ## 프로젝트 소개
 본 프로젝트는 캡스톤 디자인을 준비하며 팀원 간의 협업 경험을 쌓기 위해 진행된 토이 프로젝트입니다. 사용자가 역사적 위인들의 훌륭한 습관과 하루 루틴을 직접 체험하고 실천할 수 있도록 돕습니다. 루틴 달성 시 코인을 지급하여 사용자의 지속적인 동기를 유발합니다.
@@ -79,7 +77,7 @@ if [ -f /workspace/.android-cloud/install.sh ]; then
 fi
 source /workspace/.android-cloud/env.sh
 cd /workspace/android-app
-bash gradlew --no-daemon --console=plain \
+bash gradlew --no-daemon --console=plain --max-workers=4 \
   :app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:assembleDebugAndroidTest
 python3 scripts/verify_database.py
 ```

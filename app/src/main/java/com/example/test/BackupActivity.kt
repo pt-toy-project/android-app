@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.test.data.BackupStore
 import com.example.test.data.GoogleDriveBackup
+import com.example.test.timetable.TimetableSurfaces
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.auth.api.identity.AuthorizationResult
@@ -120,7 +121,8 @@ class BackupActivity : AppCompatActivity() {
             val date = java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT).format(java.util.Date(summary.createdAt))
             restoreDialog?.dismiss()
             restoreDialog = AlertDialog.Builder(this).setTitle(R.string.backup_restore_review)
-                .setMessage(getString(R.string.backup_restore_summary, date, summary.routines, summary.records, summary.balance))
+                .setMessage(getString(R.string.backup_restore_summary, date, summary.routines, summary.records, summary.balance) + "\n" +
+                    (summary.classes?.let { getString(R.string.timetable_backup_count, it) } ?: getString(R.string.timetable_backup_legacy)))
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(R.string.backup_restore_confirm) { _, _ ->
                     work({
@@ -132,7 +134,7 @@ class BackupActivity : AppCompatActivity() {
                             com.example.test.alarm.ExperienceReminder(applicationContext).cancelFocus()
                             com.example.test.focus.FocusTimerStore(applicationContext).clear()
                         }
-                        finally { runCatching { coordinator.reconcile() } }
+                        finally { runCatching { coordinator.reconcile() }; runCatching { TimetableSurfaces.refresh(applicationContext) } }
                     }) { status.setText(R.string.backup_restored); findViewById<View>(R.id.backup_undo).visibility = View.VISIBLE }
                 }.show()
         }

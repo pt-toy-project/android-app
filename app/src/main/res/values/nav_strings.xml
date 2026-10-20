@@ -1,6 +1,7 @@
 <resources>
     <string name="nav_home">오늘</string>
     <string name="nav_routine">나만의 계획</string>
+    <string name="nav_plan_short">계획</string>
     <string name="nav_hero">인물</string>
     <string name="nav_myroom">상점</string>
     <string name="nav_settings">설정</string>
