@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/ui_background">
     <com.google.android.material.appbar.MaterialToolbar android:id="@+id/screen_toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" app:title="@string/timetable_title"/>
-    <ScrollView android:id="@+id/timetable_scroll" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/timetable_heading" android:textAppearance="?attr/textAppearanceHeadlineLarge" android:textColor="@color/ui_text" android:textStyle="bold" android:layout_marginTop="12dp"/>
-            <TextView android:id="@+id/timetable_summary" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyLarge" android:layout_marginTop="12dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/timetable_add" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/timetable_add" android:layout_marginTop="12dp"/>
-            <TextView android:id="@+id/timetable_next_class" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:padding="16dp" android:background="@color/ui_primary_container" android:layout_marginTop="16dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/timetable_everytime" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/timetable_everytime"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/timetable_widget_add" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/timetable_widget_add"/>
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="16dp">
+    <androidx.core.widget.NestedScrollView android:id="@+id/timetable_scroll" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <TextView android:id="@+id/timetable_summary" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:textColor="@color/ui_text" android:textStyle="bold" android:layout_marginTop="4dp"/>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
+                <com.google.android.material.button.MaterialButton android:id="@+id/timetable_add" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/timetable_add"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/timetable_everytime" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_marginStart="8dp" android:text="@string/timetable_everytime"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="4dp">
                 <com.google.android.material.button.MaterialButton android:id="@+id/timetable_previous" style="@style/Widget.Material3.Button.TextButton" android:layout_width="48dp" android:layout_height="48dp" android:minWidth="48dp" android:padding="0dp" android:text="‹" android:contentDescription="@string/timetable_previous"/>
                 <TextView android:id="@+id/timetable_week_label" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center" android:textAppearance="?attr/textAppearanceTitleMedium"/>
                 <com.google.android.material.button.MaterialButton android:id="@+id/timetable_next" style="@style/Widget.Material3.Button.TextButton" android:layout_width="48dp" android:layout_height="48dp" android:minWidth="48dp" android:padding="0dp" android:text="›" android:contentDescription="@string/timetable_next"/>
@@ -19,9 +18,11 @@
                 <com.google.android.material.chip.Chip android:id="@+id/timetable_week_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:minHeight="48dp" android:text="@string/timetable_week_view"/>
                 <com.google.android.material.chip.Chip android:id="@+id/timetable_list_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:minHeight="48dp" android:text="@string/timetable_list_view"/>
             </com.google.android.material.chip.ChipGroup>
+            <TextView android:id="@+id/timetable_next_class" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:textColor="@color/ui_on_container" android:padding="12dp" android:background="@color/ui_primary_container" android:layout_marginTop="8dp" android:layout_marginBottom="12dp"/>
             <TextView android:id="@+id/timetable_view_hint" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodySmall" android:layout_marginBottom="12dp"/>
             <LinearLayout android:id="@+id/timetable_content" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/timetable_repeat" android:textAppearance="?attr/textAppearanceBodySmall" android:layout_marginTop="12dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/timetable_widget_add" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/timetable_widget_add" android:layout_marginTop="12dp"/>
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/timetable_notification_heading" android:textAppearance="?attr/textAppearanceTitleLarge" android:textStyle="bold" android:layout_marginTop="24dp"/>
             <com.google.android.material.button.MaterialButton android:id="@+id/timetable_notice_toggle" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/timetable_notice_on"/>
             <com.google.android.material.button.MaterialButton android:id="@+id/timetable_notice_settings" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/timetable_notice_settings" android:visibility="gone"/>
@@ -31,6 +32,6 @@
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/timetable_csv_help" android:textAppearance="?attr/textAppearanceBodySmall"/>
             <TextView android:id="@+id/timetable_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceBodyMedium" android:accessibilityLiveRegion="polite" android:layout_marginTop="12dp"/>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
     <include layout="@layout/layout_bottom_nav"/>
 </LinearLayout>

@@ -168,14 +168,77 @@ class ScreenRenderTest {
         try {
             capture(controller.get(), "timetable-week-dark", width = 320, height = 568)
             assertNotNull(controller.get().findViewById<View>(R.id.timetable_content))
-            controller.get().findViewById<android.widget.ScrollView>(R.id.timetable_scroll).scrollTo(0, 720)
+            scrollTimetableGridToTop(controller.get())
             capture(controller.get(), "timetable-grid-dark", width = 320, height = 568)
             RuntimeEnvironment.setFontScale(2f)
             controller.recreate()
+            capture(controller.get(), "timetable-large-font-start", width = 320, height = 568)
+            scrollTimetableGridToTop(controller.get())
             capture(controller.get(), "timetable-large-font-dark", width = 320, height = 568)
             assertTrue(controller.get().findViewById<View>(R.id.timetable_add).height >= 48)
             assertTrue(controller.get().window.decorView.findViewWithTag<View>("day-header:1").height >= 80)
         } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test
+    @Config(qualifiers = "w393dp-h851dp-night-mdpi")
+    fun importedTimetableKeepsWeekdaysVisibleWhileHoursScroll() {
+        val context = RuntimeEnvironment.getApplication()
+        val rows = visualTimetableRows()
+        com.example.test.data.TimetableStore(context).use { it.import(rows) }
+        val controller = Robolectric.buildActivity(TimetableActivity::class.java).setup().visible()
+        try {
+            capture(controller.get(), "timetable-imported-start", width = 393, height = 851)
+            scrollTimetableGridToTop(controller.get())
+            capture(controller.get(), "timetable-imported-grid-night", width = 393, height = 851)
+            val root = controller.get().window.decorView
+            val header = root.findViewWithTag<View>("day-header:0")
+            val body = root.findViewWithTag<androidx.core.widget.NestedScrollView>("timetable-grid-body")
+            val before = IntArray(2).also(header::getLocationOnScreen)
+            body.scrollTo(0, 4 * 56)
+            capture(controller.get(), "timetable-imported-scrolled-night", width = 393, height = 851)
+            val after = IntArray(2).also(header::getLocationOnScreen)
+            assertEquals(before[1], after[1])
+            assertTrue(body.scrollY > 0)
+            assertTrue(root.findViewWithTag<View>("day-header:4").width >= 60)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test
+    @Config(qualifiers = "w393dp-h851dp-night-mdpi")
+    fun importConfirmationPreviewsClassesBeforeSaving() {
+        val rows = visualTimetableRows()
+        val controller = Robolectric.buildActivity(TimetableActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            capture(activity, "timetable-before-preview", width = 393, height = 851)
+            val method = TimetableActivity::class.java.getDeclaredMethod("previewImport", List::class.java,
+                String::class.java, Int::class.javaPrimitiveType).apply { isAccessible = true }
+            method.invoke(activity, rows, "https://everytime.kr/@SamplePublicLink", 1)
+            val field = TimetableActivity::class.java.getDeclaredField("transient").apply { isAccessible = true }
+            val dialog = field.get(activity) as androidx.appcompat.app.AlertDialog
+            assertTrue(dialog.isShowing)
+            assertNotNull(dialog.window!!.decorView.findViewWithTag<View>("timetable-grid"))
+            capture(activity, "timetable-import-preview-night", dialog.window!!.decorView, 393, 851)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    private fun scrollTimetableGridToTop(activity: TimetableActivity) {
+        val outer = activity.findViewById<androidx.core.widget.NestedScrollView>(R.id.timetable_scroll)
+        val grid = activity.window.decorView.findViewWithTag<View>("timetable-grid")
+        val area = android.graphics.Rect().apply { grid.getDrawingRect(this) }
+        outer.offsetDescendantRectToMyCoords(grid, area)
+        outer.scrollTo(0, (area.top - 8).coerceAtLeast(0))
+    }
+
+    private fun visualTimetableRows(): List<com.example.test.timetable.TimetableEntry> {
+        val titles = listOf("프로젝트와 디자인", "데이터 구조 심화", "융합 디자인 세미나", "모바일 앱 제작",
+            "컴퓨터 그래픽스", "클라우드 서비스", "과제 연구", "딥러닝 실습", "소프트웨어 개발")
+        val fixture = javaClass.classLoader!!.getResourceAsStream("everytime-share-anonymized.xml")!!
+        return fixture.use(com.example.test.timetable.EverytimeShareImporter::parse).entries.map { entry ->
+            val number = entry.title.substringAfterLast(' ').toInt() - 1
+            entry.copy(title = titles[number], location = "제2공학관 501호 실습실")
+        }
     }
 
     @Test

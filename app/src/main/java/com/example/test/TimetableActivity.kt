@@ -7,12 +7,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
+import android.content.res.Configuration
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +33,7 @@ import com.example.test.timetable.TimetableWidgetProvider
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.Calendar
@@ -67,6 +71,11 @@ class TimetableActivity : AppCompatActivity() {
         setContentView(R.layout.activity_timetable)
         applySystemBarInsets()
         ScreenToolbar.bind(this, R.string.timetable_title)
+        findViewById<MaterialToolbar>(R.id.screen_toolbar).menu.add(0, R.id.timetable_toolbar_add, 0, R.string.timetable_add).apply {
+            setIcon(R.drawable.ic_add_timetable)
+            setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            setOnMenuItemClickListener { openEditor(null); true }
+        }
         week = RoutineDate.parse(state?.getString("week")) ?: week
         listMode = state?.getBoolean("listMode") ?: (resources.configuration.fontScale >= 1.5f)
         findViewById<Chip>(R.id.timetable_week_mode).isChecked = !listMode
@@ -143,7 +152,7 @@ class TimetableActivity : AppCompatActivity() {
             addView(field, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) }) }
         transient?.dismiss()
         transient = com.google.android.material.dialog.MaterialAlertDialogBuilder(this).setTitle(R.string.timetable_everytime)
-            .setView(view).setNegativeButton(android.R.string.cancel, null)
+            .setView(view).setNegativeButton(R.string.timetable_cancel, null)
             .setNeutralButton(R.string.timetable_link_open, null)
             .setPositiveButton(R.string.timetable_link_import, null).create().also { dialog ->
                 dialog.setOnShowListener {
@@ -199,12 +208,32 @@ class TimetableActivity : AppCompatActivity() {
     }
     private fun previewImport(rows: List<TimetableEntry>, sourceLink: String? = null, unscheduled: Int = 0) {
         transient?.dismiss()
+        val summary = if (sourceLink == null) getString(R.string.timetable_import_note, rows.size)
+            else getString(R.string.timetable_everytime_review, rows.size, unscheduled)
+        val previewView = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(12), 0, dp(12), 0)
+            addView(TextView(this@TimetableActivity).apply {
+                text = summary; textSize = 14f
+                setTextColor(ContextCompat.getColor(context, R.color.ui_secondary))
+                setPadding(dp(4), 0, dp(4), dp(12))
+            })
+        }
+        val viewport = ((resources.displayMetrics.heightPixels / resources.displayMetrics.density).toInt() - 350)
+            .coerceIn(220, 420)
+        renderGrid(previewView, (0..6).map(week::plusDays), rows, viewport) { entry ->
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(entry.title)
+                .setMessage("${TimetableEntry.weekdays[entry.weekday - 1]}요일 ${entry.timeLabel}\n${entry.location}" +
+                    entry.instructor.takeIf(String::isNotBlank)?.let { "\n$it" }.orEmpty())
+                .setPositiveButton(android.R.string.ok, null).show()
+        }
         transient = com.google.android.material.dialog.MaterialAlertDialogBuilder(this).setTitle(R.string.timetable_import_review)
-            .setMessage(if (sourceLink == null) getString(R.string.timetable_import_note, rows.size)
-                else getString(R.string.timetable_everytime_review, rows.size, unscheduled))
-            .setNegativeButton(android.R.string.cancel, null)
+            .setView(previewView)
+            .setNegativeButton(R.string.timetable_cancel, null)
             .setPositiveButton(R.string.timetable_import_confirm, null).create().also { dialog ->
                 dialog.setOnShowListener {
+                    dialog.window?.setLayout(resources.displayMetrics.widthPixels - dp(24), -2)
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                         if (busy) return@setOnClickListener
                         setBusy(true); dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
@@ -272,75 +301,154 @@ class TimetableActivity : AppCompatActivity() {
             if (rows.isEmpty()) return@forEachIndexed
             container.addView(TextView(this).apply { text = "${date.label("M월 d일 E요일")}"; textSize = 18f; setTypeface(null, android.graphics.Typeface.BOLD); setPadding(0,dp(16),0,dp(8)) })
             rows.forEach { entry ->
-                val card = MaterialCardView(this).apply { radius = dp(20).toFloat(); setCardBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)); cardElevation = 0f; tag = "class:${entry.id}" }
-                card.addView(TextView(this).apply { text = "${entry.timeLabel} · ${entry.title}\n${entry.location.ifBlank { getString(R.string.timetable_location_empty) }}${entry.instructor.takeIf(String::isNotBlank)?.let { " · $it" }.orEmpty()}"; textSize = 16f; setTextColor(ContextCompat.getColor(context, R.color.ui_text)); setPadding(dp(16),dp(14),dp(16),dp(14)) })
+                val card = MaterialCardView(this).apply { radius = dp(16).toFloat(); setCardBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)); cardElevation = 0f; tag = "class:${entry.id}" }
+                card.addView(LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
+                    setPadding(dp(12), dp(12), dp(12), dp(12)); minimumHeight = dp(64)
+                    addView(TextView(this@TimetableActivity).apply {
+                        text = "${TimetableEntry.time(entry.startMinute)}\n${TimetableEntry.time(entry.endMinute)}"
+                        textSize = if (resources.configuration.fontScale >= 1.3f) 12f else 14f
+                        setTextColor(ContextCompat.getColor(context, R.color.ui_primary))
+                        setTypeface(null, android.graphics.Typeface.BOLD)
+                    }, LinearLayout.LayoutParams(dp(if (resources.configuration.fontScale >= 1.3f) 90 else 72), -2))
+                    addView(LinearLayout(this@TimetableActivity).apply {
+                        orientation = LinearLayout.VERTICAL
+                        addView(TextView(this@TimetableActivity).apply {
+                            text = entry.title; textSize = 16f
+                            setTypeface(null, android.graphics.Typeface.BOLD)
+                            setTextColor(ContextCompat.getColor(context, R.color.ui_text))
+                        })
+                        addView(TextView(this@TimetableActivity).apply {
+                            text = entry.location.ifBlank { getString(R.string.timetable_location_empty) } +
+                                entry.instructor.takeIf(String::isNotBlank)?.let { " · $it" }.orEmpty()
+                            textSize = 13f; setTextColor(ContextCompat.getColor(context, R.color.ui_secondary))
+                        })
+                    }, LinearLayout.LayoutParams(0, -2, 1f))
+                })
                 card.setOnClickListener { openEditor(entry) }
                 container.addView(card, LinearLayout.LayoutParams(-1,-2).apply { bottomMargin = dp(8) })
             }
         }
     }
-    private fun renderGrid(container: LinearLayout, days: List<RoutineDate>) {
-        val scale = if (resources.configuration.fontScale >= 1.3f) 104 else 80
-        val cell = if (resources.configuration.fontScale >= 1.3f) 136 else 112
-        val header = when {
-            resources.configuration.fontScale >= 1.5f -> 80
-            resources.configuration.fontScale >= 1.3f -> 60
-            else -> 44
-        }
-        val railWidth = if (resources.configuration.fontScale >= 1.5f) 68 else 46
-        val startHour = minOf(8, entries.minOf { it.startMinute } / 60)
-        val endHour = maxOf(20, (entries.maxOf { it.endMinute } + 59) / 60)
+    private fun renderGrid(container: LinearLayout, days: List<RoutineDate>, sourceRows: List<TimetableEntry> = entries,
+        maxViewportDp: Int = 560, onOpen: (TimetableEntry) -> Unit = ::openEditor) {
+        val largeText = resources.configuration.fontScale >= 1.3f
+        val scale = if (largeText) 80 else 56
+        val railWidth = if (largeText) 56 else 42
+        val usableWidth = (resources.displayMetrics.widthPixels / resources.displayMetrics.density).toInt() - 32 - railWidth
+        val cell = if (largeText) maxOf(88, usableWidth / 3) else maxOf(60, usableWidth / 5)
+        val header = if (resources.configuration.fontScale >= 1.5f) 80 else 48
+        val startHour = minOf(9, sourceRows.minOf { it.startMinute } / 60)
+        val endHour = maxOf(18, (sourceRows.maxOf { it.endMinute } + 59) / 60)
         val board = FrameLayout(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)) }
         val rail = FrameLayout(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)) }
-        val width = dp(7 * cell); val height = dp(header + (endHour - startHour) * scale)
+        val headerBoard = FrameLayout(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)) }
+        val width = dp(7 * cell); val height = dp((endHour - startHour) * scale)
+        val night = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        val swatches = (if (night) listOf("#294461", "#28514D", "#493E62", "#5A452F", "#3C503F", "#584051")
+            else listOf("#DDEBFF", "#DDF4EA", "#EFE6FA", "#FFF0D8", "#E7F2DE", "#FAE5EC"))
+            .map(android.graphics.Color::parseColor)
+        val classNames = sourceRows.map { it.title }.distinct().sorted()
+        val cardText = android.graphics.Color.parseColor(if (night) "#F4F7FB" else "#233247")
+        val cardSecondary = android.graphics.Color.parseColor(if (night) "#D6DFEA" else "#4B5D70")
         board.layoutParams = LinearLayout.LayoutParams(width, height)
         rail.layoutParams = LinearLayout.LayoutParams(dp(railWidth), height)
+        headerBoard.layoutParams = LinearLayout.LayoutParams(width, dp(header))
         for (hour in startHour..endHour) {
-            val top = dp(header + (hour - startHour) * scale)
+            val top = dp((hour - startHour) * scale)
             board.addView(View(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_outline)) }, FrameLayout.LayoutParams(width, dp(1)).apply { topMargin = top })
-            if (hour < endHour) rail.addView(TextView(this).apply { text = TimetableEntry.time(hour*60); textSize = if (railWidth > 46) 10f else 12f; setTextColor(ContextCompat.getColor(context,R.color.ui_secondary)) },
-                FrameLayout.LayoutParams(dp(railWidth-2),dp(36)).apply { topMargin = top + dp(2); leftMargin=dp(2) })
+            if (hour < endHour) {
+                board.addView(View(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_outline)); alpha = .38f },
+                    FrameLayout.LayoutParams(width, dp(1)).apply { topMargin = top + dp(scale / 2) })
+                rail.addView(TextView(this).apply { text = TimetableEntry.time(hour * 60); textSize = if (largeText) 11f else 12f
+                    setTextColor(ContextCompat.getColor(context, R.color.ui_secondary)) },
+                    FrameLayout.LayoutParams(dp(railWidth - 2), dp(36)).apply { topMargin = top + dp(3); leftMargin = dp(3) })
+            }
         }
         days.forEachIndexed { index, date ->
             val left = dp(index*cell)
             if (date == RoutineDate.today()) board.addView(View(this).apply { setBackgroundColor(ContextCompat.getColor(context,R.color.ui_primary_container)); alpha=.35f },
-                FrameLayout.LayoutParams(dp(cell),height-dp(header)).apply { leftMargin=left; topMargin=dp(header) })
-            board.addView(TextView(this).apply { text = date.label("E\nd"); gravity=Gravity.CENTER; textSize=14f; setTypeface(null,android.graphics.Typeface.BOLD)
+                FrameLayout.LayoutParams(dp(cell),height).apply { leftMargin=left })
+            headerBoard.addView(TextView(this).apply { text = date.label("E\nd"); gravity=Gravity.CENTER; textSize=if (largeText) 16f else 14f
+                setTypeface(null,android.graphics.Typeface.BOLD)
                 tag = "day-header:$index"
-                setTextColor(ContextCompat.getColor(context,R.color.ui_text)) }, FrameLayout.LayoutParams(dp(cell),dp(header)).apply { leftMargin=left })
-            board.addView(View(this).apply { setBackgroundColor(ContextCompat.getColor(context,R.color.ui_outline)) }, FrameLayout.LayoutParams(dp(1),height).apply { leftMargin=left })
-            val rows=entries.filter { it.weekday==index+1 }.sortedWith(compareBy<TimetableEntry> { it.startMinute }.thenBy { it.endMinute })
+                setTextColor(ContextCompat.getColor(context, if (date == RoutineDate.today()) R.color.ui_primary else R.color.ui_secondary)) },
+                FrameLayout.LayoutParams(dp(cell),dp(header)).apply { leftMargin=left })
+            board.addView(View(this).apply { setBackgroundColor(ContextCompat.getColor(context,R.color.ui_outline)); alpha = .6f },
+                FrameLayout.LayoutParams(dp(1),height).apply { leftMargin=left })
+            val rows=sourceRows.filter { it.weekday==index+1 }.sortedWith(compareBy<TimetableEntry> { it.startMinute }.thenBy { it.endMinute })
             val placed=mutableListOf<Pair<TimetableEntry,Int>>()
             rows.forEach { entry ->
                 val free=(0..rows.size).first { lane -> placed.none { (other,occupied) -> occupied==lane && entry.startMinute < maxOf(other.endMinute,other.startMinute+36) && other.startMinute < maxOf(entry.endMinute,entry.startMinute+36) } }
                 placed+=entry to free
             }
-            rows.forEach { entry ->
-                val lane=placed.first { it.first.id==entry.id }.second
+            rows.forEachIndexed { position, entry ->
+                val lane=placed[position].second
                 val lanes=placed.filter { (other,_) -> other.startMinute < maxOf(entry.endMinute,entry.startMinute+36) && entry.startMinute < maxOf(other.endMinute,other.startMinute+36) }.maxOfOrNull { it.second }?.plus(1) ?: 1
-                val cardWidth=(cell-8)/lanes
-                val top=dp(header)+(entry.startMinute-startHour*60)*dp(scale)/60
+                val cardWidth=(cell-4)/lanes
+                val top=(entry.startMinute-startHour*60)*dp(scale)/60
                 val cardHeight=maxOf(dp(48),(entry.endMinute-entry.startMinute)*dp(scale)/60-dp(3))
-                val card=TextView(this).apply {
-                    text=if(cardHeight>=dp(84)) "${entry.title}\n${entry.timeLabel}\n${entry.location}" else entry.title
-                    textSize=if(lanes>1) 11f else 13f; maxLines=4; ellipsize=android.text.TextUtils.TruncateAt.END
-                    setTextColor(ContextCompat.getColor(context,R.color.ui_on_container))
-                    setPadding(dp(7),dp(6),dp(5),dp(4)); gravity=Gravity.TOP
-                    background=android.graphics.drawable.GradientDrawable().apply { cornerRadius=dp(12).toFloat(); setColor(ContextCompat.getColor(context,R.color.ui_primary_container)) }
-                    tag="class:${entry.id}"; minHeight=dp(48)
+                val card=LinearLayout(this).apply {
+                    orientation=LinearLayout.VERTICAL
+                    setPadding(dp(5),dp(6),dp(4),dp(4))
+                    background=android.graphics.drawable.GradientDrawable().apply { cornerRadius=dp(10).toFloat()
+                        setColor(swatches[classNames.indexOf(entry.title) % swatches.size]) }
+                    tag="class:${entry.id}"; minimumHeight=dp(48)
                     contentDescription="${TimetableEntry.weekdays[index]}요일 ${entry.timeLabel} ${entry.title} ${entry.location} ${entry.instructor}"
-                    setOnClickListener { openEditor(entry) }
+                    setOnClickListener { onOpen(entry) }
                 }
-                board.addView(card,FrameLayout.LayoutParams(dp(cardWidth),cardHeight).apply { leftMargin=left+dp(4+lane*cardWidth); topMargin=top })
+                card.addView(TextView(this).apply {
+                    text=entry.title; textSize=if (largeText) 14f else if (lanes>1) 10f else 12f
+                    setTypeface(null,android.graphics.Typeface.BOLD); setTextColor(cardText)
+                    maxLines=if (cardHeight >= dp(86)) 4 else 3
+                    ellipsize=android.text.TextUtils.TruncateAt.END
+                    setLineSpacing(0f, 1.05f)
+                })
+                if (cardHeight >= dp(72) && lanes == 1 && entry.location.isNotBlank()) card.addView(TextView(this).apply {
+                    text=entry.location; textSize=if (largeText) 12f else 10f; setTextColor(cardSecondary)
+                    maxLines=2; ellipsize=android.text.TextUtils.TruncateAt.END
+                    setPadding(0,dp(4),0,0)
+                })
+                board.addView(card,FrameLayout.LayoutParams(dp(cardWidth),cardHeight).apply { leftMargin=left+dp(2+lane*cardWidth); topMargin=top })
             }
         }
-        val horizontal=HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; addView(board) }
-        container.addView(LinearLayout(this).apply {
-            orientation=LinearLayout.HORIZONTAL
-            addView(rail)
-            addView(horizontal,LinearLayout.LayoutParams(0,height,1f))
-        },LinearLayout.LayoutParams(-1,height))
-        if (week == RoutineDate.today().week().first()) horizontal.post { horizontal.scrollTo(dp((TimetableEntry.weekday(RoutineDate.today())-1)*cell),0) }
+        val headerScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(headerBoard) }
+        val bodyScroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false; addView(board) }
+        headerScroll.setOnScrollChangeListener { _, x, _, _, _ -> if (bodyScroll.scrollX != x) bodyScroll.scrollTo(x, 0) }
+        bodyScroll.setOnScrollChangeListener { _, x, _, _, _ -> if (headerScroll.scrollX != x) headerScroll.scrollTo(x, 0) }
+        val grid = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            tag = "timetable-grid"
+            addView(LinearLayout(this@TimetableActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface))
+                addView(View(this@TimetableActivity), LinearLayout.LayoutParams(dp(railWidth), dp(header)))
+                addView(headerScroll, LinearLayout.LayoutParams(0, dp(header), 1f))
+            }, LinearLayout.LayoutParams(-1, dp(header)))
+            val bodyRow = LinearLayout(this@TimetableActivity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                addView(rail)
+                addView(bodyScroll, LinearLayout.LayoutParams(0, height, 1f))
+            }
+            val screenHeight = (resources.displayMetrics.heightPixels / resources.displayMetrics.density).toInt()
+            val viewport = dp(minOf((screenHeight - 270).coerceAtLeast(240), maxViewportDp, (endHour - startHour) * scale))
+            addView(NestedScrollView(this@TimetableActivity).apply {
+                tag = "timetable-grid-body"
+                isFillViewport = false
+                isNestedScrollingEnabled = true
+                addView(bodyRow)
+            }, LinearLayout.LayoutParams(-1, viewport))
+        }
+        container.addView(MaterialCardView(this).apply {
+            radius = dp(16).toFloat(); cardElevation = 0f
+            setCardBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface))
+            addView(grid)
+        }, LinearLayout.LayoutParams(-1, -2))
+        if (week == RoutineDate.today().week().first()) {
+            val todayIndex = TimetableEntry.weekday(RoutineDate.today()) - 1
+            val firstVisible = maxOf(0, todayIndex - if (largeText) 2 else 4)
+            headerScroll.post { headerScroll.scrollTo(dp(firstVisible * cell), 0) }
+        }
     }
     private fun setBusy(value: Boolean) {
         busy=value

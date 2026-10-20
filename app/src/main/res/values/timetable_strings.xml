@@ -9,7 +9,7 @@
     <string name="timetable_edit">수업 수정</string>
     <string name="timetable_week_view">주간 표</string>
     <string name="timetable_list_view">목록</string>
-    <string name="timetable_scroll_hint">좌우로 밀어 다른 요일을 볼 수 있어요. 겹친 수업은 나란히 보여요.</string>
+    <string name="timetable_scroll_hint">요일 좌우 · 시간 위아래 · 수업 누르기</string>
     <string name="timetable_empty">아직 수업이 없어요.\n수업을 추가하거나 파일을 가져와 보세요.</string>
     <string name="timetable_no_today">오늘은 남은 수업이 없어요</string>
     <string name="timetable_upcoming">다음 수업 · %1$s\n%2$s · %3$s</string>
@@ -37,6 +37,7 @@
     <string name="timetable_import_review">가져올 수업 확인</string>
     <string name="timetable_import_note">%1$d개 수업을 매주 반복하는 시간표에 추가해요. 같은 이름·요일·시간·강의실은 중복 추가하지 않아요.</string>
     <string name="timetable_import_confirm">수업 추가하기</string>
+    <string name="timetable_cancel">취소</string>
     <string name="timetable_imported">%1$d개 수업을 추가했어요. 중복된 수업은 건너뛰었어요.</string>
     <string name="timetable_working">처리하고 있어요…</string>
     <string name="timetable_everytime">에타 시간표 가져오기</string>
@@ -46,7 +47,7 @@
     <string name="timetable_link_import">불러오기</string>
     <string name="timetable_link_invalid">https://everytime.kr/@로 시작하는 시간표 공유 링크를 넣어 주세요.</string>
     <string name="timetable_link_saved">공유 링크를 저장했어요. 수업은 ‘불러오기’에서 확인 후 추가할 수 있어요.</string>
-    <string name="timetable_everytime_review">공개 시간표에서 %1$d개 수업 시간을 찾았어요. 시간 미정 수업 %2$d개는 제외했어요. 확인을 누르면 현재 시간표에 추가하며 중복 수업은 건너뜁니다.</string>
+    <string name="timetable_everytime_review">수업 %1$d개를 찾았어요. 시간 미정 %2$d개는 제외했어요. 좌우·위아래로 밀어 확인한 뒤 추가해 주세요. 중복은 건너뜁니다.</string>
     <string name="timetable_link_connection">에브리타임에 연결하지 못했어요. 네트워크를 확인하고 다시 시도해 주세요. 저장된 시간표는 바뀌지 않았어요.</string>
     <string name="timetable_link_private">공개되지 않은 시간표예요. 에브리타임에서 시간표 공유 설정을 확인해 주세요.</string>
     <string name="timetable_link_empty">가져올 시간표 수업이 없어요. 시간 미정 수업은 추가되지 않아요.</string>
