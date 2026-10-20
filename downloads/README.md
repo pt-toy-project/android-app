@@ -1,4 +1,29 @@
-# 위인의 하루 v3.5 테스트 APK
+# 위인의 하루 v3.6 테스트 APK
+
+**[v3.6 테스트 APK 다운로드 — 시간표·홈 위젯·알림창 카드](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.6-debug.apk)**
+
+수업을 직접 추가하거나 앱의 UTF-8 CSV 형식으로 가져올 수 있습니다. 에브리타임 공유 링크는 저장·열기만 지원하고 자동 수업 가져오기는 아직 지원하지 않습니다. 홈 화면 위젯은 런처에 추가할 수 있으며, 삼성 알림창과 같은 알림 영역에는 사용자가 켠 경우에만 시간표 카드가 표시됩니다.
+
+**기존 배포 v3.3과 서명이 다릅니다. 이 APK로 v3.3 위에 업데이트 설치할 수 없습니다. 기존 앱이나 데이터를 삭제하지 마세요.** v3.5 테스트 APK와는 서명과 버전 조건이 맞지만 실제 덮어쓰기 설치는 검증하지 않았습니다.
+
+| 항목 | 값 |
+| --- | --- |
+| 버전 | 3.6 / versionCode 9 |
+| 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
+| APK 크기 | 11,027,540 B |
+| APK SHA-256 | `f94fbfd196f35572e68db3517ec0279833d2a11ec1c80b4cb75638161f0db36b` |
+| 인증서 SHA-256 | `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0` |
+| 검증 | JVM 159개·SQLite 22개 통과, lint 오류 0개·경고 185개, 앱·기기 테스트 APK 빌드 및 서명 검증 성공 |
+| 미실행 | 실제 기기 계측·업데이트 설치·런처 위젯·알림창 표시·TalkBack·Doze |
+
+[구현·검증 보고서](../docs/upgrade-v3.6.md) · [빌드 정보](v3.6-build-manifest.json) · [체크섬](android-app-v3.6-debug.apk.sha256) · [시간표 화면](../docs/screenshots/v3.6-timetable-dark.png)
+
+```bash
+cd downloads
+sha256sum --check android-app-v3.6-debug.apk.sha256
+```
+
+## v3.5 이전 테스트 APK
 
 **[v3.5 테스트 APK 다운로드 — 달력·통계·배지](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.5-debug.apk)**
 
