@@ -51,6 +51,7 @@ python3 scripts/verify_database.py
 
 v3.3 기준 127개였던 JVM 테스트에 총 27개가 추가됐습니다. v3.4의 9개와 이번 달력·통계·추천·화면 회귀 18개를 포함합니다. 최종 Gradle 로그는 `/workspace/.android-cloud/upgrade-final.log`입니다.
 
+- 게시용 사본: `downloads/android-app-v3.5-debug.apk`
 - 앱 APK: `app/build/outputs/apk/debug/app-debug.apk`
 - 동일 APK의 버전 명시 사본: `app/build/outputs/apk/debug/android-app-v3.5-debug.apk`
 - 기기 테스트 APK: `app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk`
@@ -59,7 +60,7 @@ v3.3 기준 127개였던 JVM 테스트에 총 27개가 추가됐습니다. v3.4�
 - 현재 인증서 SHA-256: `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0`
 - 기존 배포 v3.3 인증서 SHA-256: `bf3489b7cb1b71f6f452b1e3caea6859e29365b69a37d5d8680c536dc5f81c4c`
 
-이 APK는 게시된 배포본이 아닌 로컬 테스트 결과입니다. 실제 기기 테스트 실행과 기존 배포본 위의 업데이트 설치 검증은 미실행입니다.
+검증한 동일 APK를 저장소의 [v3.5 테스트 다운로드](../downloads/README.md)에 포함했습니다. 별도 테스트 환경용입니다. 실제 기기 테스트 실행과 기존 배포본 위의 업데이트 설치 검증은 미실행입니다.
 
 ## 남은 조건
 

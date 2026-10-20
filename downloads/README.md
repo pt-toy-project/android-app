@@ -1,46 +1,31 @@
-# 위인의 하루 v3.3 테스트 APK
+# 위인의 하루 v3.5 테스트 APK
 
-**[최신 APK 다운로드 — 집중 타이머·알림 시험](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.3-debug.apk)**
+**[v3.5 테스트 APK 다운로드 — 달력·통계·배지](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.5-debug.apk)**
 
-설정에서 `3.3 · 집중 실천과 알림`을 확인하세요. 오늘의 실천 상세에서 5·10·25분 집중 타이머를 열고 시작·일시정지·이어 하기·실천으로 복귀할 수 있습니다. 홈에는 집중 이어 하기와 하루 전체 완료 카드를 표시합니다. 목록은 제목·보조 줄을 중심으로 줄이고 카드 자체를 상세 진입점으로 정리했습니다. 설정 → 알림 → **10초 알림 시험**으로 기존 소리/무음 채널을 시험합니다. 정확한 알람 권한이 없으면 늦어질 수 있음을 안내합니다. 타이머 종료·시험 알림은 코인을 지급하지 않습니다.
+월간 달력과 날짜별 실천 링, 목표별 인물 추천, 통계·달성 배지를 추가했습니다. 밝은 배경과 파란색 강조를 사용하며 다크 모드를 지원합니다. 계정 없는 시작·파일 백업·타이머 상태 복원·알림 안내 개선도 포함합니다.
+
+**기존 배포 v3.3과 서명이 다릅니다. 이 APK는 기존 배포본 위에 업데이트 설치할 수 없습니다. 기존 앱이나 데이터를 삭제하지 마세요.** 데이터 보존 업데이트에는 기존 배포 키로 다시 빌드한 APK와 실제 업데이트 검증이 필요합니다. 현재 파일은 별도 테스트 환경용입니다.
 
 | 항목 | 값 |
-|---|---|
-| 버전 | 3.3 / versionCode 6 |
+| --- | --- |
+| 버전 | 3.5 / versionCode 8 |
 | 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
-| 인물 / 하루 블록 / 서브 퀘스트 | 30명 / 240개 / 510개 |
-| APK 크기 | 10,833,441 B |
-| APK SHA-256 | `f6649fa225e89e8afd1d8ec3fc477df8aa0e608ff430bf3f478246fc828fa2a5` |
-| 인증서 SHA-256 | `bf3489b7cb1b71f6f452b1e3caea6859e29365b69a37d5d8680c536dc5f81c4c` |
-| 대응 소스 | `ca314d276cc7ce6508d7be0333f556904299bec6` |
-| 기본 검증 | JVM 127개·SQLite 21개 통과, 앱·계측 APK 빌드, lint 오류 0·경고 166, apksigner 성공 |
-| 업데이트 설치 | Android 35 AVD의 실제 v3.2 → v3.3 설치 성공; DB 9개 테이블의 모든 행·루틴 ID·완료·구매/적용·80포인트 보존 |
+| APK 크기 | 10,892,603 B |
+| APK SHA-256 | `fc2c7d002d84dedf5c4f9f9df4ad6844fcd5cdf75793eb37b9d80c766aba7fcc` |
+| 인증서 SHA-256 | `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0` |
+| 대응 소스 | [`ada146c`](https://github.com/pt-toy-project/android-app/commit/ada146c5fd44bd18b17685cdf72061a7d1970c50) |
+| 검증 | JVM 154개·SQLite 21개 통과, lint 오류 0·경고 174개, 앱·기기 테스트 APK 빌드 및 서명 검증 성공 |
+| 미실행 | 실제 기기 계측·업데이트 설치·실제 소리/진동·TalkBack·Doze |
 
-**v3.0/v3.1/v3.2와 같은 인증서**를 유지합니다. 실제 휴대폰 업데이트는 미실행입니다. **기존 v2는 서명 키가 달라 이 APK로 업데이트할 수 없습니다. 기존 앱을 삭제하지 마세요.** 기존 키를 확보한 재빌드가 필요합니다. 이전 APK는 보존했습니다.
+로그인 없이 핵심 기능을 사용할 수 있습니다. Google 연결 코드는 유지했으며 Google 앱 등록은 이번 기능의 필수 조건이 아닙니다. 타이머 종료·달력 조회·배지 달성으로 별도 코인을 지급하지 않습니다.
 
-Google 로그인·Drive 백업 코드는 있지만 **앱 등록값이 없어 현재 APK에서는 연결이 준비 중**입니다. [Google 앱 등록 방법](../docs/google-account-setup.md)이 필요합니다. 계정 없이 시작과 파일 백업·복원은 사용할 수 있습니다. Google 로그인/Drive API 성공을 흉내 내지 않습니다.
-
-현재 30명을 유지하며 이번에 추가/제외한 인물은 없습니다. 초기 32명 후보 중 장영실·호쿠사이는 하루 자료가 빈약해 제외했고 이유는 [역사 자료](../docs/historical-sources.md)에 보존합니다. 기존 15장 사진(636,640 B)·기본 아바타·원래 크레딧은 동일합니다. v3.2 대비 비트맵 증가 **0 B**, 자체 뒤로/완료 벡터를 포함한 전체 drawable/mipmap의 압축 전 증가 **1,536 B**입니다. AI 이미지·새 외부 인물 사진·프로필 사진 다운로드는 없습니다.
-
-새 라이브러리는 추가하지 않습니다. 기존 역사 자료 접근 실패 상태·Google SDK 약관 미확인을 유지합니다. [라이선스 제한](../docs/licenses-v3.md)·[3.3 구현과 환경 제한](../docs/experience-v3.3.md)을 참고하세요. 실제 휴대폰 스피커·진동·TalkBack·절전/Doze·제조사 백그라운드 정책·Google 계정/Drive 실행은 미확인입니다.
-
-체크섬: [android-app-v3.3-debug.apk.sha256](android-app-v3.3-debug.apk.sha256). 소스·검증 상세: [v3-build-manifest.json](v3-build-manifest.json).
+[구현·검증 보고서](../docs/upgrade-v3.5.md) · [다음 작업 프롬프트](../docs/next-upgrade-prompt.md) · [빌드 정보](v3.5-build-manifest.json) · [체크섬](android-app-v3.5-debug.apk.sha256)
 
 ```bash
-sha256sum --check android-app-v3.3-debug.apk.sha256
+cd downloads
+sha256sum --check android-app-v3.5-debug.apk.sha256
 ```
 
-빌드와 기본 검증:
+화면 미리보기는 Robolectric에서 시험 기록으로 렌더링한 실제 Android View입니다: [월간 달력](../docs/screenshots/v3.5-calendar.png) · [통계와 배지](../docs/screenshots/v3.5-progress.png).
 
-```bash
-source /workspace/.android-cloud/env.sh
-bash gradlew --no-daemon --console=plain \
-  :app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:assembleDebugAndroidTest
-python3 scripts/verify_database.py
-```
-
-`assembleDebugAndroidTest`는 기기 테스트 APK 빌드입니다. 실제 계측 결과는 아래 실행 기록과 구분합니다. 테스트는 전용 기기에서 실행하고 실제 사용자 데이터가 있는 휴대폰에서 실행하지 마세요. Google 활성화 빌드는 공개 웹 클라이언트 ID가 필요하며 비밀 키를 넣지 않습니다.
-
-이전 배포: [v3.2 APK](android-app-v3.2-debug.apk) · [v3.1 APK](android-app-v3.1-debug.apk) · [v2 보존 안내](v2-archive.md).
-
-실제 OS 실행 기록: Android 35 AVD의 서로 다른 계측 **5개 실행, 4개 통과·1개 실패**, 47개 미실행입니다. 10초 시험, 정규 예약 전달, 두 출처의 실제 화면 연결, 반복 완료의 한 번 보상은 통과했습니다. 미래 완료 보호와 빠른 연속 탭도 통과했습니다. 달력/회전 테스트는 반복적인 가상 기기 System UI ANR가 창 포커스를 막아 실패로 남겼고 성공으로 집계하지 않았습니다. Robolectric 날짜 보존 회귀는 통과했습니다. 테스트 APK 사전 컴파일과 전용 AVD의 시스템 타임아웃 조정은 앱/테스트 단언 변경과 구분해 구현 문서에 기록했습니다.
+이전 배포 파일과 검증 기록은 보존했습니다: [v3.3](v3.3-archive.md) · [v3.2 APK](android-app-v3.2-debug.apk) · [v3.1 APK](android-app-v3.1-debug.apk) · [v2 안내](v2-archive.md).
