@@ -233,7 +233,8 @@ class ScreenRenderTest {
         val controller = Robolectric.buildActivity(TimetableActivity::class.java).setup().visible()
         try {
             capture(controller.get(), "timetable-week-dark", width = 320, height = 568)
-            assertNotNull(controller.get().findViewById<View>(R.id.timetable_content))
+            assertTrue("Weekly grid must be visible when the timetable opens",
+                controller.get().window.decorView.findViewWithTag<View>("timetable-grid").getGlobalVisibleRect(android.graphics.Rect()))
             scrollTimetableGridToTop(controller.get())
             capture(controller.get(), "timetable-grid-dark", width = 320, height = 568)
             RuntimeEnvironment.setFontScale(2f)
@@ -242,7 +243,7 @@ class ScreenRenderTest {
             scrollTimetableGridToTop(controller.get())
             capture(controller.get(), "timetable-large-font-dark", width = 320, height = 568)
             assertTrue(controller.get().findViewById<View>(R.id.timetable_add).height >= 48)
-            assertTrue(controller.get().window.decorView.findViewWithTag<View>("day-header:1").height >= 80)
+            assertTrue(controller.get().window.decorView.findViewWithTag<View>("day-header:1").height >= 48)
         } finally { controller.pause().stop().destroy() }
     }
 
@@ -259,6 +260,7 @@ class ScreenRenderTest {
             capture(controller.get(), "timetable-imported-grid-night", width = 393, height = 851)
             val root = controller.get().window.decorView
             val header = root.findViewWithTag<View>("day-header:0")
+            assertEquals("월", (header as android.widget.TextView).text.toString())
             val body = root.findViewWithTag<androidx.core.widget.NestedScrollView>("timetable-grid-body")
             val before = IntArray(2).also(header::getLocationOnScreen)
             body.scrollTo(0, 4 * 56)
@@ -266,7 +268,10 @@ class ScreenRenderTest {
             val after = IntArray(2).also(header::getLocationOnScreen)
             assertEquals(before[1], after[1])
             assertTrue(body.scrollY > 0)
-            assertTrue(root.findViewWithTag<View>("day-header:4").width >= 60)
+            assertTrue(root.findViewWithTag<View>("day-header:4").width >= 55)
+            controller.get().findViewById<View>(R.id.timetable_list_mode).performClick()
+            capture(controller.get(), "timetable-weekdays-list-night", width = 393, height = 851)
+            assertEquals("월요일", root.findViewWithTag<android.widget.TextView>("list-day:0").text.toString())
         } finally { controller.pause().stop().destroy() }
     }
 

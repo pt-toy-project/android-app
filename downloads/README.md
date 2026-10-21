@@ -1,4 +1,29 @@
-# 위인의 하루 v3.11 테스트 APK
+# 위인의 하루 v3.12 테스트 APK
+
+**[v3.12 테스트 APK 다운로드 — 주간 시간표를 첫 화면에](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.12-debug.apk)**
+
+시간표 탭을 열면 요일·시간 격자가 먼저 나옵니다. 기본 화면 폭에서 월~토 수업을 함께 보고, 일요일은 옆으로 밀어 볼 수 있습니다. 수업은 매주 반복하므로 주 이동과 날짜 숫자를 없애고 목록에도 요일만 표시합니다. 추가·에타 가져오기·위젯 등의 도구는 표 아래에 있습니다.
+
+**기존 v3.3 배포 APK와 서명이 다릅니다. v3.3 위에 업데이트 설치할 수 없으므로 기존 앱과 데이터를 삭제하지 마세요.** v3.11 테스트 APK와는 서명·버전 조건이 맞지만 실제 덮어쓰기 설치는 검증하지 않았습니다.
+
+| 항목 | 값 |
+| --- | --- |
+| 버전 | 3.12 / versionCode 15 |
+| 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
+| APK 크기 | 9,259,299 B |
+| APK SHA-256 | `d32521961449487979f9f5abdeb4b8a9d82d82bd5ca0763cfd82def286efc001` |
+| 인증서 SHA-256 | `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0` |
+| 검증 | JVM 169개·SQLite 22개 통과, lint 오류 0개·경고 194개, 앱·기기 테스트 APK 빌드 및 앱 APK 서명 검증 성공 |
+| 미실행 | 실제 기기 계측·업데이트 설치·휴대폰 화면 확인 |
+
+[구현·검증 보고서](../docs/upgrade-v3.12.md) · [빌드 정보](v3.12-build-manifest.json) · [체크섬](android-app-v3.12-debug.apk.sha256) · [주간 격자](../docs/screenshots/v3.12-timetable-first-night.png) · [요일별 목록](../docs/screenshots/v3.12-timetable-list-night.png)
+
+```bash
+cd downloads
+sha256sum --check android-app-v3.12-debug.apk.sha256
+```
+
+## v3.11 이전 테스트 APK
 
 **[v3.11 테스트 APK 다운로드 — 시간표 위젯·마이페이지·광고 영역](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.11-debug.apk)**
 

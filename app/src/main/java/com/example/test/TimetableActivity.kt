@@ -40,7 +40,6 @@ import java.util.Calendar
 
 /** Weekly classes are local data; public share links can be imported without an account. */
 class TimetableActivity : AppCompatActivity() {
-    private var week = RoutineDate.today().week().first()
     private var listMode = false
     private var entries: List<TimetableEntry> = emptyList()
     private var sharedLink: String? = null
@@ -76,15 +75,11 @@ class TimetableActivity : AppCompatActivity() {
             setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             setOnMenuItemClickListener { openEditor(null); true }
         }
-        week = RoutineDate.parse(state?.getString("week") ?: intent.getStringExtra("week")) ?: week
         listMode = state?.getBoolean("listMode") ?: (resources.configuration.fontScale >= 1.5f)
         findViewById<Chip>(R.id.timetable_week_mode).isChecked = !listMode
         findViewById<Chip>(R.id.timetable_list_mode).isChecked = listMode
         findViewById<View>(R.id.timetable_week_mode).setOnClickListener { listMode = false; render() }
         findViewById<View>(R.id.timetable_list_mode).setOnClickListener { listMode = true; render() }
-        findViewById<View>(R.id.timetable_previous).setOnClickListener { week = week.plusDays(-7); render() }
-        findViewById<View>(R.id.timetable_next).setOnClickListener { week = week.plusDays(7); render() }
-        findViewById<View>(R.id.timetable_today).setOnClickListener { week = RoutineDate.today().week().first(); render() }
         findViewById<View>(R.id.timetable_add).setOnClickListener { openEditor(null) }
         findViewById<View>(R.id.timetable_import).setOnClickListener {
             if (!busy) importCsv.launch(arrayOf("text/*", "application/vnd.ms-excel", "application/octet-stream"))
@@ -115,7 +110,7 @@ class TimetableActivity : AppCompatActivity() {
         super.onResume(); setupBottomNavigation(R.id.nav_timetable); load(); handleShare()
     }
     override fun onSaveInstanceState(out: Bundle) {
-        out.putString("week", week.iso); out.putBoolean("listMode", listMode)
+        out.putBoolean("listMode", listMode)
         super.onSaveInstanceState(out)
     }
     override fun onDestroy() { transient?.dismiss(); super.onDestroy() }
@@ -221,7 +216,7 @@ class TimetableActivity : AppCompatActivity() {
         }
         val viewport = ((resources.displayMetrics.heightPixels / resources.displayMetrics.density).toInt() - 350)
             .coerceIn(220, 420)
-        renderGrid(previewView, (0..6).map(week::plusDays), rows, viewport) { entry ->
+        renderGrid(previewView, rows, viewport) { entry ->
             com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle(entry.title)
                 .setMessage("${TimetableEntry.weekdays[entry.weekday - 1]}요일 ${entry.timeLabel}\n${entry.location}" +
@@ -275,9 +270,6 @@ class TimetableActivity : AppCompatActivity() {
         TimetableEditor.create(entry, TimetableEntry.weekday(RoutineDate.today())).show(supportFragmentManager, "timetable_editor")
     }
     private fun render() {
-        val days = (0..6).map(week::plusDays)
-        findViewById<TextView>(R.id.timetable_week_label).text = "${days.first().label("M월 d일")} – ${days.last().label("M월 d일")}"
-        findViewById<View>(R.id.timetable_today).visibility = if (week == RoutineDate.today().week().first()) View.GONE else View.VISIBLE
         val minutes = entries.sumOf { it.endMinute - it.startMinute }
         findViewById<TextView>(R.id.timetable_summary).text = getString(R.string.timetable_summary, entries.size, minutes / 60, minutes % 60)
         val now = Calendar.getInstance(); val minute = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
@@ -290,16 +282,16 @@ class TimetableActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.timetable_view_hint).visibility = if (entries.isNotEmpty() && !listMode) View.VISIBLE else View.GONE
         findViewById<TextView>(R.id.timetable_view_hint).setText(R.string.timetable_scroll_hint)
         if (entries.isEmpty()) content.addView(TextView(this).apply { setText(R.string.timetable_empty); textSize = 18f; setPadding(dp(20),dp(24),dp(20),dp(24)) })
-        else if (listMode) renderList(content, days)
-        else renderGrid(content, days)
+        else if (listMode) renderList(content)
+        else renderGrid(content)
         findViewById<Chip>(R.id.timetable_week_mode).isChecked = !listMode
         findViewById<Chip>(R.id.timetable_list_mode).isChecked = listMode
     }
-    private fun renderList(container: LinearLayout, days: List<RoutineDate>) {
-        days.forEachIndexed { index, date ->
+    private fun renderList(container: LinearLayout) {
+        TimetableEntry.weekdays.forEachIndexed { index, weekday ->
             val rows = entries.filter { it.weekday == index + 1 }.sortedBy { it.startMinute }
             if (rows.isEmpty()) return@forEachIndexed
-            container.addView(TextView(this).apply { text = "${date.label("M월 d일 E요일")}"; textSize = 18f; setTypeface(null, android.graphics.Typeface.BOLD); setPadding(0,dp(16),0,dp(8)) })
+            container.addView(TextView(this).apply { text = "${weekday}요일"; tag = "list-day:$index"; textSize = 18f; setTypeface(null, android.graphics.Typeface.BOLD); setPadding(0,dp(16),0,dp(8)) })
             rows.forEach { entry ->
                 val card = MaterialCardView(this).apply { radius = dp(16).toFloat(); setCardBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)); cardElevation = 0f; tag = "class:${entry.id}" }
                 card.addView(LinearLayout(this).apply {
@@ -330,14 +322,14 @@ class TimetableActivity : AppCompatActivity() {
             }
         }
     }
-    private fun renderGrid(container: LinearLayout, days: List<RoutineDate>, sourceRows: List<TimetableEntry> = entries,
-        maxViewportDp: Int = 560, onOpen: (TimetableEntry) -> Unit = ::openEditor) {
+    private fun renderGrid(container: LinearLayout, sourceRows: List<TimetableEntry> = entries,
+        maxViewportDp: Int = 640, onOpen: (TimetableEntry) -> Unit = ::openEditor) {
         val largeText = resources.configuration.fontScale >= 1.3f
-        val scale = if (largeText) 80 else 56
-        val railWidth = if (largeText) 56 else 42
-        val usableWidth = (resources.displayMetrics.widthPixels / resources.displayMetrics.density).toInt() - 32 - railWidth
-        val cell = if (largeText) maxOf(88, usableWidth / 3) else maxOf(60, usableWidth / 5)
-        val header = if (resources.configuration.fontScale >= 1.5f) 80 else 48
+        val scale = if (largeText) 80 else 52
+        val railWidth = if (largeText) 56 else 36
+        val usableWidth = (resources.displayMetrics.widthPixels / resources.displayMetrics.density).toInt() - 24 - railWidth
+        val cell = if (largeText) maxOf(88, usableWidth / 3) else maxOf(55, usableWidth / 6)
+        val header = if (resources.configuration.fontScale >= 1.5f) 48 else 32
         val startHour = minOf(9, sourceRows.minOf { it.startMinute } / 60)
         val endHour = maxOf(18, (sourceRows.maxOf { it.endMinute } + 59) / 60)
         val board = FrameLayout(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)) }
@@ -365,14 +357,15 @@ class TimetableActivity : AppCompatActivity() {
                     FrameLayout.LayoutParams(dp(railWidth - 2), dp(36)).apply { topMargin = top + dp(3); leftMargin = dp(3) })
             }
         }
-        days.forEachIndexed { index, date ->
+        TimetableEntry.weekdays.forEachIndexed { index, weekday ->
             val left = dp(index*cell)
-            if (date == RoutineDate.today()) board.addView(View(this).apply { setBackgroundColor(ContextCompat.getColor(context,R.color.ui_primary_container)); alpha=.35f },
+            val isToday = index + 1 == TimetableEntry.weekday(RoutineDate.today())
+            if (isToday) board.addView(View(this).apply { setBackgroundColor(ContextCompat.getColor(context,R.color.ui_primary_container)); alpha=.35f },
                 FrameLayout.LayoutParams(dp(cell),height).apply { leftMargin=left })
-            headerBoard.addView(TextView(this).apply { text = date.label("E\nd"); gravity=Gravity.CENTER; textSize=if (largeText) 16f else 14f
+            headerBoard.addView(TextView(this).apply { text = weekday; gravity=Gravity.CENTER; textSize=if (largeText) 16f else 14f
                 setTypeface(null,android.graphics.Typeface.BOLD)
                 tag = "day-header:$index"
-                setTextColor(ContextCompat.getColor(context, if (date == RoutineDate.today()) R.color.ui_primary else R.color.ui_secondary)) },
+                setTextColor(ContextCompat.getColor(context, if (isToday) R.color.ui_primary else R.color.ui_secondary)) },
                 FrameLayout.LayoutParams(dp(cell),dp(header)).apply { leftMargin=left })
             board.addView(View(this).apply { setBackgroundColor(ContextCompat.getColor(context,R.color.ui_outline)); alpha = .6f },
                 FrameLayout.LayoutParams(dp(1),height).apply { leftMargin=left })
@@ -431,7 +424,7 @@ class TimetableActivity : AppCompatActivity() {
                 addView(bodyScroll, LinearLayout.LayoutParams(0, height, 1f))
             }
             val screenHeight = (resources.displayMetrics.heightPixels / resources.displayMetrics.density).toInt()
-            val viewport = dp(minOf((screenHeight - 270).coerceAtLeast(240), maxViewportDp, (endHour - startHour) * scale))
+            val viewport = dp(minOf((screenHeight - 170).coerceAtLeast(240), maxViewportDp, (endHour - startHour) * scale))
             addView(NestedScrollView(this@TimetableActivity).apply {
                 tag = "timetable-grid-body"
                 isFillViewport = false
@@ -444,11 +437,6 @@ class TimetableActivity : AppCompatActivity() {
             setCardBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface))
             addView(grid)
         }, LinearLayout.LayoutParams(-1, -2))
-        if (week == RoutineDate.today().week().first()) {
-            val todayIndex = TimetableEntry.weekday(RoutineDate.today()) - 1
-            val firstVisible = maxOf(0, todayIndex - if (largeText) 2 else 4)
-            headerScroll.post { headerScroll.scrollTo(dp(firstVisible * cell), 0) }
-        }
     }
     private fun setBusy(value: Boolean) {
         busy=value

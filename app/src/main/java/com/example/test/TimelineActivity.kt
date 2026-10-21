@@ -101,7 +101,7 @@ abstract class TimelineActivity : AppCompatActivity() {
             startActivity(Intent(this, FocusActivity::class.java))
         }
         timelineHeader.findViewById<View>(R.id.timeline_timetable_open).setOnClickListener {
-            startActivity(Intent(this, TimetableActivity::class.java).putExtra("week", selectedDate.week().first().iso))
+            startActivity(Intent(this, TimetableActivity::class.java))
         }
         supportFragmentManager.setFragmentResultListener(PersonalRoutineDetailSheet.RESULT_KEY, this) { _, result ->
             val id = result.getLong(USER_ROUTINE_ID, -1)
