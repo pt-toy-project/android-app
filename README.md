@@ -2,7 +2,7 @@
 
 역사적 인물의 루틴을 골라 실천하고, 완료 기록과 코인을 쌓는 Android 앱입니다. 계정 없이 시작할 수 있습니다.
 
-[**최신 테스트 APK v3.14 다운로드**](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.14-debug.apk) · [화면 보기](docs/screenshots/v3.14-timetable-personal-night.png) · [변경 내용](docs/upgrade-v3.14.md)
+[**최신 테스트 APK v3.15 다운로드**](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.15-debug.apk) · [화면 보기](docs/screenshots/v3.15-timetable-plans.png) · [변경 내용](docs/upgrade-v3.15.md)
 
 > 기존에 배포된 v3.3 앱과 테스트 APK는 서명이 달라 덮어쓰기 설치할 수 없습니다. 기존 앱과 데이터를 삭제하지 마세요. 설치·검증 정보는 [다운로드 안내](downloads/README.md)에 있습니다.
 

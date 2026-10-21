@@ -11,6 +11,7 @@
     <string name="timetable_personal_empty">아직 개인 계획이 없어요.</string>
     <string name="timetable_personal_add">계획 추가</string>
     <string name="timetable_personal_open">내 계획 전체 보기</string>
+    <string name="timetable_personal_jump">내 계획으로 이동</string>
     <string name="timetable_personal_more">그 외 계획 %1$d개</string>
     <string name="timetable_personal_every_day">매일</string>
     <string name="timetable_personal_paused">일시정지</string>

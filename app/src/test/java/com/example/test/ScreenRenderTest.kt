@@ -307,6 +307,8 @@ class ScreenRenderTest {
         try {
             val activity = controller.get()
             capture(activity, "timetable-with-personal-start", width = 393, height = 851)
+            assertTrue("A short class schedule should leave the personal plan card visible",
+                activity.findViewById<View>(R.id.timetable_personal_card).getGlobalVisibleRect(android.graphics.Rect()))
             val outer = activity.findViewById<androidx.core.widget.NestedScrollView>(R.id.timetable_scroll)
             val plans = activity.findViewById<View>(R.id.timetable_personal_list)
             val area = android.graphics.Rect().apply { plans.getDrawingRect(this) }
@@ -314,6 +316,25 @@ class ScreenRenderTest {
             outer.scrollTo(0, (area.top - 300).coerceAtLeast(0))
             capture(activity, "timetable-personal-night", width = 393, height = 851)
             assertEquals(2, (plans as android.widget.LinearLayout).childCount)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test
+    @Config(qualifiers = "w393dp-h851dp-night-mdpi")
+    fun toolbarJumpReachesPlansBelowAFullTimetable() {
+        val context = RuntimeEnvironment.getApplication()
+        com.example.test.data.TimetableStore(context).use { it.import(visualTimetableRows()) }
+        com.example.test.data.AppRepository(context).use { it.addPersonalPlan("독서", "20:30") }
+        val controller = Robolectric.buildActivity(TimetableActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            capture(activity, "timetable-dense-before-jump", width = 393, height = 851)
+            val outer = activity.findViewById<androidx.core.widget.NestedScrollView>(R.id.timetable_scroll)
+            assertTrue(activity.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.screen_toolbar)
+                .menu.performIdentifierAction(R.id.timetable_toolbar_personal, 0))
+            capture(activity, "timetable-dense-personal-jump", width = 393, height = 851)
+            assertTrue(outer.scrollY > 0)
+            assertTrue(activity.findViewById<View>(R.id.timetable_personal_card).getGlobalVisibleRect(android.graphics.Rect()))
         } finally { controller.pause().stop().destroy() }
     }
 

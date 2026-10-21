@@ -106,6 +106,24 @@ class ScreenBehaviorTest {
         } finally { controller.pause().stop().destroy() }
     }
 
+    @Test fun invalidTimetableShareShowsErrorWithoutScrollingToPageBottom() {
+        val context = RuntimeEnvironment.getApplication()
+        val intent = Intent(context, TimetableActivity::class.java).apply {
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, "잘못된 주소")
+        }
+        val controller = Robolectric.buildActivity(TimetableActivity::class.java, intent).setup().visible()
+        try {
+            val activity = controller.get()
+            render(activity)
+            val expected = activity.getString(R.string.timetable_link_invalid)
+            assertEquals(expected, activity.findViewById<TextView>(R.id.timetable_status).text.toString())
+            assertEquals(expected, activity.window.decorView.findViewById<TextView>(
+                com.google.android.material.R.id.snackbar_text).text.toString())
+        } finally { controller.pause().stop().destroy() }
+    }
+
     @Test fun todayEmptyStateActuallyOpensHeroCatalog() {
         val controller = Robolectric.buildActivity(MainActivity::class.java).setup().visible()
         try {

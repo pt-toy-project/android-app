@@ -9,4 +9,5 @@
     <item name="timetable_import_confirm" type="id"/>
     <item name="timetable_link_input" type="id"/>
     <item name="timetable_toolbar_add" type="id"/>
+    <item name="timetable_toolbar_personal" type="id"/>
 </resources>

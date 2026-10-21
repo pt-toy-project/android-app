@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.graphics.Rect
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -39,6 +40,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
 
 /** Weekly classes are local data; public share links can be imported without an account. */
@@ -77,6 +79,11 @@ class TimetableActivity : AppCompatActivity() {
             setIcon(R.drawable.ic_add_timetable)
             setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             setOnMenuItemClickListener { openEditor(null); true }
+        }
+        findViewById<MaterialToolbar>(R.id.screen_toolbar).menu.add(0, R.id.timetable_toolbar_personal, 1, R.string.timetable_personal_jump).apply {
+            setIcon(R.drawable.nav_plan_v3)
+            setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            setOnMenuItemClickListener { scrollToPersonalPlans(); true }
         }
         listMode = state?.getBoolean("listMode") ?: (resources.configuration.fontScale >= 1.5f)
         findViewById<Chip>(R.id.timetable_week_mode).isChecked = !listMode
@@ -176,6 +183,13 @@ class TimetableActivity : AppCompatActivity() {
             text = getString(R.string.timetable_personal_more, plans.size - 3)
             setPadding(dp(12), dp(8), dp(12), dp(8))
         })
+    }
+    private fun scrollToPersonalPlans() {
+        val outer = findViewById<NestedScrollView>(R.id.timetable_scroll)
+        val card = findViewById<View>(R.id.timetable_personal_card)
+        val bounds = Rect().apply { card.getDrawingRect(this) }
+        outer.offsetDescendantRectToMyCoords(card, bounds)
+        outer.scrollTo(0, (bounds.top - dp(12)).coerceAtLeast(0))
     }
     private fun handleShare() {
         if (shareHandled || intent.action != Intent.ACTION_SEND || intent.type != "text/plain") return
@@ -285,7 +299,7 @@ class TimetableActivity : AppCompatActivity() {
                             setBusy(false)
                             result.onSuccess { count ->
                                 dialog.dismiss(); if (sourceLink != null) sharedLink = sourceLink
-                                findViewById<TextView>(R.id.timetable_status).text = getString(R.string.timetable_imported, count); load()
+                                status(getString(R.string.timetable_imported, count)); load()
                             }
                                 .onFailure { dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true; status(R.string.timetable_import_error) }
                         }
@@ -379,8 +393,9 @@ class TimetableActivity : AppCompatActivity() {
         val usableWidth = (resources.displayMetrics.widthPixels / resources.displayMetrics.density).toInt() - 24 - railWidth
         val cell = if (largeText) maxOf(88, usableWidth / 3) else maxOf(55, usableWidth / 6)
         val header = if (resources.configuration.fontScale >= 1.5f) 48 else 32
-        val startHour = minOf(9, sourceRows.minOf { it.startMinute } / 60)
-        val endHour = maxOf(18, (sourceRows.maxOf { it.endMinute } + 59) / 60)
+        val firstHour = sourceRows.minOf { it.startMinute } / 60
+        val startHour = if (firstHour > 9) firstHour - 1 else firstHour
+        val endHour = maxOf(startHour + 4, (sourceRows.maxOf { it.endMinute } + 59) / 60 + 1).coerceAtMost(24)
         val board = FrameLayout(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)) }
         val rail = FrameLayout(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)) }
         val headerBoard = FrameLayout(this).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface)) }
@@ -492,6 +507,13 @@ class TimetableActivity : AppCompatActivity() {
         listOf(R.id.timetable_import,R.id.timetable_export,R.id.timetable_everytime,R.id.timetable_notice_toggle).forEach { findViewById<View>(it).isEnabled=!value }
         if(value) status(R.string.timetable_working)
     }
-    private fun status(message: Int) { findViewById<TextView>(R.id.timetable_status).setText(message) }
+    private fun status(message: Int) = status(getString(message), message != R.string.timetable_working)
+    private fun status(message: CharSequence, announce: Boolean = true) {
+        findViewById<TextView>(R.id.timetable_status).text = message
+        if (announce && !isFinishing && !isDestroyed) {
+            Snackbar.make(findViewById<View>(R.id.bottomNavigationView), message, Snackbar.LENGTH_LONG)
+                .setAnchorView(R.id.bottomNavigationView).show()
+        }
+    }
     private fun dp(value: Int)=(resources.displayMetrics.density*value).toInt()
 }
