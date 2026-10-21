@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_page_title">마이페이지</string>
+    <string name="settings_guest_heading">계정 없이 사용 중이에요</string>
+    <string name="settings_guest_body">루틴과 기록은 이 기기에 저장돼요. 파일로 백업해 두면 새 기기에서도 복원할 수 있어요.</string>
+    <string name="settings_records_heading">내 기록과 보상</string>
+    <string name="settings_records_open">진행 기록 보기</string>
+    <string name="settings_backup_open">파일 백업·복원</string>
+    <string name="settings_notifications_heading">알림 설정</string>
+    <string name="settings_help_heading">도움말과 앱 정보</string>
+    <string name="hero_ad_label">광고 영역</string>
+    <string name="hero_ad_placeholder">이곳에 광고를 연결할 수 있어요</string>
+</resources>

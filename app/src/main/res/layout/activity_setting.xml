@@ -1,29 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/ui_background">
-    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/screen_toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" app:title="@string/nav_settings"/>
-    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:text="@string/settings_account_group" android:layout_marginBottom="8dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/settings_progress" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/progress_title"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/settings_backup" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/backup_title"/>
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:text="@string/settings_notifications_group" android:layout_marginTop="24dp" android:layout_marginBottom="8dp"/>
-            <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
-                    <androidx.appcompat.widget.SwitchCompat android:id="@+id/switch_alarm" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" android:padding="8dp" android:saveEnabled="false" android:text="@string/settings_alarm" android:textAppearance="?attr/textAppearanceTitleMedium"/>
-                    <androidx.appcompat.widget.SwitchCompat android:id="@+id/switch_sound" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" android:padding="8dp" android:saveEnabled="false" android:text="@string/settings_sound" android:textAppearance="?attr/textAppearanceTitleMedium"/>
-                    <TextView android:id="@+id/settings_alarm_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="8dp" android:textAppearance="?attr/textAppearanceBodyMedium" android:accessibilityLiveRegion="polite"/>
-                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_alarm_preview" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/polish_alarm_preview"/>
-                    <TextView android:id="@+id/settings_preview_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="8dp" android:textAppearance="?attr/textAppearanceBodySmall" android:accessibilityLiveRegion="polite" android:visibility="gone"/>
-                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_alarm_details" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/experience_alarm_details"/>
-                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_notification_permission" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/settings_allow_notifications"/>
-                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_exact_alarm_permission" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/settings_allow_exact_alarms" android:visibility="gone"/>
-                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_system_notifications" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/settings_system_notifications"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/ui_background">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/screen_toolbar"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:minHeight="56dp" app:title="@string/settings_page_title"/>
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="20dp">
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/ui_primary_container">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="20dp">
+                    <ImageView android:layout_width="52dp" android:layout_height="52dp"
+                        android:src="@drawable/avatar_default" android:contentDescription="@null"/>
+                    <TextView android:id="@+id/settings_guest_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp" android:text="@string/settings_guest_heading"
+                        android:textAppearance="?attr/textAppearanceTitleLarge" android:textStyle="bold"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:text="@string/settings_guest_body"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_backup"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp" android:minHeight="52dp"
+                        android:text="@string/settings_backup_open"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleMedium" android:text="@string/settings_help_group" android:layout_marginTop="24dp" android:layout_marginBottom="8dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/settings_tutorial" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/intro_replay"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/layout_etc" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/settings_other"/>
-            <TextView android:id="@+id/settings_build" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:paddingBottom="16dp" android:textAppearance="?attr/textAppearanceBodySmall"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="24dp" android:layout_marginBottom="8dp"
+                android:text="@string/settings_records_heading" android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textStyle="bold"/>
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_progress"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="52dp" android:text="@string/settings_records_open"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="24dp" android:layout_marginBottom="8dp"
+                android:text="@string/settings_notifications_heading" android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textStyle="bold"/>
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <androidx.appcompat.widget.SwitchCompat android:id="@+id/switch_alarm"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="56dp" android:padding="8dp" android:saveEnabled="false"
+                        android:text="@string/settings_alarm" android:textAppearance="?attr/textAppearanceTitleMedium"/>
+                    <androidx.appcompat.widget.SwitchCompat android:id="@+id/switch_sound"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="56dp" android:padding="8dp" android:saveEnabled="false"
+                        android:text="@string/settings_sound" android:textAppearance="?attr/textAppearanceTitleMedium"/>
+                    <TextView android:id="@+id/settings_alarm_status" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:padding="8dp"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:accessibilityLiveRegion="polite"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_alarm_preview"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="52dp" android:text="@string/polish_alarm_preview"/>
+                    <TextView android:id="@+id/settings_preview_status" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:padding="8dp"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:accessibilityLiveRegion="polite" android:visibility="gone"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_alarm_details"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="48dp" android:text="@string/experience_alarm_details"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_notification_permission"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="48dp" android:text="@string/settings_allow_notifications"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_exact_alarm_permission"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="48dp" android:text="@string/settings_allow_exact_alarms"
+                        android:visibility="gone"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_system_notifications"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="48dp" android:text="@string/settings_system_notifications"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="24dp" android:layout_marginBottom="8dp"
+                android:text="@string/settings_help_heading" android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textStyle="bold"/>
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="12dp">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/settings_tutorial"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="52dp" android:text="@string/intro_replay"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/layout_etc"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="52dp" android:text="@string/settings_other"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView android:id="@+id/settings_build" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="16dp"
+                android:paddingBottom="12dp" android:textAppearance="?attr/textAppearanceBodySmall"/>
         </LinearLayout>
     </ScrollView>
     <include layout="@layout/layout_bottom_nav"/>

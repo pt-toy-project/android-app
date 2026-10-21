@@ -33,6 +33,7 @@ class TimetableTest {
         val differentDay = TimetableEntry(title = "화요일 수업", weekday = 2, startMinute = 480, endMinute = 540)
         val entries = listOf(afternoon, differentDay, midday, morning)
         assertEquals(TodayTimetablePreview(listOf(morning, midday), 1), TodayTimetablePreview.forDate(entries, monday))
+        assertEquals(TodayTimetablePreview(listOf(morning), 2), TodayTimetablePreview.forDate(entries, monday, limit = 1))
         assertEquals(TodayTimetablePreview(listOf(differentDay), 0), TodayTimetablePreview.forDate(entries, tuesday))
         assertEquals(TodayTimetablePreview(emptyList(), 0), TodayTimetablePreview.forDate(entries, monday.plusDays(2)))
     }

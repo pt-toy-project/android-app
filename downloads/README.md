@@ -1,4 +1,29 @@
-# 위인의 하루 v3.10 테스트 APK
+# 위인의 하루 v3.11 테스트 APK
+
+**[v3.11 테스트 APK 다운로드 — 시간표 위젯·마이페이지·광고 영역](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.11-debug.apk)**
+
+홈 화면 위젯에 앱 카드와 같은 오늘 수업 시간·이름·강의실을 표시합니다. 크기가 작거나 글씨가 크면 한 수업과 남은 개수를 보여 줍니다. 마이페이지에 계정 없는 사용 상태, 파일 백업·복원, 기록·알림을 정리했습니다. 인물 추천 화면에는 디버그 빌드에서 확인할 수 있는 광고 영역을 만들었습니다. 실제 광고는 연결하지 않았습니다.
+
+**기존 v3.3 배포 APK와 서명이 다릅니다. v3.3 위에 업데이트 설치할 수 없으므로 기존 앱과 데이터를 삭제하지 마세요.** v3.10 테스트 APK와는 서명·버전 조건이 맞지만 실제 덮어쓰기 설치는 검증하지 않았습니다.
+
+| 항목 | 값 |
+| --- | --- |
+| 버전 | 3.11 / versionCode 14 |
+| 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
+| APK 크기 | 11,072,258 B |
+| APK SHA-256 | `ea19f1cee0098ed81055e015be2a2d060f31ea598b379d8c15ab2e25f89b8966` |
+| 인증서 SHA-256 | `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0` |
+| 검증 | JVM 169개·SQLite 22개 통과, lint 오류 0개·경고 193개, 앱·기기 테스트 APK 빌드 및 앱 APK 서명 검증 성공 |
+| 미실행 | 실제 기기 계측·런처 위젯 표시·업데이트 설치·실제 광고 송출 |
+
+[구현·검증 보고서](../docs/upgrade-v3.11.md) · [빌드 정보](v3.11-build-manifest.json) · [체크섬](android-app-v3.11-debug.apk.sha256) · [마이페이지](../docs/screenshots/v3.11-settings-light.png) · [위젯](../docs/screenshots/v3.11-widget-two-classes-night.png)
+
+```bash
+cd downloads
+sha256sum --check android-app-v3.11-debug.apk.sha256
+```
+
+## v3.10 이전 테스트 APK
 
 **[v3.10 테스트 APK 다운로드 — ‘오늘’ 시간표 카드 정리](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.10-debug.apk)**
 

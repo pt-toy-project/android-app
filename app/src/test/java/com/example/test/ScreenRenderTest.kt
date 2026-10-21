@@ -187,6 +187,42 @@ class ScreenRenderTest {
     }
 
     @Test
+    @Config(qualifiers = "w360dp-h800dp-night-mdpi")
+    fun renderTwoClassLauncherWidget() {
+        val controller = Robolectric.buildActivity(SettingActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            val widget = activity.layoutInflater.inflate(R.layout.widget_timetable, null)
+            widget.findViewById<android.widget.TextView>(R.id.widget_first_time).text = "09:00–12:00"
+            widget.findViewById<android.widget.TextView>(R.id.widget_first_title).text = "데이터통신"
+            widget.findViewById<android.widget.TextView>(R.id.widget_first_location).text = "융합교육관 501호"
+            widget.findViewById<android.widget.TextView>(R.id.widget_second_time).text = "15:00–18:00"
+            widget.findViewById<android.widget.TextView>(R.id.widget_second_title).text = "클라우드데이터베이스"
+            widget.findViewById<android.widget.TextView>(R.id.widget_second_location).text = "융합교육관 202호"
+            widget.findViewById<android.widget.TextView>(R.id.widget_detail).text = activity.getString(R.string.timetable_widget_open)
+            capture(activity, "widget-two-classes-night", widget, width = 300, height = 180)
+            assertTrue("Launcher widget footer must fit", widget.findViewById<View>(R.id.widget_detail).bottom <= widget.height - widget.paddingBottom)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test
+    @Config(qualifiers = "w360dp-h800dp-night-mdpi")
+    fun renderRecommendationAdPlaceholderBetweenFiltersAndCatalog() {
+        val controller = Robolectric.buildActivity(CharacterSelectActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            capture(activity, "recommendations-before-ad")
+            val scroll = activity.findViewById<androidx.core.widget.NestedScrollView>(R.id.hero_scroll)
+            val slot = activity.findViewById<View>(R.id.hero_ad_slot)
+            scroll.scrollTo(0, slot.top - 16)
+            capture(activity, "recommendations-ad-slot-night")
+            assertEquals(View.VISIBLE, slot.visibility)
+            assertTrue("Ad placement should be visible between filters and catalog", slot.getGlobalVisibleRect(android.graphics.Rect()))
+            assertFalse(slot.isClickable)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test
     @Config(qualifiers = "w320dp-h568dp-night-mdpi")
     fun renderTimetableOnSmallDarkScreenAndLargeText() {
         val context = RuntimeEnvironment.getApplication()
@@ -280,6 +316,7 @@ class ScreenRenderTest {
         com.example.test.focus.FocusTimerStore(context).start(id, "집중해서 한 쪽 읽기", 25)
         listOf(TutorialActivity::class.java to "welcome-small-night",
             CharacterSelectActivity::class.java to "heroes-small-night",
+            SettingActivity::class.java to "settings-small-night",
             BackupActivity::class.java to "backup-small-night",
             FocusActivity::class.java to "focus-small-night").forEach { (type, name) ->
             val controller = Robolectric.buildActivity(type).setup().visible()
@@ -294,6 +331,12 @@ class ScreenRenderTest {
                 if (activity is CharacterSelectActivity) {
                     val list = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.heroRecyclerView)
                     assertTrue("Catalog must remain reachable below filters", list.height > 0)
+                    assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.hero_ad_slot).visibility)
+                }
+                if (activity is SettingActivity) {
+                    assertTrue(activity.findViewById<View>(R.id.settings_backup).height >= 48)
+                    assertEquals(activity.getString(R.string.settings_guest_heading),
+                        activity.findViewById<android.widget.TextView>(R.id.settings_guest_title).text.toString())
                 }
             } finally { controller.pause().stop().destroy() }
         }

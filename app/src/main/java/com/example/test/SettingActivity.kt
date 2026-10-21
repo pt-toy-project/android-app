@@ -40,7 +40,7 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
         applySystemBarInsets()
-        ScreenToolbar.bind(this, R.string.nav_settings, back = true)
+        ScreenToolbar.bind(this, R.string.settings_page_title, back = true)
         setupBottomNavigation(0)
         findViewById<TextView>(R.id.settings_build).text = getString(
             R.string.compact_build_details, com.example.test.Hero.HeroCatalog.all.size)

@@ -27,6 +27,7 @@ class CharacterSelectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_select)
+        findViewById<View>(R.id.hero_ad_slot).visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
         applySystemBarInsets()
         ScreenToolbar.bind(this, R.string.nav_hero)
         selectedField = savedInstanceState?.getString(FIELD) ?: HeroCatalog.ALL_FIELDS

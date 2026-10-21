@@ -13,8 +13,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.RemoteViews
+import android.view.View
 import androidx.core.app.NotificationCompat
 import com.example.test.R
+import com.example.test.Routine.RoutineDate
 import com.example.test.TimetableActivity
 import com.example.test.alarm.ReceiverWork
 import com.example.test.data.TimetableStore
@@ -54,9 +56,30 @@ object TimetableSurfaces {
         val component = ComponentName(app, TimetableWidgetProvider::class.java)
         widget.getAppWidgetIds(component).forEach { id ->
             val views = RemoteViews(app.packageName, R.layout.widget_timetable)
-            views.setTextViewText(R.id.widget_title, app.getString(R.string.timetable_widget_title))
-            views.setTextViewText(R.id.widget_class, title)
-            views.setTextViewText(R.id.widget_detail, detail)
+            val height = widget.getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 100)
+            val compact = height < (if (app.resources.configuration.fontScale >= 1.3f) 230 else 155)
+            val preview = TodayTimetablePreview.forDate(entries, RoutineDate.today(), if (compact) 1 else 2)
+            val first = preview.classes.getOrNull(0)
+            val second = preview.classes.getOrNull(1)
+            views.setViewVisibility(R.id.widget_first, if (first == null) View.GONE else View.VISIBLE)
+            views.setViewVisibility(R.id.widget_second, if (second == null) View.GONE else View.VISIBLE)
+            first?.let {
+                views.setTextViewText(R.id.widget_first_time, it.timeLabel)
+                views.setTextViewText(R.id.widget_first_title, it.title)
+                views.setTextViewText(R.id.widget_first_location, it.location)
+                views.setViewVisibility(R.id.widget_first_location, if (compact || it.location.isBlank()) View.GONE else View.VISIBLE)
+            }
+            second?.let {
+                views.setTextViewText(R.id.widget_second_time, it.timeLabel)
+                views.setTextViewText(R.id.widget_second_title, it.title)
+                views.setTextViewText(R.id.widget_second_location, it.location)
+                views.setViewVisibility(R.id.widget_second_location, if (it.location.isBlank()) View.GONE else View.VISIBLE)
+            }
+            views.setTextViewText(R.id.widget_detail, when {
+                first == null -> app.getString(R.string.timetable_widget_no_class)
+                preview.remaining > 0 -> app.getString(R.string.timetable_home_more, preview.remaining)
+                else -> app.getString(R.string.timetable_widget_open)
+            })
             views.setOnClickPendingIntent(R.id.widget_root, openIntent(app))
             widget.updateAppWidget(id, views)
         }
@@ -96,6 +119,9 @@ object TimetableSurfaces {
 
 class TimetableWidgetProvider : android.appwidget.AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
+        ReceiverWork.run(goAsync()) { TimetableSurfaces.refresh(context) }
+    }
+    override fun onAppWidgetOptionsChanged(context: Context, manager: AppWidgetManager, id: Int, options: android.os.Bundle) {
         ReceiverWork.run(goAsync()) { TimetableSurfaces.refresh(context) }
     }
 }
