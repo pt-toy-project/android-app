@@ -1,6 +1,7 @@
 package com.example.test.Routine
 
 import com.example.test.data.UserRoutine
+import com.example.test.data.RoutineSource
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -24,6 +25,16 @@ class TimelinePresentationTest {
         val next = row(3, "sejong", "09:00")
         assertEquals(next, TimelinePresentation.next(listOf(done, paused, next)))
         assertNull(TimelinePresentation.next(listOf(done, paused)))
+    }
+    @Test fun todayCombinesPersonalAndHeroPlansWithoutDuplicatingCopiedBlocks() {
+        val heroBlock = row(1, "sejong", "08:00").copy(routine = row(1, "sejong", "08:00").routine.copy(source = RoutineSource.HERO_DAY))
+        val copied = row(2, "sejong", "09:00")
+        val manual = row(3, "personal", "07:30")
+        val otherHero = row(4, "newton", "10:00").copy(routine = row(4, "newton", "10:00").routine.copy(source = RoutineSource.HERO_DAY))
+        val rows = listOf(heroBlock, otherHero, copied, manual)
+        assertEquals(listOf(3L, 2L, 4L), TimelinePresentation.dailyFlow(rows, null).map { it.routine.id })
+        assertEquals(listOf(3L, 2L), TimelinePresentation.dailyFlow(rows, "sejong").map { it.routine.id })
+        assertEquals(listOf(3L, 1L, 2L), TimelinePresentation.dailyFlow(rows, "sejong", managementMode = true).map { it.routine.id })
     }
     @Test fun inlineCompletionKeepsDateAdoptionAndEnabledGuards() {
         val valid = row(1, "sejong", "09:00")

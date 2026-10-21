@@ -74,6 +74,45 @@ class ScreenBehaviorTest {
         } finally { settings.pause().stop().destroy() }
     }
 
+    @Test fun todaysFlowShowsPersonalPlanAndOffersBothWaysToAddOne() {
+        val context = RuntimeEnvironment.getApplication()
+        val id = com.example.test.data.AppRepository(context).use {
+            it.addPersonalPlan("직접 만든 계획", "08:15")
+        }
+        val home = Robolectric.buildActivity(MainActivity::class.java).setup().visible()
+        try {
+            val activity = home.get()
+            drainWork(activity)
+            assertEquals("직접 만든 계획", activity.findViewById<TextView>(R.id.timeline_next).text.toString())
+            activity.findViewById<View>(R.id.today_plan_import).performClick()
+            val import = shadowOf(activity).nextStartedActivity
+            assertEquals(CharacterSelectActivity::class.java.name, import.component!!.className)
+            assertTrue(import.getBooleanExtra("personal_mode", false))
+            activity.findViewById<View>(R.id.today_plan_create).performClick()
+            shadowOf(Looper.getMainLooper()).idle()
+            assertNotNull(activity.supportFragmentManager.findFragmentByTag("routine_editor"))
+            activity.findViewById<Button>(R.id.timeline_next_complete).performClick()
+            drainWork(activity)
+            com.example.test.data.AppRepository(context).use {
+                assertTrue(it.isCompleted(id, com.example.test.Routine.RoutineDate.today()))
+                assertEquals(com.example.test.data.RoutineRules.COMPLETION_REWARD, it.balance())
+            }
+        } finally { home.pause().stop().destroy() }
+    }
+
+    @Test fun emptyPersonalPlansStillOfferHeroImport() {
+        val screen = Robolectric.buildActivity(RoutineActivity::class.java).setup().visible()
+        try {
+            val activity = screen.get()
+            drainWork(activity)
+            assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.personal_add).visibility)
+            activity.findViewById<View>(R.id.personal_add).performClick()
+            val import = shadowOf(activity).nextStartedActivity
+            assertEquals(CharacterSelectActivity::class.java.name, import.component!!.className)
+            assertTrue(import.getBooleanExtra("personal_mode", false))
+        } finally { screen.pause().stop().destroy() }
+    }
+
     @Test fun timetableShowsSavedPersonalPlansAndOffersAddAndManage() {
         val context = RuntimeEnvironment.getApplication()
         val id = com.example.test.data.AppRepository(context).use {

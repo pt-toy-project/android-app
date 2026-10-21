@@ -19,7 +19,6 @@
             <com.google.android.material.button.MaterialButton android:id="@+id/timeline_timetable_open" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/timetable_home_open"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-    <com.google.android.material.button.MaterialButton android:id="@+id/personal_plans_open" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/home_personal_plans_open" android:visibility="gone"/>
     <com.google.android.material.card.MaterialCardView android:id="@+id/timeline_finished_card" style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:visibility="gone">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleLarge" android:text="@string/polish_all_done"/>
@@ -36,6 +35,15 @@
             <com.google.android.material.button.MaterialButton android:id="@+id/timeline_next_open" android:layout_width="0dp" android:layout_weight="2" android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginTop="12dp" android:text="@string/experience_open"/>
             <com.google.android.material.button.MaterialButton android:id="@+id/timeline_next_complete" style="@style/Widget.Material3.Button.TextButton" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/experience_done"/>
             </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:id="@+id/today_plan_actions" style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/today_plan_heading" android:textAppearance="?attr/textAppearanceTitleMedium"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/today_plan_hint" android:textAppearance="?attr/textAppearanceBodyMedium"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/today_plan_create" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:minHeight="48dp" android:text="@string/today_plan_create"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/today_plan_import" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/redesign_from_hero"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/personal_plans_open" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/home_personal_plans_open" android:visibility="gone"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
     <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:id="@+id/timeline_empty_card">

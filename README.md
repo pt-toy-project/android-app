@@ -2,13 +2,13 @@
 
 역사적 인물의 루틴을 골라 실천하고, 완료 기록과 코인을 쌓는 Android 앱입니다. 계정 없이 시작할 수 있습니다.
 
-[**최신 테스트 APK v3.15 다운로드**](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.15-debug.apk) · [화면 보기](docs/screenshots/v3.15-timetable-plans.png) · [변경 내용](docs/upgrade-v3.15.md)
+[**최신 테스트 APK v3.16 다운로드**](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.16-debug.apk) · [변경 내용](docs/upgrade-v3.16.md)
 
 > 기존에 배포된 v3.3 앱과 테스트 APK는 서명이 달라 덮어쓰기 설치할 수 없습니다. 기존 앱과 데이터를 삭제하지 마세요. 설치·검증 정보는 [다운로드 안내](downloads/README.md)에 있습니다.
 
 ## 주요 기능
 
-- **오늘:** 선택한 루틴을 실천하고, 타이머와 날짜별 완료 기록을 확인합니다.
+- **오늘:** 인물 루틴과 직접 만든 계획을 함께 실천하고, 타이머와 날짜별 완료 기록을 확인합니다.
 - **인물:** 인물을 검색하고 루틴을 살펴본 뒤 시작합니다.
 - **시간표:** 주간 수업을 보고, 아래에서 개인 계획을 추가·관리합니다. 공개 에브리타임 링크·CSV 가져오기를 지원합니다.
 - **상점·설정:** 획득한 코인으로 아이템을 구매하고, 알림과 파일 백업·복원을 관리합니다.

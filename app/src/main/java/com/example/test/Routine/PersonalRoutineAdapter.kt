@@ -23,16 +23,19 @@ class PersonalRoutineAdapter(
         private val status = view.findViewById<TextView>(R.id.tv_status)
         init { view.setOnClickListener { if (bindingAdapterPosition != RecyclerView.NO_POSITION) onClick(getItem(bindingAdapterPosition)) } }
         fun bind(row: PersonalRoutineRow) {
-            time.text = "${row.routine.time} · ${com.example.test.data.RoutineIdentity.displayName(row.routine.heroId)}"
+            val heroName = com.example.test.data.RoutineIdentity.displayName(row.routine.heroId)
+            val sourceName = if (row.routine.source == com.example.test.data.RoutineSource.PERSONAL &&
+                row.routine.heroId != com.example.test.data.RoutineIdentity.PERSONAL_HERO_ID)
+                itemView.context.getString(R.string.today_plan_source, heroName) else heroName
+            time.text = "${row.routine.time} · $sourceName"
             title.text = row.routine.title
             com.example.test.CompactText.apply(time)
             com.example.test.CompactText.apply(title)
-            val heroName = com.example.test.data.RoutineIdentity.displayName(row.routine.heroId)
             val block = com.example.test.Hero.HeroDayCatalog.find(row.routine.heroId, row.routine.templateId)
             if (block != null) {
                 val checked = block.quests.count { it.id in row.questChecks }
                 val progress = itemView.context.getString(R.string.quest_progress, checked, block.quests.size)
-                time.text = "${row.routine.time} · $heroName · $progress"
+                time.text = "${row.routine.time} · $sourceName · $progress"
             }
             itemView.findViewById<TextView>(R.id.day_row_subtitle).visibility = View.GONE
             itemView.findViewById<TextView>(R.id.day_row_subtitle).text = if (row.routine.source == com.example.test.data.RoutineSource.HERO_DAY)

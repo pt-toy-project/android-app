@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.test.data.RoutineSource
 
-/** Personal plans are a separate source and never populate the Today hero timeline. */
+/** Personal plan management keeps its own source, while Today displays scheduled plans. */
 class RoutineActivity : TimelineActivity() {
     override val timelineLayout = R.layout.activity_routine
     override val routineSource = RoutineSource.PERSONAL

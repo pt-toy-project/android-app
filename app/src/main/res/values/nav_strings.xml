@@ -5,7 +5,11 @@
     <string name="nav_hero">인물</string>
     <string name="nav_myroom">상점</string>
     <string name="nav_settings">설정</string>
-    <string name="home_personal_plans_open">내 계획 보기</string>
+    <string name="home_personal_plans_open">내 계획 관리</string>
+    <string name="today_plan_heading">나만의 계획도 하루 흐름에</string>
+    <string name="today_plan_hint">직접 만들거나 인물의 실천을 가져와 오늘 함께 실천해요.</string>
+    <string name="today_plan_create">계획 직접 만들기</string>
+    <string name="today_plan_source">내 계획 · %1$s</string>
     <string name="home_title">위인의 하루</string>
     <string name="home_today_routine">오늘의 루틴</string>
     <string name="home_progress">%1$d / %2$d 완료</string>

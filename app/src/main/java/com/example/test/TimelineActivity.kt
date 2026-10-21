@@ -16,6 +16,7 @@ import com.example.test.alarm.AlarmCoordinator
 import com.example.test.data.AppRepository
 import com.example.test.data.CompletionOutcome
 import com.example.test.data.UserRoutine
+import com.example.test.data.RoutineSource
 import com.example.test.timetable.TodayTimetablePreview
 
 abstract class TimelineActivity : AppCompatActivity() {
@@ -91,6 +92,16 @@ abstract class TimelineActivity : AppCompatActivity() {
         timelineHeader.findViewById<View>(R.id.personal_plans_open).apply {
             visibility = if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
             setOnClickListener { navigateTo(RoutineActivity::class.java) }
+        }
+        timelineHeader.findViewById<View>(R.id.today_plan_actions).visibility =
+            if (routineSource == RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
+        timelineHeader.findViewById<View>(R.id.today_plan_create).apply {
+            visibility = if (routineSource == RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
+            setOnClickListener { openPersonalEditor() }
+        }
+        timelineHeader.findViewById<View>(R.id.today_plan_import).apply {
+            visibility = if (routineSource == RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
+            setOnClickListener { startActivity(Intent(this@TimelineActivity, CharacterSelectActivity::class.java).putExtra("personal_mode", true)) }
         }
         timelineHeader.findViewById<Button>(R.id.personal_add).setOnClickListener {
             startActivity(Intent(this, CharacterSelectActivity::class.java).putExtra("personal_mode", routineSource == com.example.test.data.RoutineSource.PERSONAL))
@@ -211,14 +222,15 @@ abstract class TimelineActivity : AppCompatActivity() {
                 repo.selectedHeroId = hero.id
                 val completed = repo.completedRoutineIds(date)
                 val questChecks = repo.questChecksForDate(date)
-                val adopted = repo.listRoutines(source = routineSource)
+                val adopted = repo.listRoutines(source = if (routineSource == RoutineSource.HERO_DAY) null else routineSource)
                 val now = java.util.GregorianCalendar()
-                val rows = repo.listRoutines(date = if (manage) null else date, source = routineSource).map { routine ->
+                val rows = repo.listRoutines(date = if (manage) null else date,
+                    source = if (routineSource == RoutineSource.HERO_DAY) null else routineSource).map { routine ->
                     PersonalRoutineRow(routine, routine.id in completed, date, RoutineDate.today(), now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE), questChecks[routine.id].orEmpty())
                 }
                 val classes = com.example.test.data.TimetableStore(applicationContext).use { it.entries() }
                 PersonalSnapshot(hero.id, rows, repo.balance(), completed, repo.appliedItemId(),
-                    adopted.map { it.heroId }.distinct(), adopted.any { it.enabled && it.alarmEnabled },
+                    adopted.filter { it.source == RoutineSource.HERO_DAY }.map { it.heroId }.distinct(), adopted.any { it.enabled && it.alarmEnabled }, adopted.isNotEmpty(),
                     repo.calendarActivity(ActivityCalendar.monthStart(date).week().first(), ActivityCalendar.days(date).last().week().last()), classes)
             }
         }) { result ->
@@ -235,14 +247,15 @@ abstract class TimelineActivity : AppCompatActivity() {
                 timelineHeader.findViewById<Button>(R.id.personal_add).setText(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.redesign_choose_day else R.string.redesign_from_hero)
                 timelineHeader.findViewById<TextView>(R.id.routine_date).text = selectedDate.label("yyyy년 M월 d일 E요일")
                 if (dayFilter !in snapshot.startedHeroes) dayFilter = null
-                val visibleRows = TimelinePresentation.forHero(snapshot.rows, dayFilter)
+                val visibleRows = if (routineSource == RoutineSource.HERO_DAY) TimelinePresentation.dailyFlow(snapshot.rows, dayFilter, managementMode)
+                    else TimelinePresentation.forHero(snapshot.rows, dayFilter)
                 renderHeroFilters(snapshot.startedHeroes)
                 alarmRequested = snapshot.requestedAlarm
                 val alarmStatus = timelineHeader.findViewById<TextView>(R.id.personal_alarm_status)
                 alarmStatus.visibility = if (alarmRequested && alarmStatus.text.isNotBlank()) View.VISIBLE else View.GONE
                 timelineHeader.findViewById<View>(R.id.timeline_section).visibility = if (visibleRows.isEmpty()) View.GONE else View.VISIBLE
-                timelineHeader.findViewById<View>(R.id.personal_add).visibility = if (visibleRows.isEmpty() || routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.GONE else View.VISIBLE
-                timelineHeader.findViewById<View>(R.id.personal_manage).visibility = if (snapshot.startedHeroes.isEmpty()) View.GONE else View.VISIBLE
+                timelineHeader.findViewById<View>(R.id.personal_add).visibility = if (routineSource == RoutineSource.PERSONAL) View.VISIBLE else View.GONE
+                timelineHeader.findViewById<View>(R.id.personal_manage).visibility = if (snapshot.hasAnyRoutines) View.VISIBLE else View.GONE
                 timelineHeader.findViewById<View>(R.id.personal_create).visibility = if (routineSource == com.example.test.data.RoutineSource.PERSONAL && visibleRows.isNotEmpty()) View.VISIBLE else View.GONE
                 val finished = visibleRows.count { it.completed }
                 timelineHeader.findViewById<View>(R.id.timeline_finished_card).visibility = if (!managementMode &&
@@ -268,7 +281,10 @@ abstract class TimelineActivity : AppCompatActivity() {
                 timelineHeader.findViewById<View>(R.id.timeline_next_card).visibility = if (next == null) View.GONE else View.VISIBLE
                 timelineHeader.findViewById<TextView>(R.id.timeline_next).text = next?.routine?.title.orEmpty()
                 timelineHeader.findViewById<TextView>(R.id.timeline_next_subtitle).text = next?.let {
-                    "${it.routine.time} · ${com.example.test.data.RoutineIdentity.displayName(it.routine.heroId)}"
+                    val name = com.example.test.data.RoutineIdentity.displayName(it.routine.heroId)
+                    val source = if (it.routine.source == RoutineSource.PERSONAL && it.routine.heroId != com.example.test.data.RoutineIdentity.PERSONAL_HERO_ID)
+                        getString(R.string.today_plan_source, name) else name
+                    "${it.routine.time} · $source"
                 }.orEmpty()
                 timelineHeader.findViewById<Button>(R.id.timeline_next_complete).apply {
                     contentDescription = next?.let { getString(R.string.timeline_complete_accessibility, com.example.test.data.RoutineIdentity.displayName(it.routine.heroId), it.routine.title) }.orEmpty()
@@ -297,7 +313,7 @@ abstract class TimelineActivity : AppCompatActivity() {
                     setImageResource(R.drawable.avatar_default)
                     CompactText.circle(this)
                 }
-                (timelineHeader.findViewById<TextView>(R.id.personal_summary).parent.parent as View).visibility = if (snapshot.startedHeroes.isEmpty()) View.GONE else View.VISIBLE
+                (timelineHeader.findViewById<TextView>(R.id.personal_summary).parent.parent as View).visibility = if (visibleRows.isEmpty()) View.GONE else View.VISIBLE
                 timelineHeader.findViewById<TextView>(R.id.personal_summary).text = getString(R.string.redesign_progress, finished, visibleRows.size)
                 timelineHeader.findViewById<TextView>(R.id.timeline_wallet).text = getString(R.string.personal_wallet, snapshot.balance)
                 timelineHeader.findViewById<TextView>(R.id.day_badge).text = com.example.test.data.ShopCatalog.find(snapshot.badge.orEmpty())?.let { getString(R.string.personal_badge, it.title) }.orEmpty()
@@ -382,7 +398,7 @@ abstract class TimelineActivity : AppCompatActivity() {
                     if (requestedDetailId == id) requestedDetailId = -1
                     showMessage(R.string.routine_invalid); return@fold
                 }
-                if (value.first.source != routineSource) {
+                if (!canHandle(value.first.source)) {
                     startActivity(Intent(this, if (value.first.source == com.example.test.data.RoutineSource.HERO_DAY) MainActivity::class.java else RoutineActivity::class.java)
                         .putExtra(USER_ROUTINE_ID, id).putExtra(SELECTED_DATE, date.iso))
                     requestedDetailId = -1
@@ -402,7 +418,8 @@ abstract class TimelineActivity : AppCompatActivity() {
         busy = true
         val requestedHero = dayFilter
         AppIo.run(this, {
-            val outcome = AppRepository(applicationContext).use { if (it.getRoutine(id)?.let { row -> row.source == routineSource && (requestedHero == null || row.heroId == requestedHero) } == true) it.complete(id, date) else CompletionOutcome.ROUTINE_UNAVAILABLE }
+            val outcome = AppRepository(applicationContext).use { if (it.getRoutine(id)?.let { row -> canHandle(row.source) &&
+                    (row.source == RoutineSource.PERSONAL || requestedHero == null || row.heroId == requestedHero) } == true) it.complete(id, date) else CompletionOutcome.ROUTINE_UNAVAILABLE }
             runCatching { AlarmCoordinator(applicationContext).reconcile() }
             outcome
         }) { result ->
@@ -425,7 +442,7 @@ abstract class TimelineActivity : AppCompatActivity() {
         if (busy) return
         busy = true
         val expectedScope = scopeVersion
-        AppIo.run(this, { AppRepository(applicationContext).use { it.getRoutine(id)?.takeIf { row -> row.source == routineSource } } }) { result ->
+        AppIo.run(this, { AppRepository(applicationContext).use { it.getRoutine(id)?.takeIf { row -> canHandle(row.source) } } }) { result ->
             busy = false
             if (expectedScope != scopeVersion || !lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) return@run
             result.fold(onSuccess = { it?.let(::showEditor) ?: showMessage(R.string.routine_invalid) }, onFailure = { showMessage(R.string.personal_storage_error) })
@@ -439,7 +456,7 @@ abstract class TimelineActivity : AppCompatActivity() {
     }
 
     protected fun openPersonalEditor() {
-        if (routineSource != com.example.test.data.RoutineSource.PERSONAL || busy || supportFragmentManager.isStateSaved) return
+        if (!canHandle(RoutineSource.PERSONAL) || busy || supportFragmentManager.isStateSaved) return
         if (supportFragmentManager.findFragmentByTag("routine_editor") == null) {
             RoutineEditorSheet.forNewPlan().show(supportFragmentManager, "routine_editor")
         }
@@ -452,12 +469,12 @@ abstract class TimelineActivity : AppCompatActivity() {
         AppIo.run(this, {
             AppRepository(applicationContext).use { repo ->
                 if (id == 0L) {
-                    check(routineSource == com.example.test.data.RoutineSource.PERSONAL)
+                    check(canHandle(RoutineSource.PERSONAL))
                     repo.addPersonalPlan(values.getString("title").orEmpty(), values.getString("time").orEmpty(),
                         values.getInt("days"), values.getBoolean("enabled"), values.getBoolean("alarm"))
                 } else {
                     val original = requireNotNull(repo.getRoutine(id))
-                    check(original.source == routineSource)
+                    check(canHandle(original.source))
                     repo.updateRoutine(original.copy(
                         title = if (original.source == com.example.test.data.RoutineSource.PERSONAL) values.getString("title").orEmpty() else original.title,
                         time = values.getString("time").orEmpty(), weekdayMask = values.getInt("days"),
@@ -483,7 +500,7 @@ abstract class TimelineActivity : AppCompatActivity() {
                 busy = true
                 AppIo.run(this, {
                     val removed = AppRepository(applicationContext).use {
-                        if (it.getRoutine(id)?.source == routineSource) { it.deleteRoutine(id); true } else false
+                        if (it.getRoutine(id)?.let { row -> canHandle(row.source) } == true) { it.deleteRoutine(id); true } else false
                     }
                     if (removed) AlarmCoordinator(applicationContext).cancel(id)
                 }) { result -> busy = false; if (result.isFailure) showMessage(R.string.personal_storage_error); load() }
@@ -491,7 +508,9 @@ abstract class TimelineActivity : AppCompatActivity() {
     }
 
     private fun showMessage(message: Int) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?, val startedHeroes: List<String>, val requestedAlarm: Boolean, val activity: List<DayActivity>, val classes: List<com.example.test.timetable.TimetableEntry>)
+    private fun canHandle(source: RoutineSource) = source == routineSource ||
+        (routineSource == RoutineSource.HERO_DAY && source == RoutineSource.PERSONAL)
+    private data class PersonalSnapshot(val heroId: String, val rows: List<PersonalRoutineRow>, val balance: Long, val completedIds: Set<Long>, val badge: String?, val startedHeroes: List<String>, val requestedAlarm: Boolean, val hasAnyRoutines: Boolean, val activity: List<DayActivity>, val classes: List<com.example.test.timetable.TimetableEntry>)
     companion object {
         const val HERO_ID = "hero_id"
         const val SELECTED_DATE = "selected_date"
