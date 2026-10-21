@@ -22,6 +22,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.test.Routine.RoutineDate
 import com.example.test.data.TimetableStore
+import com.example.test.data.AppRepository
+import com.example.test.data.RoutineSource
+import com.example.test.data.UserRoutine
 import com.example.test.timetable.EverytimeLink
 import com.example.test.timetable.EverytimeShareImporter
 import com.example.test.timetable.TimetableCsv
@@ -81,6 +84,12 @@ class TimetableActivity : AppCompatActivity() {
         findViewById<View>(R.id.timetable_week_mode).setOnClickListener { listMode = false; render() }
         findViewById<View>(R.id.timetable_list_mode).setOnClickListener { listMode = true; render() }
         findViewById<View>(R.id.timetable_add).setOnClickListener { openEditor(null) }
+        findViewById<View>(R.id.timetable_personal_add).setOnClickListener {
+            startActivity(Intent(this, RoutineActivity::class.java).putExtra(RoutineActivity.OPEN_CREATE, true))
+        }
+        findViewById<View>(R.id.timetable_personal_open).setOnClickListener {
+            startActivity(Intent(this, RoutineActivity::class.java))
+        }
         findViewById<View>(R.id.timetable_import).setOnClickListener {
             if (!busy) importCsv.launch(arrayOf("text/*", "application/vnd.ms-excel", "application/octet-stream"))
         }
@@ -116,10 +125,16 @@ class TimetableActivity : AppCompatActivity() {
     override fun onDestroy() { transient?.dismiss(); super.onDestroy() }
     private fun load() {
         val ticket = ++generation
-        AppIo.run(this, { TimetableStore(applicationContext).use { Triple(it.entries(), it.sharedLink(), it.notificationEnabled()) } }) { result ->
+        AppIo.run(this, {
+            val timetable = TimetableStore(applicationContext).use { Triple(it.entries(), it.sharedLink(), it.notificationEnabled()) }
+            val plans = AppRepository(applicationContext).use { it.listRoutines(source = RoutineSource.PERSONAL) }
+            timetable to plans
+        }) { result ->
             if (ticket != generation) return@run
-            result.onSuccess { (rows, link, notices) ->
+            result.onSuccess { (timetable, plans) ->
+                val (rows, link, notices) = timetable
                 entries = rows; sharedLink = link
+                renderPersonalPlans(plans)
                 findViewById<MaterialButton>(R.id.timetable_notice_toggle).setText(if (notices) R.string.timetable_notice_off else R.string.timetable_notice_on)
                 findViewById<View>(R.id.timetable_notice_settings).visibility =
                     if (notices && !TimetableSurfaces.notificationsAllowed(this)) View.VISIBLE else View.GONE
@@ -127,6 +142,40 @@ class TimetableActivity : AppCompatActivity() {
                 render()
             }.onFailure { status(R.string.timetable_load_error) }
         }
+    }
+    private fun renderPersonalPlans(plans: List<UserRoutine>) {
+        val container = findViewById<LinearLayout>(R.id.timetable_personal_list)
+        container.removeAllViews()
+        if (plans.isEmpty()) {
+            container.addView(TextView(this).apply {
+                setText(R.string.timetable_personal_empty)
+                setPadding(0, dp(8), 0, dp(8))
+            })
+            return
+        }
+        plans.sortedWith(compareByDescending<UserRoutine> { it.enabled }.thenBy { it.time }).take(3).forEach { plan ->
+            val days = if (plan.weekdayMask == 127) getString(R.string.timetable_personal_every_day)
+                else TimetableEntry.weekdays.filterIndexed { index, _ -> plan.weekdayMask and (1 shl index) != 0 }.joinToString("·")
+            val detail = if (plan.enabled) days else getString(R.string.timetable_personal_paused)
+            container.addView(TextView(this).apply {
+                text = "${plan.time}  ${plan.title}\n$detail"
+                tag = "personal-plan:${plan.id}"
+                minHeight = dp(56)
+                setPadding(dp(12), dp(8), dp(12), dp(8))
+                setTextColor(ContextCompat.getColor(context, R.color.ui_text))
+                setBackgroundColor(ContextCompat.getColor(context, R.color.ui_surface))
+                isClickable = true
+                isFocusable = true
+                setOnClickListener {
+                    startActivity(Intent(this@TimetableActivity, RoutineActivity::class.java)
+                        .putExtra(TimelineActivity.USER_ROUTINE_ID, plan.id))
+                }
+            })
+        }
+        if (plans.size > 3) container.addView(TextView(this).apply {
+            text = getString(R.string.timetable_personal_more, plans.size - 3)
+            setPadding(dp(12), dp(8), dp(12), dp(8))
+        })
     }
     private fun handleShare() {
         if (shareHandled || intent.action != Intent.ACTION_SEND || intent.type != "text/plain") return

@@ -35,6 +35,30 @@
                 android:padding="12dp" android:background="@color/ui_primary_container"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="@color/ui_on_container"/>
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.HeroDay.Card"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="16dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="@string/timetable_personal_title"
+                        android:textAppearance="?attr/textAppearanceTitleMedium" android:textStyle="bold"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="@string/timetable_personal_intro"
+                        android:textAppearance="?attr/textAppearanceBodySmall"/>
+                    <LinearLayout android:id="@+id/timetable_personal_list"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:orientation="vertical"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/timetable_personal_add"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:minHeight="48dp"
+                        android:text="@string/timetable_personal_add"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/timetable_personal_open"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:minHeight="48dp" android:text="@string/timetable_personal_open"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal" android:layout_marginTop="12dp">
                 <com.google.android.material.button.MaterialButton android:id="@+id/timetable_add"

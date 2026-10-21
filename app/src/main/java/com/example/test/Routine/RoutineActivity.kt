@@ -15,6 +15,9 @@ class RoutineActivity : TimelineActivity() {
             visibility = android.view.View.VISIBLE
             setOnClickListener { openPersonalEditor() }
         }
+        if (savedInstanceState == null && intent.getBooleanExtra(OPEN_CREATE, false)) {
+            window.decorView.post { openPersonalEditor() }
+        }
     }
 
     companion object {
@@ -22,5 +25,6 @@ class RoutineActivity : TimelineActivity() {
         const val SELECTED_DATE = TimelineActivity.SELECTED_DATE
         const val ROUTINE_ID = TimelineActivity.ROUTINE_ID
         const val USER_ROUTINE_ID = TimelineActivity.USER_ROUTINE_ID
+        const val OPEN_CREATE = "open_create"
     }
 }

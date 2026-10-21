@@ -6,6 +6,14 @@
     <string name="timetable_previous">지난주</string>
     <string name="timetable_next">다음 주</string>
     <string name="timetable_add">수업 추가</string>
+    <string name="timetable_personal_title">내 계획</string>
+    <string name="timetable_personal_intro">수업 외에 하고 싶은 일도 요일과 시간으로 정해 보세요.</string>
+    <string name="timetable_personal_empty">아직 개인 계획이 없어요.</string>
+    <string name="timetable_personal_add">계획 추가</string>
+    <string name="timetable_personal_open">내 계획 전체 보기</string>
+    <string name="timetable_personal_more">그 외 계획 %1$d개</string>
+    <string name="timetable_personal_every_day">매일</string>
+    <string name="timetable_personal_paused">일시정지</string>
     <string name="timetable_edit">수업 수정</string>
     <string name="timetable_week_view">주간 표</string>
     <string name="timetable_list_view">목록</string>

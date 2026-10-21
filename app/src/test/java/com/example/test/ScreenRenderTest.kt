@@ -293,6 +293,32 @@ class ScreenRenderTest {
 
     @Test
     @Config(qualifiers = "w393dp-h851dp-night-mdpi")
+    fun renderPersonalPlansBelowTimetable() {
+        val context = RuntimeEnvironment.getApplication()
+        com.example.test.data.TimetableStore(context).use { it.save(
+            com.example.test.timetable.TimetableEntry(title = "정기 모임", weekday = 1,
+                startMinute = 540, endMinute = 600)
+        ) }
+        com.example.test.data.AppRepository(context).use {
+            it.addPersonalPlan("운동하기", "18:30", weekdayMask = 5)
+            it.addPersonalPlan("책 읽기", "21:00", weekdayMask = 127)
+        }
+        val controller = Robolectric.buildActivity(TimetableActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            capture(activity, "timetable-with-personal-start", width = 393, height = 851)
+            val outer = activity.findViewById<androidx.core.widget.NestedScrollView>(R.id.timetable_scroll)
+            val plans = activity.findViewById<View>(R.id.timetable_personal_list)
+            val area = android.graphics.Rect().apply { plans.getDrawingRect(this) }
+            outer.offsetDescendantRectToMyCoords(plans, area)
+            outer.scrollTo(0, (area.top - 300).coerceAtLeast(0))
+            capture(activity, "timetable-personal-night", width = 393, height = 851)
+            assertEquals(2, (plans as android.widget.LinearLayout).childCount)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test
+    @Config(qualifiers = "w393dp-h851dp-night-mdpi")
     fun importConfirmationPreviewsClassesBeforeSaving() {
         val rows = visualTimetableRows()
         val controller = Robolectric.buildActivity(TimetableActivity::class.java).setup().visible()

@@ -74,6 +74,38 @@ class ScreenBehaviorTest {
         } finally { settings.pause().stop().destroy() }
     }
 
+    @Test fun timetableShowsSavedPersonalPlansAndOffersAddAndManage() {
+        val context = RuntimeEnvironment.getApplication()
+        val id = com.example.test.data.AppRepository(context).use {
+            it.addPersonalPlan("운동하기", "18:30", weekdayMask = 5)
+        }
+        val controller = Robolectric.buildActivity(TimetableActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            drainWork(activity)
+            val row = activity.window.decorView.findViewWithTag<TextView>("personal-plan:$id")
+            assertTrue(row.text.toString().contains("운동하기"))
+            assertTrue(row.text.toString().contains("월·수"))
+            row.performClick()
+            val detail = shadowOf(activity).nextStartedActivity
+            assertEquals(RoutineActivity::class.java.name, detail.component!!.className)
+            assertEquals(id, detail.getLongExtra(TimelineActivity.USER_ROUTINE_ID, -1))
+            activity.findViewById<View>(R.id.timetable_personal_add).performClick()
+            val add = shadowOf(activity).nextStartedActivity
+            assertEquals(RoutineActivity::class.java.name, add.component!!.className)
+            assertTrue(add.getBooleanExtra(RoutineActivity.OPEN_CREATE, false))
+            val createScreen = Robolectric.buildActivity(RoutineActivity::class.java, add).setup().visible()
+            try {
+                shadowOf(Looper.getMainLooper()).idle()
+                assertNotNull(createScreen.get().supportFragmentManager.findFragmentByTag("routine_editor"))
+            } finally { createScreen.pause().stop().destroy() }
+            activity.findViewById<View>(R.id.timetable_personal_open).performClick()
+            assertEquals(RoutineActivity::class.java.name,
+                shadowOf(activity).nextStartedActivity.component!!.className)
+            com.example.test.data.AppRepository(context).use { assertEquals("운동하기", it.getRoutine(id)?.title) }
+        } finally { controller.pause().stop().destroy() }
+    }
+
     @Test fun todayEmptyStateActuallyOpensHeroCatalog() {
         val controller = Robolectric.buildActivity(MainActivity::class.java).setup().visible()
         try {
