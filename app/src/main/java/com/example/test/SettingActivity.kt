@@ -40,8 +40,8 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
         applySystemBarInsets()
-        ScreenToolbar.bind(this, R.string.settings_page_title, back = true)
-        setupBottomNavigation(0)
+        ScreenToolbar.bind(this, R.string.settings_page_title)
+        setupBottomNavigation(R.id.nav_settings)
         findViewById<TextView>(R.id.settings_build).text = getString(
             R.string.compact_build_details, com.example.test.Hero.HeroCatalog.all.size)
         findViewById<MaterialButton>(R.id.settings_progress).setOnClickListener { startActivity(Intent(this, ProgressActivity::class.java)) }
@@ -113,6 +113,7 @@ class SettingActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        setupBottomNavigation(R.id.nav_settings)
         reconcile()
     }
 

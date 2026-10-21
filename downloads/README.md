@@ -1,4 +1,29 @@
-# 위인의 하루 v3.12 테스트 APK
+# 위인의 하루 v3.13 테스트 APK
+
+**[v3.13 테스트 APK 다운로드 — 계획 탭을 설정으로 교체](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.13-debug.apk)**
+
+하단 메뉴가 오늘 · 인물 · 시간표 · 상점 · 설정으로 바뀌었습니다. 기존 개인 계획은 오늘 화면의 ‘내 계획 보기’에서 계속 관리할 수 있고, 날짜별 실천 기록은 오늘의 월간 달력에 남아 있습니다. 저장 데이터와 DB 구조는 변경하지 않았습니다.
+
+**기존 v3.3 배포 APK와 서명이 다릅니다. v3.3 위에 업데이트 설치할 수 없으므로 기존 앱과 데이터를 삭제하지 마세요.** v3.12 테스트 APK와는 서명·버전 조건이 맞지만 실제 덮어쓰기 설치는 검증하지 않았습니다.
+
+| 항목 | 값 |
+| --- | --- |
+| 버전 | 3.13 / versionCode 16 |
+| 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
+| APK 크기 | 9,435,001 B |
+| APK SHA-256 | `4448cddc702e254499bfef59c69e9ee2bc72062a6f98990a25bdf1e9c1ac47ff` |
+| 인증서 SHA-256 | `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0` |
+| 검증 | JVM 171개·SQLite 22개 통과, lint 오류 0개·경고 196개, 앱·기기 테스트 APK 빌드 및 앱 APK 서명 검증 성공 |
+| 미실행 | 실제 기기 계측·업데이트 설치·휴대폰 화면 확인 |
+
+[변경·검증 보고서](../docs/upgrade-v3.13.md) · [빌드 정보](v3.13-build-manifest.json) · [체크섬](android-app-v3.13-debug.apk.sha256) · [오늘](../docs/screenshots/v3.13-today-night.png) · [설정](../docs/screenshots/v3.13-settings-night.png)
+
+```bash
+cd downloads
+sha256sum --check android-app-v3.13-debug.apk.sha256
+```
+
+## v3.12 이전 테스트 APK
 
 **[v3.12 테스트 APK 다운로드 — 주간 시간표를 첫 화면에](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.12-debug.apk)**
 

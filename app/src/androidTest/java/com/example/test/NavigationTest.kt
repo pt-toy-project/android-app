@@ -26,12 +26,12 @@ class NavigationTest {
     }
 
     @Test
-    fun routineButtonOpensRoutineAndBackReturnsToSameHome() {
+    fun personalPlansShortcutOpensRoutineAndBackReturnsToSameHome() {
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
             lateinit var originalHome: MainActivity
             scenario.onActivity { originalHome = it }
 
-            onView(withId(R.id.nav_routine)).perform(click())
+            scenario.onActivity { it.findViewById<android.view.View>(R.id.personal_plans_open).performClick() }
             onView(withId(R.id.rv_routine_list)).check(matches(isDisplayed()))
             pressBack()
 

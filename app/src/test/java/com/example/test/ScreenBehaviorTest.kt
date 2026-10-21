@@ -51,6 +51,29 @@ class ScreenBehaviorTest {
         render(activity)
     }
 
+    @Test fun planTabBecomesSettingsWhilePersonalPlansStayReachable() {
+        val context = RuntimeEnvironment.getApplication()
+        val planId = com.example.test.data.AppRepository(context).use { it.addPersonalPlan("남겨 둘 계획", "08:15") }
+        val home = Robolectric.buildActivity(MainActivity::class.java).setup().visible()
+        try {
+            val activity = home.get()
+            val nav = activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
+            assertEquals(listOf(R.id.nav_home, R.id.nav_hero, R.id.nav_timetable, R.id.nav_myroom, R.id.nav_settings),
+                (0 until nav.menu.size()).map { nav.menu.getItem(it).itemId })
+            assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.personal_plans_open).visibility)
+            activity.findViewById<View>(R.id.personal_plans_open).performClick()
+            assertEquals(RoutineActivity::class.java.name, shadowOf(activity).nextStartedActivity.component!!.className)
+            com.example.test.data.AppRepository(context).use { assertEquals("남겨 둘 계획", it.getRoutine(planId)?.title) }
+            nav.selectedItemId = R.id.nav_settings
+            assertEquals(SettingActivity::class.java.name, shadowOf(activity).nextStartedActivity.component!!.className)
+        } finally { home.pause().stop().destroy() }
+        val settings = Robolectric.buildActivity(SettingActivity::class.java).setup().visible()
+        try {
+            assertEquals(R.id.nav_settings,
+                settings.get().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView).selectedItemId)
+        } finally { settings.pause().stop().destroy() }
+    }
+
     @Test fun todayEmptyStateActuallyOpensHeroCatalog() {
         val controller = Robolectric.buildActivity(MainActivity::class.java).setup().visible()
         try {

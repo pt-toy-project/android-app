@@ -5,6 +5,7 @@
     <string name="nav_hero">인물</string>
     <string name="nav_myroom">상점</string>
     <string name="nav_settings">설정</string>
+    <string name="home_personal_plans_open">내 계획 보기</string>
     <string name="home_title">위인의 하루</string>
     <string name="home_today_routine">오늘의 루틴</string>
     <string name="home_progress">%1$d / %2$d 완료</string>

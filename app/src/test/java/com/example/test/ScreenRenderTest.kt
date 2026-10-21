@@ -89,6 +89,22 @@ class ScreenRenderTest {
         try { capture(controller.get(), "hero-day") } finally { controller.pause().stop().destroy() }
     }
 
+    @Test
+    @Config(qualifiers = "w393dp-h851dp-night-mdpi")
+    fun renderTodayAndSettingsWithNewBottomNavigation() {
+        listOf(MainActivity::class.java to "v3.13-today-night",
+            SettingActivity::class.java to "v3.13-settings-night").forEach { (type, name) ->
+            val controller = Robolectric.buildActivity(type).setup().visible()
+            try {
+                val activity = controller.get()
+                capture(activity, name, width = 393, height = 851)
+                val nav = activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
+                assertEquals(5, nav.menu.size())
+                assertNotNull(nav.menu.findItem(R.id.nav_settings))
+            } finally { controller.pause().stop().destroy() }
+        }
+    }
+
     @Test fun renderTodayTimetableAsSeparateClassesOnNarrowScreen() {
         val context = RuntimeEnvironment.getApplication()
         val weekday = com.example.test.timetable.TimetableEntry.weekday(com.example.test.Routine.RoutineDate.today())

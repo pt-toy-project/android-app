@@ -52,7 +52,7 @@ abstract class TimelineActivity : AppCompatActivity() {
         // Keep the old fragment class loadable for upgrade restoration, but do not show obsolete sample UI.
         supportFragmentManager.fragments.filterIsInstance<RoutineDetailBottomSheet>().forEach { it.dismissAllowingStateLoss() }
         applySystemBarInsets()
-        setupBottomNavigation(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.id.nav_home else R.id.nav_routine)
+        setupBottomNavigation(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.id.nav_home else 0)
         val incomingHero = savedInstanceState?.getString(HERO_ID) ?: intent.getStringExtra(HERO_ID)
         resolveStoredHero = incomingHero == null
         heroId = HeroCatalog.getOrDefault(incomingHero).id
@@ -74,7 +74,8 @@ abstract class TimelineActivity : AppCompatActivity() {
             timelineHeader.findViewById<Button>(R.id.iv_calendar).layoutParams = LinearLayout.LayoutParams(
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT)
         }
-        ScreenToolbar.bind(this, if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.nav_home else R.string.nav_routine)
+        ScreenToolbar.bind(this, if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.nav_home else R.string.nav_routine,
+            back = routineSource == com.example.test.data.RoutineSource.PERSONAL)
         routineAdapter = PersonalRoutineAdapter(onComplete = { complete(it.routine.id, it.date) }) { showDetail(it.routine.id) }
         timelineList.apply {
             adapter = androidx.recyclerview.widget.ConcatAdapter(TimelineHeaderAdapter(timelineHeader), routineAdapter)
@@ -86,6 +87,10 @@ abstract class TimelineActivity : AppCompatActivity() {
             calendarExpanded = !calendarExpanded
             renderDates()
             scrollToCalendar()
+        }
+        timelineHeader.findViewById<View>(R.id.personal_plans_open).apply {
+            visibility = if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
+            setOnClickListener { navigateTo(RoutineActivity::class.java) }
         }
         timelineHeader.findViewById<Button>(R.id.personal_add).setOnClickListener {
             startActivity(Intent(this, CharacterSelectActivity::class.java).putExtra("personal_mode", routineSource == com.example.test.data.RoutineSource.PERSONAL))
@@ -146,7 +151,7 @@ abstract class TimelineActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        super.onResume(); setupBottomNavigation(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.id.nav_home else R.id.nav_routine); handler.removeCallbacks(refresh); handler.post(refresh)
+        super.onResume(); setupBottomNavigation(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.id.nav_home else 0); handler.removeCallbacks(refresh); handler.post(refresh)
         AppIo.run(this, { AlarmCoordinator(applicationContext).reconcile() }) { result ->
             timelineHeader.findViewById<TextView>(R.id.personal_alarm_status).text = result.fold(
                 { if (it.notificationsBlocked) getString(R.string.personal_permission_needed)

@@ -29,10 +29,6 @@ fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
                 navigateTo(MainActivity::class.java)
                 true
             }
-            R.id.nav_routine -> {
-                navigateTo(RoutineActivity::class.java)
-                true
-            }
             R.id.nav_hero -> {
                 navigateTo(CharacterSelectActivity::class.java)
                 true
@@ -43,6 +39,10 @@ fun AppCompatActivity.setupBottomNavigation(selectedItemId: Int) {
             }
             R.id.nav_myroom -> {
                 navigateTo(ShopActivity::class.java)
+                true
+            }
+            R.id.nav_settings -> {
+                navigateTo(SettingActivity::class.java)
                 true
             }
             else -> false

@@ -19,6 +19,7 @@
             <com.google.android.material.button.MaterialButton android:id="@+id/timeline_timetable_open" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/timetable_home_open"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.button.MaterialButton android:id="@+id/personal_plans_open" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/home_personal_plans_open" android:visibility="gone"/>
     <com.google.android.material.card.MaterialCardView android:id="@+id/timeline_finished_card" style="@style/Widget.HeroDay.Card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:visibility="gone">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceTitleLarge" android:text="@string/polish_all_done"/>
