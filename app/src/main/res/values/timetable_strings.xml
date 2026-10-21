@@ -65,6 +65,10 @@
     <string name="timetable_widget_manual">홈 화면을 길게 누른 다음 ‘위젯’에서 ‘위인의 하루 시간표’를 선택해 주세요.</string>
     <string name="timetable_notification_heading">알림창 시간표</string>
     <string name="timetable_widget_title">오늘의 시간표</string>
+    <string name="timetable_selected_day_title">%1$s 시간표</string>
+    <string name="timetable_selected_day_no_class">이날은 수업이 없어요</string>
+    <string name="timetable_home_more">그 외 수업 %1$d개</string>
+    <string name="timetable_home_open">전체 시간표 보기</string>
     <string name="timetable_widget_now">지금 · %1$s</string>
     <string name="timetable_widget_next">다음 %1$s · %2$s</string>
     <string name="timetable_widget_no_class">오늘은 수업이 없어요</string>

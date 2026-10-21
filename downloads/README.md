@@ -1,4 +1,29 @@
-# 위인의 하루 v3.9 테스트 APK
+# 위인의 하루 v3.10 테스트 APK
+
+**[v3.10 테스트 APK 다운로드 — ‘오늘’ 시간표 카드 정리](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.10-debug.apk)**
+
+수업마다 시간·이름·강의실을 따로 표시하고, 나머지 수업 개수와 전체 시간표 링크를 제공합니다. 달력에서 선택한 날짜의 요일 수업을 보여 주며, 큰 글씨에서도 날짜와 달력 버튼이 겹치지 않습니다.
+
+**기존 v3.3 배포 APK와 서명이 다릅니다. v3.3 위에 업데이트 설치할 수 없으므로 기존 앱과 데이터를 삭제하지 마세요.** v3.9 테스트 APK와는 서명·버전 조건이 맞지만 실제 덮어쓰기 설치는 검증하지 않았습니다.
+
+| 항목 | 값 |
+| --- | --- |
+| 버전 | 3.10 / versionCode 13 |
+| 패키지 / 최소 OS | com.example.test / Android 7.0(API 24)+ |
+| APK 크기 | 11,060,338 B |
+| APK SHA-256 | `3f49ccb5a373e60f14985be0b6d88b3db6f203995ff985d8915596f3b5cbe56c` |
+| 인증서 SHA-256 | `bc33faab57ff446fdffd9faf5d73dd397da37fa9eaa5a0baeb9811e952e013a0` |
+| 검증 | JVM 167개·SQLite 22개 통과, lint 오류 0개·경고 189개, 앱·기기 테스트 APK 빌드 및 앱 APK 서명 검증 성공 |
+| 미실행 | 실제 기기 계측·업데이트 설치·휴대폰에서의 에타 가져오기 |
+
+[구현·검증 보고서](../docs/upgrade-v3.10.md) · [빌드 정보](v3.10-build-manifest.json) · [체크섬](android-app-v3.10-debug.apk.sha256) · [기본 화면](../docs/screenshots/v3.10-today-timetable-compact.png) · [큰 글씨](../docs/screenshots/v3.10-today-timetable-large-font.png)
+
+```bash
+cd downloads
+sha256sum --check android-app-v3.10-debug.apk.sha256
+```
+
+## v3.9 이전 테스트 APK
 
 **[v3.9 테스트 APK 다운로드 — 읽기 쉬운 주간 시간표·가져오기 미리보기](https://github.com/pt-toy-project/android-app/raw/refs/heads/main/downloads/android-app-v3.9-debug.apk)**
 

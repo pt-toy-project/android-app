@@ -76,7 +76,7 @@ class TimetableActivity : AppCompatActivity() {
             setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             setOnMenuItemClickListener { openEditor(null); true }
         }
-        week = RoutineDate.parse(state?.getString("week")) ?: week
+        week = RoutineDate.parse(state?.getString("week") ?: intent.getStringExtra("week")) ?: week
         listMode = state?.getBoolean("listMode") ?: (resources.configuration.fontScale >= 1.5f)
         findViewById<Chip>(R.id.timetable_week_mode).isChecked = !listMode
         findViewById<Chip>(R.id.timetable_list_mode).isChecked = listMode

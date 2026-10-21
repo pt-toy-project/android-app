@@ -7,6 +7,8 @@ import com.example.test.timetable.EverytimeShareImporter
 import com.example.test.timetable.TimetableAgenda
 import com.example.test.timetable.TimetableCsv
 import com.example.test.timetable.TimetableEntry
+import com.example.test.timetable.TodayTimetablePreview
+import com.example.test.Routine.RoutineDate
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +23,19 @@ class TimetableTest {
     private val context get() = RuntimeEnvironment.getApplication()
     private fun row() = TimetableEntry(title = "데이터 통신, 심화", weekday = 2, startMinute = 570,
         endMinute = 720, location = "공학관 \"501\"", instructor = "김 교수")
+
+    @Test fun homePreviewUsesSelectedWeekdayAndShowsRemainingCount() {
+        val monday = RoutineDate(2026, 10, 19)
+        val tuesday = monday.plusDays(1)
+        val morning = TimetableEntry(title = "아침 수업", weekday = 1, startMinute = 540, endMinute = 600)
+        val midday = TimetableEntry(title = "점심 수업", weekday = 1, startMinute = 720, endMinute = 780)
+        val afternoon = TimetableEntry(title = "오후 수업", weekday = 1, startMinute = 900, endMinute = 960)
+        val differentDay = TimetableEntry(title = "화요일 수업", weekday = 2, startMinute = 480, endMinute = 540)
+        val entries = listOf(afternoon, differentDay, midday, morning)
+        assertEquals(TodayTimetablePreview(listOf(morning, midday), 1), TodayTimetablePreview.forDate(entries, monday))
+        assertEquals(TodayTimetablePreview(listOf(differentDay), 0), TodayTimetablePreview.forDate(entries, tuesday))
+        assertEquals(TodayTimetablePreview(emptyList(), 0), TodayTimetablePreview.forDate(entries, monday.plusDays(2)))
+    }
 
     @Test fun csvRoundTripAndInvalidBatchDoesNotMutateClasses() {
         val expected = row()

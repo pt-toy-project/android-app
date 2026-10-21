@@ -16,6 +16,7 @@ import com.example.test.alarm.AlarmCoordinator
 import com.example.test.data.AppRepository
 import com.example.test.data.CompletionOutcome
 import com.example.test.data.UserRoutine
+import com.example.test.timetable.TodayTimetablePreview
 
 abstract class TimelineActivity : AppCompatActivity() {
     protected abstract val timelineLayout: Int
@@ -66,6 +67,13 @@ abstract class TimelineActivity : AppCompatActivity() {
         // A detached header measured as WRAP_CONTENT can squeeze a seven-day month
         // into a narrow card on real devices, even when Robolectric looks correct.
         timelineHeader = layoutInflater.inflate(R.layout.item_timeline_header, timelineList, false)
+        if (resources.configuration.fontScale >= 1.5f) {
+            timelineHeader.findViewById<LinearLayout>(R.id.timeline_date_header).orientation = LinearLayout.VERTICAL
+            timelineHeader.findViewById<LinearLayout>(R.id.timeline_date_labels).layoutParams = LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT)
+            timelineHeader.findViewById<Button>(R.id.iv_calendar).layoutParams = LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
         ScreenToolbar.bind(this, if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.nav_home else R.string.nav_routine)
         routineAdapter = PersonalRoutineAdapter(onComplete = { complete(it.routine.id, it.date) }) { showDetail(it.routine.id) }
         timelineList.apply {
@@ -93,7 +101,7 @@ abstract class TimelineActivity : AppCompatActivity() {
             startActivity(Intent(this, FocusActivity::class.java))
         }
         timelineHeader.findViewById<View>(R.id.timeline_timetable_open).setOnClickListener {
-            startActivity(Intent(this, TimetableActivity::class.java))
+            startActivity(Intent(this, TimetableActivity::class.java).putExtra("week", selectedDate.week().first().iso))
         }
         supportFragmentManager.setFragmentResultListener(PersonalRoutineDetailSheet.RESULT_KEY, this) { _, result ->
             val id = result.getLong(USER_ROUTINE_ID, -1)
@@ -129,8 +137,12 @@ abstract class TimelineActivity : AppCompatActivity() {
     }
 
     private fun scrollToCalendar() {
-        (findViewById<RecyclerView>(R.id.rv_routine_list).layoutManager as? LinearLayoutManager)
-            ?.scrollToPositionWithOffset(0, 0)
+        val list = findViewById<RecyclerView>(R.id.rv_routine_list)
+        // Wait for the month/day header to resize before restoring the calendar to view.
+        list.post {
+            (list.layoutManager as? LinearLayoutManager)
+                ?.scrollToPositionWithOffset(0, -activityCalendar.top)
+        }
     }
 
     override fun onResume() {
@@ -211,10 +223,7 @@ abstract class TimelineActivity : AppCompatActivity() {
                 renderDates()
                 timelineHeader.findViewById<View>(R.id.timeline_timetable_card).visibility =
                     if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
-                val classRows = snapshot.classes.filter { it.weekday == com.example.test.timetable.TimetableEntry.weekday(RoutineDate.today()) }
-                timelineHeader.findViewById<TextView>(R.id.timeline_timetable_summary).text =
-                    if (classRows.isEmpty()) getString(R.string.timetable_widget_no_class)
-                    else classRows.sortedBy { it.startMinute }.joinToString(" · ", limit = 2) { "${it.timeLabel} ${it.title}" }
+                renderTimetablePreview(snapshot.classes, date)
                 heroId = snapshot.heroId; resolveStoredHero = false
                 timelineHeader.findViewById<TextView>(R.id.routine_title).text = getString(if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) R.string.redesign_day_title else R.string.redesign_personal_title)
                 timelineHeader.findViewById<TextView>(R.id.day_notice).visibility = if (routineSource == com.example.test.data.RoutineSource.HERO_DAY) View.VISIBLE else View.GONE
@@ -297,6 +306,33 @@ abstract class TimelineActivity : AppCompatActivity() {
                     showDetail(requestedDetailId)
                 }
             }, onFailure = { activityCalendar.showError(); timelineHeader.findViewById<TextView>(R.id.personal_summary).setText(R.string.personal_storage_error) })
+        }
+    }
+
+    private fun renderTimetablePreview(classes: List<com.example.test.timetable.TimetableEntry>, date: RoutineDate) {
+        val today = date == RoutineDate.today()
+        timelineHeader.findViewById<TextView>(R.id.timeline_timetable_title).text =
+            if (today) getString(R.string.timetable_widget_title)
+            else getString(R.string.timetable_selected_day_title, date.label("M월 d일 E요일"))
+        val preview = TodayTimetablePreview.forDate(classes, date)
+        val empty = timelineHeader.findViewById<TextView>(R.id.timeline_timetable_summary)
+        empty.visibility = if (preview.classes.isEmpty()) View.VISIBLE else View.GONE
+        empty.text = getString(if (today) R.string.timetable_widget_no_class else R.string.timetable_selected_day_no_class)
+        val container = timelineHeader.findViewById<LinearLayout>(R.id.timeline_timetable_classes)
+        container.removeAllViews()
+        preview.classes.forEach { entry ->
+            val row = layoutInflater.inflate(R.layout.item_today_timetable_class, container, false)
+            row.findViewById<TextView>(R.id.today_class_time).text = entry.timeLabel
+            row.findViewById<TextView>(R.id.today_class_title).text = entry.title
+            row.findViewById<TextView>(R.id.today_class_location).apply {
+                text = entry.location
+                visibility = if (entry.location.isBlank()) View.GONE else View.VISIBLE
+            }
+            container.addView(row)
+        }
+        timelineHeader.findViewById<TextView>(R.id.timeline_timetable_more).apply {
+            visibility = if (preview.remaining > 0) View.VISIBLE else View.GONE
+            text = if (preview.remaining > 0) getString(R.string.timetable_home_more, preview.remaining) else ""
         }
     }
 

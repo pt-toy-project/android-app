@@ -88,6 +88,36 @@ class ScreenRenderTest {
         val controller = Robolectric.buildActivity(HeroDetailActivity::class.java, intent).setup().visible()
         try { capture(controller.get(), "hero-day") } finally { controller.pause().stop().destroy() }
     }
+
+    @Test fun renderTodayTimetableAsSeparateClassesOnNarrowScreen() {
+        val context = RuntimeEnvironment.getApplication()
+        val weekday = com.example.test.timetable.TimetableEntry.weekday(com.example.test.Routine.RoutineDate.today())
+        val ids = com.example.test.data.TimetableStore(context).use { store ->
+            listOf(
+                com.example.test.timetable.TimetableEntry(title = "데이터통신", weekday = weekday, startMinute = 540, endMinute = 720, location = "융합교육관 501호"),
+                com.example.test.timetable.TimetableEntry(title = "객체지향개발론", weekday = weekday, startMinute = 780, endMinute = 870),
+                com.example.test.timetable.TimetableEntry(title = "컴퓨터그래픽스", weekday = weekday, startMinute = 900, endMinute = 960)
+            ).map(store::save)
+        }
+        val controller = Robolectric.buildActivity(MainActivity::class.java).setup().visible()
+        try {
+            val activity = controller.get()
+            capture(activity, "today-timetable-compact", width = 320, height = 750)
+            val rows = activity.findViewById<android.widget.LinearLayout>(R.id.timeline_timetable_classes)
+            assertEquals(2, rows.childCount)
+            assertEquals("09:00–12:00", rows.getChildAt(0).findViewById<android.widget.TextView>(R.id.today_class_time).text.toString())
+            assertEquals("데이터통신", rows.getChildAt(0).findViewById<android.widget.TextView>(R.id.today_class_title).text.toString())
+            assertEquals("그 외 수업 1개", activity.findViewById<android.widget.TextView>(R.id.timeline_timetable_more).text.toString())
+            RuntimeEnvironment.setFontScale(1.8f)
+            controller.recreate()
+            capture(controller.get(), "today-timetable-large-font", width = 320, height = 750)
+            assertEquals(android.widget.LinearLayout.VERTICAL,
+                controller.get().findViewById<android.widget.LinearLayout>(R.id.timeline_date_header).orientation)
+        } finally {
+            controller.pause().stop().destroy()
+            com.example.test.data.TimetableStore(context).use { store -> ids.forEach(store::delete) }
+        }
+    }
     @Test fun portraitDisplayIsCircularWithoutModifyingOriginalFile() {
         val image = android.widget.ImageView(RuntimeEnvironment.getApplication())
         AvatarView.bind(image, com.example.test.Hero.HeroCatalog.default.imageResId)
